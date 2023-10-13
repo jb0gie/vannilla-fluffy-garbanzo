@@ -1,0 +1,18 @@
+{
+  "name": "vannilla-fluffy-garbanzo",
+  "version": "0.0.0",
+  "description": "practicing threeJS strats",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^4.4.9"
+  },
+  "dependencies": {
+    "three": "^0.156.0"
+  },
+  "author": "irb0gie",
+  "license": "UNLICENSED"
+}
