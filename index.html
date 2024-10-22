@@ -162,7 +162,7 @@
         camera.position.setZ(30);
         camera.position.setX(-3);
         controls = new OrbitControls(camera, renderer.domElement);
-        // renderer.render(scene, camera);
+        renderer.render(scene, camera);
       }
       // Torus
       const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
