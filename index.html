@@ -15,14 +15,6 @@
   <link rel="icon" href="public/favicon.ico" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>git~gud</title>
-  <script type="importmap">
-      {
-        "imports": {
-          "three": "https://cdn.jsdelivr.net/npm/three/build/three.module.js",
-          "three/addons/": "https://cdn.jsdelivr.net/npm/three/examples/jsm/"
-        }
-      }
-  </script>
   <style>
     @import url("https://use.typekit.net/jmk3xov.css");
 
@@ -144,21 +136,25 @@
       grid-column: 12 /12;
     }
   </style>
+  <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three/examples/jsm/"
+        }
+      }
+  </script>
 </head>
 
 <body>
   <script type="module">
     import * as THREE from 'three';
-    import { OrbitControls } from 'three/addons/controls/OrbitControls.js'; 
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    (function () { })();
     // Setup
-
     const scene = new THREE.Scene();
-
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-
-    const renderer = new THREE.WebGLRenderer({
-      canvas: document.querySelector('#bg'),
-    });
+    const renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#bg') });
 
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
