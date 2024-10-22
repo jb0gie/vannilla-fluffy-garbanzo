@@ -3,9 +3,7 @@
   "version": "0.0.0",
   "description": "practicing threeJS strats",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "serve": "vite preview"
+    "start": "npx http-server"
   },
   "devDependencies": {
     "vite": "^4.4.9"
