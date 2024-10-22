@@ -6,7 +6,6 @@ canvas {
   left: 0;
 }
 
-
 :root {
   --dark-bg: rgba(15, 15, 15, 0.95);
   --spacing: 350px;
@@ -16,16 +15,13 @@ canvas {
   font-style: normal;
 }
 
-
 main {
   width: 100vw;
   color: white;
   z-index: 99;
   position: absolute;
-  width: 100%;
   margin: 0px auto;
   padding: 120px 0px;
-  
   display: grid;
   grid-template-columns: repeat(12, 1fr);
 }
@@ -36,34 +32,29 @@ h1, h2, h3, blockquote {
   font-style: normal;
 }
 
-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-}
-
-
 
 header {
   background: var(--dark-bg);
   grid-column: 2 / span 5;
-  font-size: 2.5rem;
+  font-size: 2.3rem;
   padding: 2rem;
   margin-bottom: var(--spacing);
+  border-radius: 12px;
 }
 
 section {
   grid-column: 2 / 8;
   padding: 1rem;
   background: var(--dark-bg);
-  font-size: 1.25rem;
+  font-size: 1.35rem;
   line-height: 1.5;
   margin-bottom: var(--spacing);
+  border-radius: 12px;
 }
 
 blockquote {
-  margin: 0;
-  padding: 0;
+  margin: 5;
+  padding: 10;
   grid-column: 2 / span 9;
   margin-bottom: var(--spacing);
 }
@@ -73,9 +64,54 @@ blockquote p {
   background-color: white;
   font-size: 4rem;
   display: inline;
-  line-height: 1;
+  line-height: 1.5;
+  
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  /* border-bottom: 1px dotted black; */
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  font-size: 3rem;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
 }
 
 .left {
   grid-column: 6 / 12;
+}
+
+.right {
+  grid-column: 12 /12;
 }
