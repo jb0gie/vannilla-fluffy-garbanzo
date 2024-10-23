@@ -15,14 +15,10 @@
   <link rel="icon" href="public/favicon.ico" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>git~gud</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @import url("https://use.typekit.net/jmk3xov.css");
-
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-    }
 
     :root {
       --dark-bg: rgba(15, 15, 15, 0.95);
@@ -39,7 +35,7 @@
       z-index: 99;
       position: absolute;
       margin: 0px auto;
-      padding: 120px 0px;
+      padding: 60px 20px;
       display: grid;
       grid-template-columns: repeat(12, 1fr);
     }
@@ -53,96 +49,76 @@
       font-style: normal;
     }
 
-    header {
-      background: var(--dark-bg);
-      grid-column: 2 / span 5;
-      font-size: 2.3rem;
-      padding: 2rem;
-      margin-bottom: var(--spacing);
-      border-radius: 12px;
-    }
-
-    section {
-      grid-column: 2 / 8;
-      padding: 1rem;
-      background: var(--dark-bg);
-      font-size: 1.35rem;
-      line-height: 1.5;
-      margin-bottom: var(--spacing);
-      border-radius: 12px;
-    }
-
-    blockquote {
-      margin: 5;
-      padding: 10;
-      grid-column: 2 / span 9;
-      margin-bottom: var(--spacing);
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      cursor: pointer;
     }
 
     blockquote p {
       color: black;
       background-color: white;
-      font-size: 4rem;
+      font-size: clamp(1rem, 5vw, 4rem);
       display: inline;
       line-height: 1.5;
-
-    }
-
-    .tooltip {
-      position: relative;
-      display: inline-block;
-      /* border-bottom: 1px dotted black; */
     }
 
     .tooltip .tooltiptext {
-      visibility: hidden;
-      width: 120px;
-      background-color: #555;
-      color: #fff;
-      text-align: center;
-      font-size: 3rem;
-      border-radius: 6px;
-      padding: 5px 0;
-      position: absolute;
-      z-index: 1;
-      bottom: 125%;
-      left: 50%;
-      margin-left: -60px;
-      opacity: 0;
-      transition: opacity 0.3s;
+      font-size: clamp(1rem, 3vw, 3rem);
     }
 
-    .tooltip .tooltiptext::after {
-      content: "";
-      position: absolute;
-      top: 100%;
-      left: 50%;
-      margin-left: -5px;
-      border-width: 5px;
-      border-style: solid;
-      border-color: #555 transparent transparent transparent;
+    @media (min-width: 640px) {
+      main {
+        padding: 120px 0px;
+      }
     }
 
-    .tooltip:hover .tooltiptext {
-      visibility: visible;
-      opacity: 1;
-    }
+    @media (min-width: 768px) {
+      .left {
+        grid-column: 6 / 12;
+      }
 
-    .left {
-      grid-column: 6 / 12;
-    }
-
-    .right {
-      grid-column: 12 /12;
+      .right {
+        grid-column: 12 /12;
+      }
     }
   </style>
   <script type="importmap">
-      {
+    {
         "imports": {
           "three": "https://cdn.jsdelivr.net/npm/three/build/three.module.js",
           "three/addons/": "https://cdn.jsdelivr.net/npm/three/examples/jsm/"
         }
       }
+  </script>
+  <script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+      // Add debug log
+      console.log('DOM loaded, fetching quote...');
+
+      fetch('https://api.quotable.io/random')
+        .then((resp) => {
+          console.log('Quote API response received:', resp);
+          return resp.json();
+        })
+        .then((data) => {
+          console.log('Quote data:', data);
+          // Update only the specific blockquote
+          const quoteElement = document.querySelector('#random-quote p');
+          if (quoteElement) {
+            quoteElement.innerHTML = `"${data.content}"<br />- ${data.author}`;
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching quote:', error);
+          const quoteElement = document.querySelector('#random-quote p');
+          if (quoteElement) {
+            quoteElement.innerHTML = 'Failed to load quote. Please try again later.';
+          }
+        });
+    });
   </script>
 </head>
 
@@ -150,20 +126,72 @@
   <script type="module">
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     (function () {
       let scene, camera, renderer, controls;
+      let stars = [];
+      let jeff;
+      let model;
+      let mixer;
+      const clock = new THREE.Clock()
+      const model_path = 'models/techshaman.glb'
+      const raycaster = new THREE.Raycaster();
+      const pointer = new THREE.Vector2();
+      let isHovered = false;
+      let originalScale = new THREE.Vector3(1, 1, 1);
+      let tooltipDiv;
       // Setup THREE
-      function init3() {
-        scene = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#bg') });
-        renderer.setPixelRatio(window.devicePixelRatio);
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#bg') });
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      camera.position.setZ(60);
+      camera.position.setX(2);
+      controls = new OrbitControls(camera, renderer.domElement);
+      renderer.render(scene, camera);
+      // Add window resize event listener
+      window.addEventListener('resize', onWindowResize);
+      // Function to handle window resizing
+      function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
-        camera.position.setZ(30);
-        camera.position.setX(-3);
-        controls = new OrbitControls(camera, renderer.domElement);
-        renderer.render(scene, camera);
       }
+      // Load 3D Model with more animation control
+      const loader = new GLTFLoader();
+      loader.load( model_path, function (gltf) {
+          model = gltf.scene;
+          model.position.z = -2;
+          model.position.y = -1;
+          model.position.x = 1;
+          
+          scene.add(model);
+
+          // Setup animations
+          mixer = new THREE.AnimationMixer(model);
+          
+          // Play each animation with specific settings
+          gltf.animations.forEach((clip) => {
+            const action = mixer.clipAction(clip);
+            
+            // You can adjust these properties for each animation
+            action.setLoop(THREE.LoopRepeat); // or THREE.LoopOnce, THREE.LoopPingPong
+            action.clampWhenFinished = true;
+            action.timeScale = 1; // Speed up or slow down the animation
+            
+            action.play();
+            
+            console.log(`Playing animation: ${clip.name}`);
+          });
+        },
+        function (xhr) {
+          console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+        },
+        function (error) {
+          console.error('An error happened:', error);
+        }
+      );
       // Torus
       const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
       const material = new THREE.MeshStandardMaterial({ color: 0xff6347 });
@@ -174,14 +202,20 @@
       pointLight.position.set(5, 5, 5);
       const ambientLight = new THREE.AmbientLight(0xffffff);
       scene.add(pointLight, ambientLight);
+      
       // Helpers
       // const lightHelper = new THREE.PointLightHelper(pointLight)
       // const gridHelper = new THREE.GridHelper(200, 50);
       // scene.add(lightHelper, gridHelper)
+
       // Stars
       function addStar() {
         const geometry = new THREE.SphereGeometry(0.25, 24, 24);
-        const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+        const material = new THREE.MeshStandardMaterial({
+          color: 0xffffff,
+          emissive: 0xffffff,
+          emissiveIntensity: 1,
+        });
         const star = new THREE.Mesh(geometry, material);
         const [x, y, z] = Array(3)
           .fill()
@@ -190,200 +224,332 @@
         scene.add(star);
       }
       Array(200).fill().forEach(addStar);
+      // Animate stars
+      function animateStars(time) {
+      stars.forEach(star => {
+      // Twinkling effect
+      star.material.emissiveIntensity = Math.random() * 0.3 + 0.7;
+      // Orbital movement
+      star.userData.angle += star.userData.orbitSpeed;
+      const x = star.userData.originalPosition.x + Math.cos(star.userData.angle) * star.userDataorbitRadius;
+      const y = star.userData.originalPosition.y + Math.sin(star.userData.angle) * star.userDataorbitRadius;
+      const z = star.userData.originalPosition.z + Math.sin(time * 0.001 + star.userData.angle) *
+      star.userData.orbitRadius;
+      star.position.set(x, y, z);
+      });
+      }
       // Background
-      const spaceTexture = new THREE.TextureLoader().load('./space.jpg');
+      const spaceTexture = new THREE.TextureLoader().load(
+        'images/space.jpg',
+        undefined,
+        undefined,
+        (error) => {
+          console.error('An error happened while loading the texture:', error);
+        }
+      );
       scene.background = spaceTexture;
+
+      // Hover detection
+      function onPointerMove(event) {
+        pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+        pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+        raycaster.setFromCamera(pointer, camera);
+        const intersects = raycaster.intersectObject(jeff);
+
+        if (intersects.length > 0) {
+          if (!isHovered) {
+            document.body.style.cursor = 'pointer';
+            isHovered = true;
+            jeff.scale.set(1.2, 1.2, 1.2);
+          }
+        } else {
+          if (isHovered) {
+            document.body.style.cursor = 'default';
+            isHovered = false;
+            jeff.scale.set(1, 1, 1);
+          }
+        }
+      }
+
+      // Click handler
+      function onPointerClick(event) {
+        pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+        pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+        raycaster.setFromCamera(pointer, camera);
+        const intersects = raycaster.intersectObject(jeff);
+
+        if (intersects.length > 0) { window.open('https://github.com/jb0gie', '_blank'); }
+      }
+      // Pulse animation for the cube
+      function animateJeff(time) {
+        if (!isHovered) {
+          const pulseFactor = Math.sin(time * 0.003) * 0.1 + 1;
+          jeff.scale.set( originalScale.x * pulseFactor, originalScale.y * pulseFactor, originalScale.z * pulseFactor);
+        }
+      }
+      // Add the event listener
+      window.addEventListener('mousemove', onPointerMove);
+      window.addEventListener('click', onPointerClick);
       // cubed pfp
-      const jeffTexture = new THREE.TextureLoader().load('jeff.png');
-      const jeff = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 3), new THREE.MeshBasicMaterial({ map: jeffTexture }));
+      const jeffTexture = new THREE.TextureLoader().load(
+        'images/jeff.png',
+        undefined,
+        undefined,
+        (error) => {
+          console.error('An error happened while loading the texture:', error);
+        }
+      );
+      jeff = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 3), new THREE.MeshBasicMaterial({ map: jeffTexture }));
       scene.add(jeff);
       // schwepe moon
-      const moonTexture = new THREE.TextureLoader().load('moon.jpg');
-      const normalTexture = new THREE.TextureLoader().load('normal.jpg');
+      const moonTexture = new THREE.TextureLoader().load(
+        'images/moon.jpg',
+        undefined,
+        undefined,
+        (error) => {
+          console.error('An error happened while loading the texture:', error);
+        }
+      );
+      // const normalTexture = new THREE.TextureLoader().load('images/normal.jpg');
       const moon = new THREE.Mesh(
         new THREE.SphereGeometry(3, 32, 32),
         new THREE.MeshStandardMaterial({
           map: moonTexture,
-          normalMap: normalTexture,
+          // normalMap: normalTexture,
         })
       );
       scene.add(moon);
       moon.position.z = 30;
       moon.position.setX(-10);
-      jeff.position.z = -5;
-      jeff.position.x = 2;
+      jeff.position.z = 15;
+      jeff.position.x = 8;
       // Scroll Animation
       function moveCamera() {
         const t = document.body.getBoundingClientRect().top;
+
+        // Existing animations
         moon.rotation.x += 0.05;
         moon.rotation.y += 0.075;
         moon.rotation.z += 0.05;
 
         jeff.rotation.y += 0.01;
         jeff.rotation.z += 0.01;
-
-        camera.position.z = t * -0.01;
-        camera.position.x = t * -0.002;
+        
+        camera.position.z = 1 + t * -0.01;
+        camera.position.x = 0.5 + t * -0.002;
         camera.rotation.y = t * -0.0002;
       }
       document.body.onscroll = moveCamera;
       moveCamera();
       // Animation Loop
-      function animate() {
-        requestAnimationFrame(animate);
-        torus.rotation.x += 0.01;
-        torus.rotation.y += 0.005;
-        torus.rotation.z += 0.01;
-        moon.rotation.x += 0.005;
-        controls.update();
-        renderer.render(scene, camera);
+      function animate(time) {
+      requestAnimationFrame(animate);
+
+      // Update animations
+      if (mixer) {
+        const delta = clock.getDelta();
+        mixer.update(delta);
+      }
+
+      torus.rotation.x += 0.01;
+      torus.rotation.y += 0.005;
+      torus.rotation.z += 0.01;
+      moon.rotation.x += 0.005;
+
+      animateStars(time);
+      animateJeff(time);
+
+      controls.update();
+      renderer.render(scene, camera);
       }
       animate();
-      init3()
     })();
   </script>
   <canvas id="bg"></canvas>
-  <main>
-    <header>
-      <h2>there once was a : <span><code>techshaman</code></span></h2>
-    </header>
-    <blockquote>
-      <p>
-        @here on
-        <span class="tooltip">🌍<span class="tooltiptext">earth</span></span>
-        by accident
-      </p>
-      <p>
-        here to help people
-        <span class="tooltip">🪴<span class="tooltiptext">grow</span></span>
-      </p>
-    </blockquote>
-    <section>
-      <h1>📜 Ye X Zu: connecting the connecting</h1>
-      <p>
-        the techshaman, a pioneer of a new era of human evolution.
-        believes that the current state of humanity is unsustainable,
-        fragmented, and disconnected. we are living in a world of scarcity,
-        inequality, and violence. we are trapped in a system that exploits us,
-        controls us, and limits us.
-      </p>
-      <p>
-        we have a vision of a different world, a world of abundance, harmony,
-        and connection. a world where every human being is free, empowered,
-        and valued. a world where we can unleash our full potential, express
-        our creativity, and collaborate with each other
-      </p>
-      <p>
-        we have a mission to bring about this world, by creating yexzu, the
-        human blockchain. yexzu is not a technology, but a philosophy, a way
-        of life, a collective consciousness. yexzu is the metaphor of living
-        being interconnected, of being part of a larger whole, of being a node
-        in a network of trust and cooperation.
-      </p>
-    </section>
-    <section>
-      <h1>Various 👩🏽‍🚀 Projects</h1>
-      <!-- talk about 247420, schwepe, BOLT,  BladesOfGrass & ChillingChiliz mayb -->
-      <article>
-        <h2>247🟢<sub>69</sub>🟣420</h2>
-        <p>
-          the techshamans are not only visionaries, but also doers. They have
-          achieved many remarkable feats in their quest to create yexzu, to connect the connected.
-          One of their most notable accomplishments is the
-          current project 247🟢<sub>69</sub>🟣420, an open source broadcast network that aims
-          to democratize the media and empower the people to chase their dreams.
-        </p>
-        <p>
-          project 247🟢<sub>69</sub>🟣420 is a decentralized platform that allows anyone to
-          create, share, and watch content of any kind, without censorship,
-          surveillance, or interference. the 247🟢<sub>69</sub>🟣420 project uses peer2peer
-          technology, blockchain encryption, and smart contracts to ensure the
-          security, privacy, and integrity of the network and its users.
-        </p>
-        <p>
-          Project 247🟢<sub>69</sub>🟣420 is a revolutionary initiative that challenges the
-          status quo of the mainstream media and gives voice to the voiceless.
-        </p>
-      </article>
+  <main class="w-full min-h-screen text-white z-10 absolute py-12 px-4 sm:px-6 lg:px-8 flex justify-left">
+    <div class="max-w-4xl w-full">
 
-      <article>
-        <h2>Schwepe 🩷</h2>
-        <p>
-          Schwepe son-of-kek is the pokemon-like evolution of pepe, without need for his amphibious protective coating,
-          frog became evolved man-god, finally capable of full androgeny, requiring only the power of their mind to have
-          full contact sex, shwepe is more compatible with the latest thing than the latest thing.
+      <header class="bg-opacity-80 bg-gray-900 rounded-lg p-6 mb-12">
+        <h2 class="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-center">
+          there once was a : <span><code class="text-purple-400">{techshaman.}</code>🧞</span>
+        </h2>
+        <br />
+        <blockquote class="text-sm sm:text-lg md:text-xl lg:text-2xl font-bold text-center">
+          <p class="text-black p-4 inline-block rounded-lg">
+            @here on <span class="tooltip">🌍</span> here to help people <span class="tooltip">🪴</span>
+          </p>
+        </blockquote>
+      </header>
+
+      <section class="bg-opacity-80 bg-gray-900 rounded-lg p-6 mb-12">
+        <h1 class="text-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4">Ye X Zu</h1>
+        <h3 class="text-center text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-4">connecting the connecting
+        </h3>
+        <div class="space-y-4 text-base sm:text-lg md:text-xl lg:text-2xl">
+          <p>
+            the techshaman, a pioneer of a new era of human evolution.
+            believes that the current state of humanity is unsustainable,
+            fragmented, and disconnected. we are living in a world of scarcity,
+            inequality, and violence. we are trapped in a system that exploits us,
+            controls us, and limits us.
+          </p>
+          <p>
+            they have a vision of a different world, a world of abundance, harmony,
+            and connection. a world where every human being is free, empowered,
+            and valued. a world where we can unleash our full potential, express
+            our creativity, and collaborate with each other
+          </p>
+          <p>
+            the mission: to bring about this world, by creating yexzu, the
+            human blockchain. yexzu is not a technology, but a philosophy, a way
+            of life, a collective consciousness. yexzu is the metaphor of living
+            being interconnected, of being part of a larger whole, of being a node
+            in a network of trustlessness and cooperation.
+          </p>
+        </div>
+      </section>
+
+      <section class="bg-opacity-80 bg-gray-900 rounded-lg p-6 mb-12">
+        <h1
+          class="text-center text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-8 text-gradient bg-gradient-to-r from-green-400 via-pink-500 to-purple-500 rounded-lg">
+          Various 👩🏽‍🚀 Projects
+        </h1>
+        <!-- talk about 247420, schwepe, BOLT,  BladesOfGrass & ChillingChiliz mayb -->
+        <!-- numbers -->
+        <article class="mb-12">
+          <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+            <span class="text-green-400">247</span>🟢
+            <sub class="text-sm text-white-400">69</sub>🟣
+            <span class="text-purple-400">420</span>
+          </h2>
+          <p class="sm:text-lg md:text-xl lg:text-2xl mb-4 leading-relaxed">
+            a decentralized platform that allows anyone to
+            create, share, and watch content of any kind, without censorship,
+            surveillance, or interference. using p2p technology, blockchain encryption, and smart contracts to ensure
+            the security, privacy, and integrity of the network and its users.
+          </p>
+        </article>
+        <!-- the pink one -->
+        <article class="mb-12">
+          <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-pink-400">
+            Schwepe 🩷
+          </h2>
+          <p class="sm:text-lg md:text-xl lg:text-2xl mb-4 leading-relaxed">
+            Schwepe is a skinless frog. The essence of schwepe speaks to the mind that drives ultimate realisation that
+            jokes are funny. It creates a sense of peace that can be enjoyed during any activity. Schwepe is a
+            superhero, a lover, a business man, and he sometimes sells heroin to kids. In his normal form his power
+            levels are above 9000. In his ultimate form his power levels cannot be measured.
+          </p>
+        </article>
+        <!-- bolt -->
+        <!-- chiliz -->
+        <!-- blades -->
+        <!-- <article class="mb-12">
+          <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-blue-400">BladesOfGrass</h2>
+          <p class="text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-4 leading-relaxed">
+            BladesOfGrass is an innovative project that aims to reconnect humanity with nature through technology.
+            More details coming soon...
+          </p>
+        </article> -->
+
+      </section>
+
+      <section class="bg-opacity-80 bg-gray-900 rounded-lg p-6 mb-12">
+        <h1
+          class="text-center text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-8 text-gradient bg-gradient-to-r from-green-400 via-pink-500 to-purple-500 rounded-lg">
+          🏆 Accolades
+        </h1>
+        <p class="sm:text-lg md:text-xl lg:text-2xl mb-4 leading-relaxed">
+          Our journey has been marked by numerous achievements and collaborations, including:
+          <ul class="list-disc list-inside mt-4 space-y-2 sm:text-lg md:text-xl lg:text-2xl">
+            <li><a href="https://x.com/irb0gie/status/1410374529629761547">The McAfee Job</a>: A groundbreaking
+              cybersecurity initiative</li>
+            <li><a href="https://irb0gie.vercel.app/works/mona">MonaJob</a>: Revolutionizing the gig economy</li>
+            <li><a href="https://irb0gie.vercel.app/works/swagtag">MoralisJob</a>: Pushing the boundaries of blockchain
+              technology</li>
+            <li><a href="https://metagame.wtf">MetaGame</a>: Pioneering the future of decentralized gaming</li>
+          </ul>
         </p>
-        <p>
-          Schwepe is a skinless frog. The essence of schwepe speaks to the mind that drives the ultimate realisation
-          that jokes are funny. It creates a sense of peace that can be enjoyed during any activity. Schwepe is a
-          superhero, a lover, a business man, and he sometimes sells heroin to kids. In his normal form his power levels
-          are above 9000. In his ultimate form his power levels cannot be measured.
-        </p>
-        <p>
-          Schwepe is also a symbol of the techshamans` philosophy of blending
-          nature and technology, of creating harmony and diversity, and of
-          celebrating the unexpected and the miraculous. Schwepe is a project
-          that demonstrates the techshamans` creativity, ingenuity, and
-          audacity.
-        </p>
-      </article>
+      </section>
 
-      <article>
-        <h2>BladesOfGrass</h2>
-        <p></p>
-      </article>
-      
-      <h1>🏆 Accolades</h1>
-      <p>
-        <!-- talk about the McAfee Job, MonaJob, MoralisJob, MetaGame,  -->
-      </p>
-    </section>
+      <blockquote id="random-quote">
+        <p>Loading inspiring quote...</p>
+      </blockquote>
 
-    <blockquote>
-      <p>The best way out is always through <br />-Robert Frost</p>
-    </blockquote>
+      <section class="bg-opacity-80 bg-gray-900 rounded-lg p-6 mb-12">
+        <h2>🌮Yexzu is based</h2>
+        <h3>on three principles:</h3>
+        <div class="principle-container">
+          <h3
+            class="principle-title text-2xl font-bold mb-4 text-gradient bg-gradient-to-r from-blue-400 to-purple-500">
+            Decentralization</h3>
+          <p class="principle-text text-lg mb-6 leading-relaxed">
+            We champion the dissolution of centralized power structures, advocating for a world where authority is
+            distributed among the people. Our vision: a society where every individual's right to self-determination,
+            self-organization, and self-governance is not just respected, but celebrated.
+          </p>
+        </div>
 
-    <section class="left">
-      <h2>🌮Yexzu is based</h2>
-      <h3>on three principles:</h3>
-      <h5>Decentralization:</h5>
-      <p>
-        We reject the centralized authority of governments, corporations, and
-        institutions. We believe that power should be distributed among the
-        people, not concentrated in the hands of a few. We believe that every
-        human being has the right to self-determination, self-organization,
-        and self-governance.
-      </p>
-      <h3>Transparency:</h3>
-      <p>
-        We embrace the openness of information, communication, and knowledge.
-        We believe that secrecy breeds corruption, manipulation, and
-        deception. We believe that every human being has the right to access,
-        share, and verify the truth.
-      </p>
-      <h3>Incentivization:</h3>
-      <p>
-        We promote the alignment of individual and collective interests,
-        values, and goals. We believe that competition breeds conflict, greed,
-        and waste. We believe that every human being has the right to
-        contribute, receive, and exchange value.
-      </p>
-    </section>
+        <div class="principle-container">
+          <h3 class="principle-title text-2xl font-bold mb-4 text-gradient bg-gradient-to-r from-green-400 to-blue-500">
+            Transparency</h3>
+          <p class="principle-text text-lg mb-6 leading-relaxed">
+            We stand as beacons of openness in information, communication, and knowledge. In our world, secrecy has no
+            place to hide. We uphold every human's inalienable right to access, share, and verify the truth, fostering a
+            culture of honesty and accountability.
+          </p>
+        </div>
 
-    <blockquote>
-      <p>
-        We invite you to join us in our quest to create yexzu, the human
-        blockchain. We invite you to become a techshaman, a catalyst of
-        change, a leader of the new world. We invite you to connect,
-        collaborate, and co-create with us.
-      </p>
-    </blockquote>
+        <div class="principle-container">
+          <h3 class="principle-title text-2xl font-bold mb-4 text-gradient bg-gradient-to-r from-yellow-400 to-red-500">
+            Incentivization</h3>
+          <p class="principle-text text-lg mb-6 leading-relaxed">
+            We cultivate a harmonious alignment of individual and collective interests, values, and goals. Rejecting the
+            notion that competition is the only path forward, we instead nurture an environment where every person can
+            meaningfully contribute, receive, and exchange value.
+          </p>
+        </div>
+      </section>
+      <footer class="bg-opacity-80 bg-gray-900 rounded-lg p-8 mt-12">
+        <div class="max-w-6xl mx-auto">
+          <!-- <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="text-center md:text-left">
+              <h4 class="text-xl font-bold mb-4 text-gradient bg-gradient-to-r from-green-400 to-pink-400">Connect</h4>
+              <ul class="space-y-2">
+                <li><a href="https://twitter.com/irb0gie" class="hover:text-pink-500 transition-colors">Twitter</a>
+                </li>
+                <li><a href="https://github.com/irb0gie" class="hover:text-purple-400 transition-colors">GitHub</a></li>
+                <li><a href="https://linkedin.com/in/irb0gie"
+                    class="hover:text-purple-400 transition-colors">LinkedIn</a></li>
+              </ul>
+            </div>
 
-    <blockquote>
-      <p>Together, we can make yexzu a reality.</p>
-      <p>Together, we can make history.</p>
-      <p>Together, we are yexzu.</p>
-    </blockquote>
+            <div class="text-center">
+              <h4 class="text-xl font-bold mb-4 text-gradient bg-gradient-to-r from-pink-400 to-pink-400">Navigation</h4>
+              <ul class="space-y-2">
+                <li><a href="#" class="hover:text-pink-400 transition-colors">Home</a></li>
+                <li><a href="#" class="hover:text-pink-400 transition-colors">Projects</a></li>
+                <li><a href="#" class="hover:text-pink-400 transition-colors">About</a></li>
+              </ul>
+            </div>
+
+            <div class="text-center md:text-right">
+              <h4 class="text-xl font-bold mb-4 text-gradient bg-gradient-to-r from-red-400 to-yellow-500">Contact</h4>
+              <p class="mb-2">📍 Earth, Milky Way</p>
+              <p class="mb-2">📧 hello@yexzu.xyz</p>
+            </div>
+          </div> -->
+          <!-- add this when the above is ready "border-t border-gray-700 mt-8 pt-8 " -->
+          <div class="text-center">
+            <p class="text-sm text-gray-400">
+              © 202X irb0gie. All rights reserved. Built with 💜 and Web3 magic.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
   </main>
 </body>
 
