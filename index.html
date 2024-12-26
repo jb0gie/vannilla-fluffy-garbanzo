@@ -123,7 +123,7 @@
       }
   </script>
   <script src="https://cdn.jsdelivr.net/npm/three/examples/fonts/helvetiker_regular.typeface.json"></script>
-  <script type="text/javascript">
+  <!-- <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function () {
       // Add debug log
       console.log('DOM loaded, fetching quote...');
@@ -171,7 +171,7 @@
           }
         });
     });
-  </script>
+  </script> -->
 </head>
 
 <body>
@@ -226,8 +226,6 @@
         model = gltf.scene;
         model.position.set(0, 0,  0);
         model.scale.set(3, 3, 3);
-
-
         scene.add(model);
 
         // Setup animations
@@ -275,7 +273,7 @@
         new THREE.SphereGeometry(0.1, 16, 16),
         new THREE.MeshBasicMaterial({ color: 0xff0000 })
       );
-      scene.add(debugSphere);
+      // scene.add(debugSphere);
 
       // Modal setup
       const modal = document.createElement('div');
@@ -323,14 +321,14 @@
             orbitSpeed: 0.0003
           },
           {
-            text: 'PROJECTS',
+            text: 'SPICEX',
             description: 'Innovative initiatives pushing the boundaries of technology and human connection.',
             size: 1.8,
             orbitRadius: 19,
             orbitSpeed: 0.0004
           },
           {
-            text: '247 69 420',
+            text: '247420',
             description: 'A decentralized platform for content creation and sharing, built on blockchain technology.',
             size: 1.5,
             orbitRadius: 21,
@@ -349,7 +347,8 @@
             size: 1.5,
             orbitRadius: 25,
             orbitSpeed: 0.0007
-          }
+          },
+
         ];
 
         textInfo.forEach((info, index) => {
@@ -365,18 +364,23 @@
             bevelSegments: 5
           });
           
-          const textMesh = new THREE.Mesh(geometry, textMaterial);
           geometry.computeBoundingBox();
-          const centerOffset = -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
+          const textWidth = geometry.boundingBox.max.x - geometry.boundingBox.min.x;
+          const textHeight = geometry.boundingBox.max.y - geometry.boundingBox.min.y;
+          const textDepth = geometry.boundingBox.max.z - geometry.boundingBox.min.z;
           
-          // Create bounding box helper for better click detection
-          const bbox = new THREE.Box3().setFromObject(textMesh);
-          const size = new THREE.Vector3();
-          bbox.getSize(size);
+          // Center the geometry
+          geometry.translate(
+            -textWidth/2,
+            -textHeight/2,
+            -textDepth/2
+          );
+          
+          const textMesh = new THREE.Mesh(geometry, textMaterial);
           
           // Create semi-transparent mesh for click detection
           const clickMesh = new THREE.Mesh(
-            new THREE.BoxGeometry(size.x + 6, size.y + 6, size.z + 6),
+            new THREE.BoxGeometry(textWidth + 6, textHeight + 6, textDepth + 6),
             new THREE.MeshBasicMaterial({ 
               color: 0x00ff00,
               transparent: true,
@@ -388,22 +392,27 @@
             isClickMesh: true,
             textMesh: textMesh
           };
-          scene.add(clickMesh);
+           scene.add(clickMesh);
           
-          // Set initial position in orbit
-          const angle = (index / textInfo.length) * Math.PI * 2;
-          textMesh.position.x = Math.cos(angle) * info.orbitRadius;
-          textMesh.position.z = Math.sin(angle) * info.orbitRadius;
-          textMesh.position.y = Math.sin(angle * 2) * 5; // Adds some vertical variation
+          // Set initial position and rotation
+          const orbitAngle = (index / textInfo.length) * Math.PI * 2;
+          textMesh.position.x = Math.cos(orbitAngle) * info.orbitRadius;
+          textMesh.position.z = Math.sin(orbitAngle) * info.orbitRadius;
+          textMesh.position.y = Math.sin(orbitAngle * 2) * 5; // Adds some vertical variation
           
-          // Sync click mesh position with text mesh
+          // Calculate angle to face outward and be readable
+          const rotationY = -Math.atan2(textMesh.position.z, textMesh.position.x) - Math.PI / 2;
+          textMesh.rotation.set(0, rotationY, 0);
+          
+          // Sync click mesh position and rotation with text mesh
           clickMesh.position.copy(textMesh.position);
+          clickMesh.rotation.copy(textMesh.rotation);
           
           textMesh.userData = {
             description: info.description,
             orbitRadius: info.orbitRadius,
             orbitSpeed: info.orbitSpeed,
-            orbitAngle: angle
+            orbitAngle: orbitAngle
           };
           
           textMeshes.push(textMesh);
@@ -423,14 +432,15 @@
             mesh.position.z = Math.sin(mesh.userData.orbitAngle) * mesh.userData.orbitRadius;
             mesh.position.y = Math.sin(mesh.userData.orbitAngle * 2) * 5;
             
-            // Make text and click mesh always face the center
-            mesh.lookAt(0, 0, 0);
+            // Calculate angle to face outward and be readable
+            const rotationY = -Math.atan2(mesh.position.z, mesh.position.x) - Math.PI / 2;
+            mesh.rotation.set(0, rotationY, 0);
             
             // Find and update associated click mesh
             scene.children.forEach(child => {
               if (child.userData?.isClickMesh && child.userData.textMesh === mesh) {
                 child.position.copy(mesh.position);
-                child.lookAt(0, 0, 0);
+                child.rotation.copy(mesh.rotation);
               }
             });
           }
