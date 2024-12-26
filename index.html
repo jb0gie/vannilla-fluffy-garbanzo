@@ -122,6 +122,7 @@
         }
       }
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/three/examples/fonts/helvetiker_regular.typeface.json"></script>
   <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function () {
       // Add debug log
@@ -178,8 +179,10 @@
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+    import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
     (function () {
-      let scene, camera, renderer, controls;
+      let scene, camera, renderer, controls, textMeshes = [];
       let stars = [];
       let jeff;
       let model;
@@ -187,19 +190,27 @@
       const clock = new THREE.Clock()
       const model_path = 'models/techshaman.glb'
       const raycaster = new THREE.Raycaster();
+      raycaster.near = 0.1;
+      raycaster.far = 100;
       const pointer = new THREE.Vector2();
       let isHovered = false;
       let originalScale = new THREE.Vector3(1, 1, 1);
       let tooltipDiv;
       // Setup THREE
       scene = new THREE.Scene();
-      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
       renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#bg') });
       renderer.setPixelRatio(window.devicePixelRatio);
       renderer.setSize(window.innerWidth, window.innerHeight);
-      camera.position.set(0, 2, 10);
+      camera.position.set(0, 0, 30);
 
       controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.screenSpacePanning = false;
+      controls.minDistance = 20;
+      controls.maxDistance = 40;
+      controls.maxPolarAngle = Math.PI / 2;
       renderer.render(scene, camera);
       // Add window resize event listener
       window.addEventListener('resize', onWindowResize);
@@ -213,8 +224,7 @@
       const loader = new GLTFLoader();
         loader.load(model_path, function (gltf) {
         model = gltf.scene;
-        model.position.set(5, -2, 4);
-        model.rotation.y = -1
+        model.position.set(0, 0,  0);
         model.scale.set(3, 3, 3);
 
 
@@ -250,10 +260,182 @@
       const torus = new THREE.Mesh(geometry, material);
       // scene.add(torus);
       // Lights
-      const pointLight = new THREE.PointLight(0xffffff);
+      // Enhanced lighting setup for 3D text
+      const pointLight = new THREE.PointLight(0xffffff, 1);
       pointLight.position.set(5, 5, 5);
-      const ambientLight = new THREE.AmbientLight(0xffffff);
-      scene.add(pointLight, ambientLight);
+      const pointLight2 = new THREE.PointLight(0xffffff, 0.8);
+      pointLight2.position.set(-5, 5, 5);
+      const pointLight3 = new THREE.PointLight(0xffffff, 0.6);
+      pointLight3.position.set(0, -5, 5);
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+      scene.add(pointLight, pointLight2, pointLight3, ambientLight);
+
+      // Debug helper for raycasting
+      const debugSphere = new THREE.Mesh(
+        new THREE.SphereGeometry(0.1, 16, 16),
+        new THREE.MeshBasicMaterial({ color: 0xff0000 })
+      );
+      scene.add(debugSphere);
+
+      // Modal setup
+      const modal = document.createElement('div');
+      modal.style.cssText = `
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.95);
+        padding: 30px;
+        border-radius: 15px;
+        z-index: 1000;
+        min-width: 300px;
+        max-width: 80%;
+        color: white;
+        border: 2px solid #ffffff55;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      `;
+      document.body.appendChild(modal);
+
+      // Create 3D Text
+      const fontLoader = new FontLoader();
+      fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function(font) {
+        const textMaterial = new THREE.MeshStandardMaterial({ 
+          color: 0xffffff,
+          metalness: 0.3,
+          roughness: 0.4
+        });
+
+        const textInfo = [
+          {
+            text: 'TECHSHAMAN',
+            description: 'A pioneer of a new era of human evolution, bringing transformation and connection to the digital realm.',
+            size: 2,
+            orbitRadius: 15,
+            orbitSpeed: 0.0002
+          },
+          {
+            text: 'CONNECTING THE CONNECTING',
+            description: 'Building bridges between people, technology, and consciousness in the digital age.',
+            size: 1.5,
+            orbitRadius: 17,
+            orbitSpeed: 0.0003
+          },
+          {
+            text: 'PROJECTS',
+            description: 'Innovative initiatives pushing the boundaries of technology and human connection.',
+            size: 1.8,
+            orbitRadius: 19,
+            orbitSpeed: 0.0004
+          },
+          {
+            text: '247 69 420',
+            description: 'A decentralized platform for content creation and sharing, built on blockchain technology.',
+            size: 1.5,
+            orbitRadius: 21,
+            orbitSpeed: 0.0005
+          },
+          {
+            text: 'SCHWEPE',
+            description: 'A multifaceted entity representing peace, humor, and unlimited potential.',
+            size: 1.5,
+            orbitRadius: 23,
+            orbitSpeed: 0.0006
+          },
+          {
+            text: 'BLADES OF GRASS',
+            description: 'An innovative project reconnecting humanity with nature through technology.',
+            size: 1.5,
+            orbitRadius: 25,
+            orbitSpeed: 0.0007
+          }
+        ];
+
+        textInfo.forEach((info, index) => {
+          const geometry = new TextGeometry(info.text, {
+            font: font,
+            size: info.size,
+            height: 0.5,
+            curveSegments: 12,
+            bevelEnabled: true,
+            bevelThickness: 0.05,
+            bevelSize: 0.04,
+            bevelOffset: 0,
+            bevelSegments: 5
+          });
+          
+          const textMesh = new THREE.Mesh(geometry, textMaterial);
+          geometry.computeBoundingBox();
+          const centerOffset = -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
+          
+          // Create bounding box helper for better click detection
+          const bbox = new THREE.Box3().setFromObject(textMesh);
+          const size = new THREE.Vector3();
+          bbox.getSize(size);
+          
+          // Create semi-transparent mesh for click detection
+          const clickMesh = new THREE.Mesh(
+            new THREE.BoxGeometry(size.x + 6, size.y + 6, size.z + 6),
+            new THREE.MeshBasicMaterial({ 
+              color: 0x00ff00,
+              transparent: true,
+              opacity: 0,
+              wireframe: true
+            })
+          );
+          clickMesh.userData = {
+            isClickMesh: true,
+            textMesh: textMesh
+          };
+          scene.add(clickMesh);
+          
+          // Set initial position in orbit
+          const angle = (index / textInfo.length) * Math.PI * 2;
+          textMesh.position.x = Math.cos(angle) * info.orbitRadius;
+          textMesh.position.z = Math.sin(angle) * info.orbitRadius;
+          textMesh.position.y = Math.sin(angle * 2) * 5; // Adds some vertical variation
+          
+          // Sync click mesh position with text mesh
+          clickMesh.position.copy(textMesh.position);
+          
+          textMesh.userData = {
+            description: info.description,
+            orbitRadius: info.orbitRadius,
+            orbitSpeed: info.orbitSpeed,
+            orbitAngle: angle
+          };
+          
+          textMeshes.push(textMesh);
+          scene.add(textMesh);
+        });
+      });
+
+      // Animate text in render loop
+      function animateText(time) {
+        textMeshes.forEach(mesh => {
+          if (mesh.userData) {
+            // Update orbit angle
+            mesh.userData.orbitAngle += mesh.userData.orbitSpeed;
+            
+            // Calculate new position
+            mesh.position.x = Math.cos(mesh.userData.orbitAngle) * mesh.userData.orbitRadius;
+            mesh.position.z = Math.sin(mesh.userData.orbitAngle) * mesh.userData.orbitRadius;
+            mesh.position.y = Math.sin(mesh.userData.orbitAngle * 2) * 5;
+            
+            // Make text and click mesh always face the center
+            mesh.lookAt(0, 0, 0);
+            
+            // Find and update associated click mesh
+            scene.children.forEach(child => {
+              if (child.userData?.isClickMesh && child.userData.textMesh === mesh) {
+                child.position.copy(mesh.position);
+                child.lookAt(0, 0, 0);
+              }
+            });
+          }
+        });
+      }
 
       // Helpers
       // const lightHelper = new THREE.PointLightHelper(pointLight)
@@ -311,26 +493,47 @@
       );
       scene.background = spaceTexture;
 
-      // Hover detection
+      // Enhanced hover detection
       function onPointerMove(event) {
         pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
         pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
         raycaster.setFromCamera(pointer, camera);
-        const intersects = raycaster.intersectObject(jeff);
+        // Get all click meshes
+        const clickMeshes = scene.children.filter(child => child.userData?.isClickMesh);
+        const intersects = raycaster.intersectObjects([jeff, ...clickMeshes]);
 
         if (intersects.length > 0) {
-          if (!isHovered) {
-            document.body.style.cursor = 'pointer';
-            isHovered = true;
-            jeff.scale.set(1.2, 1.2, 1.2);
+          document.body.style.cursor = 'pointer';
+          const object = intersects[0].object;
+          
+          if (object === jeff) {
+            if (!isHovered) {
+              isHovered = true;
+              jeff.scale.set(1.2, 1.2, 1.2);
+            }
+          } else if (object.userData?.isClickMesh) {
+            // Show click mesh wireframe and highlight text
+            object.material.opacity = 0.2;
+            const textMesh = object.userData.textMesh;
+            textMesh.material.color.setHex(0x00ff00);
+            textMesh.scale.set(1.1, 1.1, 1.1);
           }
         } else {
+          document.body.style.cursor = 'default';
           if (isHovered) {
-            document.body.style.cursor = 'default';
             isHovered = false;
             jeff.scale.set(1, 1, 1);
           }
+          // Reset all meshes
+          scene.children.forEach(child => {
+            if (child.userData?.isClickMesh) {
+              child.material.opacity = 0;
+              const textMesh = child.userData.textMesh;
+              textMesh.material.color.setHex(0xffffff);
+              textMesh.scale.set(1, 1, 1);
+            }
+          });
         }
       }
 
@@ -340,9 +543,46 @@
         pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
         raycaster.setFromCamera(pointer, camera);
-        const intersects = raycaster.intersectObject(jeff);
+        // Get all click meshes
+        const clickMeshes = scene.children.filter(child => child.userData?.isClickMesh);
+        const intersects = raycaster.intersectObjects([jeff, ...clickMeshes]);
 
-        if (intersects.length > 0) { window.open('https://github.com/jb0gie', '_blank'); }
+        // Update debug sphere position
+        if (intersects.length > 0) {
+          debugSphere.position.copy(intersects[0].point);
+          debugSphere.visible = true;
+          
+          const object = intersects[0].object;
+          if (object === jeff) {
+            window.open('https://github.com/jb0gie', '_blank');
+          } else if (object.userData?.isClickMesh) {
+            const textMesh = object.userData.textMesh;
+            // Show modal with text info
+            modal.innerHTML = `
+              <h2 style="font-size: 28px; margin-bottom: 20px; color: #fff; text-align: center; font-weight: bold;">
+                ${textMesh.geometry.parameters?.text || 'Information'}
+              </h2>
+              <p style="font-size: 18px; line-height: 1.6; margin-bottom: 20px; color: #eee;">
+                ${textMesh.userData.description}
+              </p>
+              <button onclick="this.parentElement.style.display='none'" 
+                      style="position: absolute; top: 15px; right: 15px; background: none; border: none; color: white; 
+                             cursor: pointer; font-size: 24px; padding: 5px; transition: transform 0.2s;">
+                ×
+              </button>
+            `;
+            modal.style.display = 'block';
+            
+            // Trigger animation for clicked text
+            textMesh.scale.set(1.3, 1.3, 1.3);
+            setTimeout(() => {
+              textMesh.scale.set(1, 1, 1);
+            }, 200);
+          }
+        } else {
+          debugSphere.visible = false;
+          modal.style.display = 'none';
+        }
       }
       // Pulse animation for the cube
       function animateJeff(time) {
@@ -395,6 +635,9 @@
       function animate(time) {
         requestAnimationFrame(animate);
 
+        // Animate 3D text
+        animateText(time);
+
         // Update animations
         if (mixer) {
           const delta = clock.getDelta();
@@ -416,8 +659,8 @@
     })();
   </script>
   <canvas id="bg"></canvas>
-  <main class="w-full min-h-screen text-white z-10 absolute py-12 px-4 sm:px-6 lg:px-8 flex justify-left">
-    <div class="max-w-4xl w-full">
+  <main style="display: none">
+    <div>
 
       <header class="bg-opacity-80 bg-gray-900 rounded-lg p-6 mb-12 text-section">
         <h2 class="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-center">
