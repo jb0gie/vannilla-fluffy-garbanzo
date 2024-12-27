@@ -129,11 +129,14 @@
     }
 
     #loader {
-      width: 100px;
-      height: 100px;
+      width: 50px;
+      height: 50px;
       position: relative;
       perspective: 1000px;
       transform-style: preserve-3d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .loader-face {
@@ -141,45 +144,49 @@
       width: 100%;
       height: 100%;
       background: linear-gradient(45deg, #247420, #420247);
-      border: 2px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.05);
       transform-style: preserve-3d;
-      animation: rotate 2s linear infinite;
-    }
-
-    @keyframes rotate {
-      0% {
-        transform: rotateX(0deg) rotateY(0deg);
-      }
-
-      50% {
-        transform: rotateX(180deg) rotateY(180deg);
-      }
-
-      100% {
-        transform: rotateX(360deg) rotateY(360deg);
-      }
+      animation: rotate 1.5s linear infinite;
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
     }
 
     .loader-text {
       position: absolute;
       bottom: -40px;
       color: #ffffff;
-      font-size: 16px;
+      font-size: 12px;
       font-family: monospace;
       text-align: center;
-      width: 100%;
-      animation: pulse 1.5s ease-in-out infinite;
+      width: 200px;
+      letter-spacing: 1px;
+      text-transform: lowercase;
+      opacity: 0.8;
+      font-weight: 300;
+    }
+
+    @keyframes rotate {
+      0% {
+        transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+      }
+
+      50% {
+        transform: rotateX(180deg) rotateY(180deg) rotateZ(180deg);
+      }
+
+      100% {
+        transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
+      }
     }
 
     @keyframes pulse {
 
       0%,
       100% {
-        opacity: 0.5;
+        opacity: 0.6;
       }
 
       50% {
-        opacity: 1;
+        opacity: 0.9;
       }
     }
   </style>
@@ -516,7 +523,41 @@
       // Add event listeners
       window.addEventListener('resize', onWindowResize);
       window.addEventListener('pointermove', onPointerMove);
-      window.addEventListener('click', onPointerClick);
+      window.addEventListener('pointerdown', onPointerClick);
+      window.addEventListener('touchstart', onTouchStart, { passive: false });
+      window.addEventListener('touchmove', onTouchMove, { passive: false });
+
+      // Touch event handlers
+      function onTouchStart(event) {
+        event.preventDefault();
+        const touch = event.touches[0];
+        onPointerClick({
+          clientX: touch.clientX,
+          clientY: touch.clientY
+        });
+      }
+
+      function onTouchMove(event) {
+        event.preventDefault();
+        const touch = event.touches[0];
+        onPointerMove({
+          clientX: touch.clientX,
+          clientY: touch.clientY
+        });
+      }
+
+      // Update OrbitControls settings for touch
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.rotateSpeed = 0.5;  // Reduced for smoother touch rotation
+      controls.enableZoom = true;
+      controls.zoomSpeed = 0.5;    // Reduced for smoother touch zooming
+      controls.enablePan = true;
+      controls.panSpeed = 0.5;     // Reduced for smoother touch panning
+      controls.touches = {
+        ONE: THREE.TOUCH.ROTATE,
+        TWO: THREE.TOUCH.DOLLY_PAN
+      };
 
       // Start animation loop
       animate();
@@ -556,49 +597,49 @@
             text: 'TECHSHAMAN',
             description: 'A pioneer of a new era of human evolution. Believes that the current state of humanity is unsustainable, fragmented, and disconnected. We are living in a world of scarcity, inequality, and violence.',
             size: 2,
-            orbitRadius: 25,
+            orbitRadius: 35,
             orbitSpeed: 0.0002,
-            heightOffset: 8
+            heightOffset: 15
           },
           {
             text: 'YE X ZU',
             description: 'A vision of a different world, a world of abundance, harmony, and connection. A world where every human being is free, empowered, and valued.',
             size: 1.5,
-            orbitRadius: 28,
+            orbitRadius: 40,
             orbitSpeed: 0.0003,
-            heightOffset: 4
+            heightOffset: 9
           },
           {
             text: '247420',
             description: 'A decentralized platform that allows anyone to create, share, and watch content of any kind, without censorship, surveillance, or interference. Using p2p technology, blockchain encryption, and smart contracts.',
             size: 1.8,
-            orbitRadius: 31,
+            orbitRadius: 45,
             orbitSpeed: 0.0004,
-            heightOffset: 0
+            heightOffset: 3
           },
           {
             text: 'SCHWEPE',
             description: 'A skinless frog. The essence of schwepe speaks to the mind that drives ultimate realisation that jokes are funny. It creates a sense of peace that can be enjoyed during any activity.',
             size: 1.5,
-            orbitRadius: 34,
+            orbitRadius: 50,
             orbitSpeed: 0.0005,
-            heightOffset: -4
+            heightOffset: -3
           },
           {
             text: 'BLADES OF GRASS',
             description: 'An innovative project that aims to reconnect humanity with nature through technology.',
             size: 1.5,
-            orbitRadius: 37,
+            orbitRadius: 55,
             orbitSpeed: 0.0006,
-            heightOffset: -8
+            heightOffset: -9
           },
           {
             text: 'ACCOLADES',
             description: 'The McAfee Job: A groundbreaking cybersecurity initiative\nMonaJob: Revolutionizing the gig economy\nMoralisJob: Pushing the boundaries of blockchain technology\nMetaGame: Pioneering the future of decentralized gaming',
             size: 1.5,
-            orbitRadius: 40,
+            orbitRadius: 60,
             orbitSpeed: 0.0007,
-            heightOffset: -12
+            heightOffset: -15
           }
         ];
 
@@ -638,16 +679,27 @@
           
           // Create description text with simpler material
           const lines = info.description.split('\n');
-          for (let i = 0; i < lines.length; i++) {
-            const descGeometry = new TextGeometry(lines[i], {
+          const wordsPerLine = 6;  // Control words per line
+          const formattedLines = [];
+          
+          // Format description into multiple lines
+          lines.forEach(line => {
+            const words = line.split(' ');
+            for (let i = 0; i < words.length; i += wordsPerLine) {
+              formattedLines.push(words.slice(i, i + wordsPerLine).join(' '));
+            }
+          });
+
+          for (let i = 0; i < formattedLines.length; i++) {
+            const descGeometry = new TextGeometry(formattedLines[i], {
               font: font,
-              size: 0.3,
-              height: 0.05,
-              curveSegments: 8,  // Reduced complexity
-              bevelEnabled: false  // Removed bevel for description
+              size: 1.2,  // Increased from 0.8
+              height: 0.15,  // Increased from 0.1
+              curveSegments: 8,
+              bevelEnabled: false
             });
             
-            const descMaterial = new THREE.MeshBasicMaterial({  // Simpler material
+            const descMaterial = new THREE.MeshBasicMaterial({
               color: 0xffffff,
               transparent: true,
               opacity: 0
@@ -657,7 +709,8 @@
             descMesh.userData.isDescriptionText = true;
             descGeometry.computeBoundingBox();
             const descWidth = descGeometry.boundingBox.max.x - descGeometry.boundingBox.min.x;
-            descGeometry.translate(-descWidth/2, -i * 0.8, 0);
+            // Move text down and increase line spacing
+            descGeometry.translate(-descWidth/2, -i * 3 - 6, 2);  // Increased vertical spacing and initial offset
             textGroup.add(descMesh);
           }
           
@@ -679,6 +732,8 @@
             isClickable: true,
             text: info.text
           };
+          
+          // Remove background panel code
           
           textMeshes.push(textGroup);
           scene.add(textGroup);
