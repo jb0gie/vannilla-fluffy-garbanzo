@@ -113,6 +113,75 @@
         grid-column: 12 /12;
       }
     }
+
+    #loader-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease-out;
+    }
+
+    #loader {
+      width: 100px;
+      height: 100px;
+      position: relative;
+      perspective: 1000px;
+      transform-style: preserve-3d;
+    }
+
+    .loader-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, #247420, #420247);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      transform-style: preserve-3d;
+      animation: rotate 2s linear infinite;
+    }
+
+    @keyframes rotate {
+      0% {
+        transform: rotateX(0deg) rotateY(0deg);
+      }
+
+      50% {
+        transform: rotateX(180deg) rotateY(180deg);
+      }
+
+      100% {
+        transform: rotateX(360deg) rotateY(360deg);
+      }
+    }
+
+    .loader-text {
+      position: absolute;
+      bottom: -40px;
+      color: #ffffff;
+      font-size: 16px;
+      font-family: monospace;
+      text-align: center;
+      width: 100%;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 0.5;
+      }
+
+      50% {
+        opacity: 1;
+      }
+    }
   </style>
   <script type="importmap">
     {
@@ -134,94 +203,183 @@
     import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
     import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
     import { AfterimagePass } from 'three/addons/postprocessing/AfterimagePass.js';
-    import { BokehPass } from 'three/addons/postprocessing/BokehPass.js';
-    import { GlitchPass } from 'three/addons/postprocessing/GlitchPass.js';
-    import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
     
     (function () {
-      let scene, camera, renderer, controls, textMeshes = [];
-      let stars = [];
-      let jeff;
-      let model;
-      let mixer;
-      let composer, afterimagePass, bokehPass, glitchPass, bloomPass;
+      // Initialize all variables first
+      const textMeshes = [];
       const clock = new THREE.Clock();
-      const model_path = 'models/techshaman.glb'
+      const model_path = 'models/techshaman.glb';
       const raycaster = new THREE.Raycaster();
-      raycaster.near = 0.1;
-      raycaster.far = 100;
       const pointer = new THREE.Vector2();
+      let isPerspective = true;
+
+      let scene, camera, renderer, controls;
+      let jeff, model;
+      let mixer;
+      let composer, afterimagePass;
       let isHovered = false;
       let originalScale = new THREE.Vector3(1, 1, 1);
       let tooltipDiv;
-      // Setup THREE
-      scene = new THREE.Scene();
-      let isPerspective = true;
-      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
-      const orthoCamera = new THREE.OrthographicCamera(
-        window.innerWidth / -32,
-        window.innerWidth / 32,
-        window.innerHeight / 32,
-        window.innerHeight / -32,
-        0.1,
-        1000
-      );
-      renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#bg') });
-      renderer.setPixelRatio(window.devicePixelRatio);
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      camera.position.set(0, 0, 50);
+      let moon;
 
+      // Initialize raycaster settings
+      raycaster.near = 0.1;
+      raycaster.far = 100;
+
+      // Initialize loading manager first
+      const loadingManager = new THREE.LoadingManager();
+
+      // Initialize all loaders with the loading manager
+      const gltfLoader = new GLTFLoader(loadingManager);
+      const textureLoader = new THREE.TextureLoader(loadingManager);
+      const fontLoader = new FontLoader(loadingManager);
+
+      // Setup loading manager handlers
+      loadingManager.onProgress = function(url, itemsLoaded, itemsTotal) {
+        const progress = (itemsLoaded / itemsTotal * 100).toFixed(0);
+        const loaderText = document.querySelector('.loader-text');
+        if (loaderText) {
+          loaderText.textContent = `loading techshaman... ${progress}%`;
+        }
+      };
+
+      loadingManager.onLoad = function() {
+        const loaderContainer = document.querySelector('#loader-container');
+        if (loaderContainer) {
+          loaderContainer.style.opacity = '0';
+          setTimeout(() => {
+            loaderContainer.style.display = 'none';
+            document.querySelector('main').style.display = 'block';
+          }, 500);
+        }
+      };
+
+      // Initialize scene and camera first
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.set(0, 0, 50);
+      camera.lookAt(0, 0, 0);
+
+      // Initialize renderer
+      renderer = new THREE.WebGLRenderer({ 
+        canvas: document.querySelector('#bg'),
+        antialias: true,
+        powerPreference: "high-performance"
+      });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      // Initialize orbit controls
       controls = new OrbitControls(camera, renderer.domElement);
-      controls.target.set(0, 0, 0);
       controls.enableDamping = true;
       controls.dampingFactor = 0.05;
       controls.screenSpacePanning = false;
       controls.minDistance = 30;
       controls.maxDistance = 100;
       controls.maxPolarAngle = Math.PI;
-      renderer.render(scene, camera);
-      // Add window resize event listener
-      window.addEventListener('resize', onWindowResize);
-      // Function to handle window resizing
-      function onWindowResize() {
-        if (isPerspective) {
-          camera.aspect = window.innerWidth / window.innerHeight;
-          camera.updateProjectionMatrix();
-        } else {
-          orthoCamera.left = window.innerWidth / -32;
-          orthoCamera.right = window.innerWidth / 32;
-          orthoCamera.top = window.innerHeight / 32;
-          orthoCamera.bottom = window.innerHeight / -32;
-          orthoCamera.updateProjectionMatrix();
+      controls.target.set(0, 0, 0);
+
+      // Lights setup
+      const pointLight = new THREE.PointLight(0xffffff, 0.8);
+      const pointLight2 = new THREE.PointLight(0xffffff, 0.6);
+      const pointLight3 = new THREE.PointLight(0xffffff, 0.4);
+
+      pointLight.position.set(5, 5, 5);
+      pointLight2.position.set(-5, 5, 5);
+      pointLight3.position.set(0, -5, 5);
+
+      // Colored ambient lights
+      const ambientLight1 = new THREE.AmbientLight(0x247420, 0.3);  // Green tint
+      const ambientLight2 = new THREE.AmbientLight(0x420247, 0.3);  // Purple tint
+      
+      scene.add(pointLight, pointLight2, pointLight3, ambientLight1, ambientLight2);
+
+      // Directional light for sun
+      const sunLight = new THREE.DirectionalLight(0xffffff, 1);
+      sunLight.position.set(50, 50, 50);  // Position the sun
+      sunLight.castShadow = true;
+      scene.add(sunLight);
+
+      // Initialize post-processing
+      composer = new EffectComposer(renderer);
+      const renderPass = new RenderPass(scene, camera);
+      composer.addPass(renderPass);
+
+      // Add subtle afterimage effect
+      afterimagePass = new AfterimagePass(0.3);
+      composer.addPass(afterimagePass);
+
+      // Load textures and initialize objects
+      textureLoader.load(
+        'images/space.jpg',
+        (texture) => {
+          scene.background = texture;
+        },
+        undefined,
+        (error) => {
+          console.error('An error happened while loading the texture:', error);
         }
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        composer.setSize(window.innerWidth, window.innerHeight);
-      }
-      // Load 3D Model with more animation control
-      const loader = new GLTFLoader();
-        loader.load(model_path, function (gltf) {
-        model = gltf.scene;
-        model.position.set(0, 0,  0);
-        model.scale.set(3, 3, 3);
-        scene.add(model);
+      );
 
-        // Setup animations
-        mixer = new THREE.AnimationMixer(model);
+      // Initialize moon
+      textureLoader.load(
+        'images/moon.jpg',
+        (texture) => {
+          moon = new THREE.Mesh(
+            new THREE.SphereGeometry(3, 32, 32),
+            new THREE.MeshStandardMaterial({
+              map: texture,
+            })
+          );
+          scene.add(moon);
+          moon.position.z = 30;
+          moon.position.setX(-10);
+        },
+        undefined,
+        (error) => {
+          console.error('An error happened while loading the texture:', error);
+        }
+      );
 
-        // Play each animation with specific settings
-        gltf.animations.forEach((clip) => {
-          const action = mixer.clipAction(clip);
+      // Initialize jeff cube
+      textureLoader.load(
+        'images/jeff.png',
+        (texture) => {
+          jeff = new THREE.Mesh(
+            new THREE.BoxGeometry(3, 3, 3), 
+            new THREE.MeshBasicMaterial({ map: texture })
+          );
+          scene.add(jeff);
+          jeff.position.z = 15;
+          jeff.position.x = 8;
+        },
+        undefined,
+        (error) => {
+          console.error('An error happened while loading the texture:', error);
+        }
+      );
 
-          // You can adjust these properties for each animation
-          action.setLoop(THREE.LoopRepeat); // or THREE.LoopOnce, THREE.LoopPingPong
-          action.clampWhenFinished = true;
-          action.timeScale = 1; // Speed up or slow down the animation
+      // Load 3D Model
+      gltfLoader.load(
+        model_path,
+        function (gltf) {
+          model = gltf.scene;
+          model.position.set(0, 0, 0);
+          model.scale.set(3, 3, 3);
+          scene.add(model);
 
-          action.play();
+          // Setup animations
+          mixer = new THREE.AnimationMixer(model);
 
-          console.log(`Playing animation: ${clip.name}`);
-        });
-      },
+          // Play each animation with specific settings
+          gltf.animations.forEach((clip) => {
+            const action = mixer.clipAction(clip);
+            action.setLoop(THREE.LoopRepeat);
+            action.clampWhenFinished = true;
+            action.timeScale = 1;
+            action.play();
+          });
+        },
         function (xhr) {
           console.log((xhr.loaded / xhr.total * 100) + '% loaded');
         },
@@ -229,21 +387,139 @@
           console.error('An error happened:', error);
         }
       );
-      // Torus
-      const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
-      const material = new THREE.MeshStandardMaterial({ color: 0xff6347 });
-      const torus = new THREE.Mesh(geometry, material);
-      // scene.add(torus);
-      // Lights
-      // Enhanced lighting setup for 3D text
-      const pointLight = new THREE.PointLight(0xffffff, 1);
-      pointLight.position.set(5, 5, 5);
-      const pointLight2 = new THREE.PointLight(0xffffff, 0.8);
-      pointLight2.position.set(-5, 5, 5);
-      const pointLight3 = new THREE.PointLight(0xffffff, 0.6);
-      pointLight3.position.set(0, -5, 5);
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-      scene.add(pointLight, pointLight2, pointLight3, ambientLight);
+
+      // Helper function to create section text
+      async function createSectionText(text, parentGroup) {
+        const geometry = new TextGeometry(text, {
+          font: await new Promise(resolve => fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', resolve)),
+          size: 0.5,
+          height: 0.1,
+          curveSegments: 32,
+          bevelEnabled: true,
+          bevelThickness: 0.02,
+          bevelSize: 0.01,
+          bevelOffset: 0,
+          bevelSegments: 8
+        });
+
+        const material = new THREE.MeshPhysicalMaterial({
+          color: 0xffffff,
+          transparent: true,
+          opacity: 0,
+          metalness: 0.2,
+          roughness: 0.1,
+          emissive: 0xffffff,
+          emissiveIntensity: 1.0
+        });
+
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.userData.isDescriptionText = true;
+        parentGroup.add(mesh);
+        return mesh;
+      }
+
+      // Define animation functions
+      function animateText(time) {
+        textMeshes.forEach(group => {
+          if (group.userData) {
+            group.userData.orbitAngle += group.userData.orbitSpeed;
+            group.position.x = Math.cos(group.userData.orbitAngle) * group.userData.orbitRadius;
+            group.position.z = Math.sin(group.userData.orbitAngle) * group.userData.orbitRadius;
+            group.position.y = group.userData.heightOffset + Math.sin(group.userData.orbitAngle * 2) * 3;
+            
+            const rotationY = -Math.atan2(group.position.z, group.position.x) - Math.PI / 2;
+            group.rotation.set(0, rotationY, 0);
+          }
+        });
+      }
+
+      function animateJeff(time) {
+        if (!isHovered) {
+          const pulseFactor = Math.sin(time * 0.003) * 0.1 + 1;
+          jeff.scale.set(originalScale.x * pulseFactor, originalScale.y * pulseFactor, originalScale.z * pulseFactor);
+        }
+      }
+
+      // Single animation loop
+      function animate(time) {
+        requestAnimationFrame(animate);
+        
+        // Update TWEEN
+        TWEEN.update();
+
+        // Update animations
+        if (mixer) {
+          const delta = clock.getDelta();
+          mixer.update(delta);
+        }
+
+        // Animate objects
+        if (moon) moon.rotation.x += 0.005;
+        if (typeof animateText === 'function') animateText(time);
+        if (!isHovered && jeff) animateJeff(time);
+
+        // Update controls
+        controls.update();
+
+        // Render scene
+        composer.render();
+      }
+
+      // Window resize handler
+      function onWindowResize() {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        // Update camera
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+
+        // Update renderer and composer
+        renderer.setSize(width, height);
+        composer.setSize(width, height);
+      }
+
+      // Pointer move handler
+      function onPointerMove(event) {
+        // Calculate pointer position in normalized device coordinates (-1 to +1)
+        pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+        pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+        // Update the picking ray with the camera and pointer position
+        raycaster.setFromCamera(pointer, camera);
+
+        // Calculate objects intersecting the picking ray
+        const intersects = raycaster.intersectObjects(scene.children, true);
+
+        // Handle hover effects
+        const textIntersects = intersects.filter(intersect => 
+          textMeshes.some(mesh => intersect.object === mesh || mesh.children.includes(intersect.object))
+        );
+
+        if (textIntersects.length > 0) {
+          document.body.style.cursor = 'pointer';
+          isHovered = true;
+        } else {
+          document.body.style.cursor = 'default';
+          isHovered = false;
+        }
+      }
+
+      // Jeff animation
+      function animateJeff(time) {
+        if (!isHovered) {
+          const pulseFactor = Math.sin(time * 0.003) * 0.1 + 1;
+          jeff.scale.set(originalScale.x * pulseFactor, originalScale.y * pulseFactor, originalScale.z * pulseFactor);
+        }
+      }
+
+      // Add event listeners
+      window.addEventListener('resize', onWindowResize);
+      window.addEventListener('pointermove', onPointerMove);
+      window.addEventListener('click', onPointerClick);
+
+      // Start animation loop
+      animate();
 
       // Debug helper for raycasting
       const debugSphere = new THREE.Mesh(
@@ -273,15 +549,8 @@
       `;
       // document.body.appendChild(modal);
 
-      // Create 3D Text
-      const fontLoader = new FontLoader();
-      fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function(font) {
-        const textMaterial = new THREE.MeshStandardMaterial({ 
-          color: 0xffffff,
-          metalness: 0.3,
-          roughness: 0.4
-        });
-
+      // Create 3D Text with optimized settings
+      fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', async function(font) {
         const textInfo = [
           {
             text: 'TECHSHAMAN',
@@ -333,17 +602,17 @@
           }
         ];
 
-        textInfo.forEach((info, index) => {
+        for (const info of textInfo) {
           const geometry = new TextGeometry(info.text, {
             font: font,
             size: info.size,
             height: 0.2,
-            curveSegments: 32,
+            curveSegments: 12,  // Reduced from 32
             bevelEnabled: true,
             bevelThickness: 0.03,
             bevelSize: 0.02,
             bevelOffset: 0,
-            bevelSegments: 8
+            bevelSegments: 3  // Reduced from 8
           });
           
           geometry.computeBoundingBox();
@@ -351,188 +620,168 @@
           const textHeight = geometry.boundingBox.max.y - geometry.boundingBox.min.y;
           const textDepth = geometry.boundingBox.max.z - geometry.boundingBox.min.z;
           
-          // Center the geometry
-          geometry.translate(
-            -textWidth/2,
-            -textHeight/2,
-            -textDepth/2
-          );
+          geometry.translate(-textWidth/2, -textHeight/2, -textDepth/2);
           
-          // Create material with random color for each text
           const randomColor = getRandomColor();
-          const randomTextMaterial = new THREE.MeshPhysicalMaterial({ 
+          const randomTextMaterial = new THREE.MeshPhongMaterial({  // Changed from MeshPhysicalMaterial
             color: randomColor,
-            metalness: 0.2,
-            roughness: 0.1,
             emissive: randomColor,
-            emissiveIntensity: 2.0,
-            reflectivity: 1,
-            clearcoat: 1.0,
-            clearcoatRoughness: 0.1,
-            side: THREE.DoubleSide
+            emissiveIntensity: 0.5,
+            shininess: 50
           });
           
           const textMesh = new THREE.Mesh(geometry, randomTextMaterial);
           
-          // Set initial position and rotation
-          const orbitAngle = (index / textInfo.length) * Math.PI * 2;
-          textMesh.position.x = Math.cos(orbitAngle) * info.orbitRadius;
-          textMesh.position.z = Math.sin(orbitAngle) * info.orbitRadius;
-          textMesh.position.y = info.heightOffset + Math.sin(orbitAngle * 2) * 3;
+          // Create a group to hold both title and description
+          const textGroup = new THREE.Group();
+          textGroup.add(textMesh);
           
-          // Calculate angle to face outward and be readable
-          const rotationY = -Math.atan2(textMesh.position.z, textMesh.position.x) - Math.PI / 2;
-          textMesh.rotation.set(0, rotationY, 0);
-          
-          /* Comment out click mesh creation
-          // Create semi-transparent mesh for click detection with adjusted size
-          const clickMesh = new THREE.Mesh(
-            new THREE.BoxGeometry(textWidth + 2, textHeight + 2, textDepth + 2),
-            new THREE.MeshBasicMaterial({ 
-              color: 0x00ff00,
+          // Create description text with simpler material
+          const lines = info.description.split('\n');
+          for (let i = 0; i < lines.length; i++) {
+            const descGeometry = new TextGeometry(lines[i], {
+              font: font,
+              size: 0.3,
+              height: 0.05,
+              curveSegments: 8,  // Reduced complexity
+              bevelEnabled: false  // Removed bevel for description
+            });
+            
+            const descMaterial = new THREE.MeshBasicMaterial({  // Simpler material
+              color: 0xffffff,
               transparent: true,
-              opacity: 0,
-              wireframe: true
-            })
-          );
+              opacity: 0
+            });
+            
+            const descMesh = new THREE.Mesh(descGeometry, descMaterial);
+            descMesh.userData.isDescriptionText = true;
+            descGeometry.computeBoundingBox();
+            const descWidth = descGeometry.boundingBox.max.x - descGeometry.boundingBox.min.x;
+            descGeometry.translate(-descWidth/2, -i * 0.8, 0);
+            textGroup.add(descMesh);
+          }
           
-          clickMesh.userData = {
-            isClickMesh: true,
-            textMesh: textMesh
-          };
+          // Set initial position and rotation for the group
+          const orbitAngle = (textInfo.indexOf(info) / textInfo.length) * Math.PI * 2;
+          textGroup.position.x = Math.cos(orbitAngle) * info.orbitRadius;
+          textGroup.position.z = Math.sin(orbitAngle) * info.orbitRadius;
+          textGroup.position.y = info.heightOffset;
           
-          // Sync click mesh position and rotation with text mesh
-          clickMesh.position.copy(textMesh.position);
-          clickMesh.rotation.copy(textMesh.rotation);
+          const rotationY = -Math.atan2(textGroup.position.z, textGroup.position.x) - Math.PI / 2;
+          textGroup.rotation.set(0, rotationY, 0);
           
-          scene.add(clickMesh);
-          */
-          
-          textMesh.userData = {
+          textGroup.userData = {
             description: info.description,
             orbitRadius: info.orbitRadius,
             orbitSpeed: info.orbitSpeed,
             orbitAngle: orbitAngle,
             heightOffset: info.heightOffset,
-            isClickable: true  // Add this flag to make text directly clickable
+            isClickable: true,
+            text: info.text
           };
           
-          textMeshes.push(textMesh);
-          scene.add(textMesh);
-        });
+          textMeshes.push(textGroup);
+          scene.add(textGroup);
+        }
       });
 
-      // Update the hover detection to work directly with text meshes
-      function onPointerMove(event) {
+      // Optimize text animation
+      function animateText(time) {
+        textMeshes.forEach(group => {
+          if (group.userData) {
+            group.userData.orbitAngle += group.userData.orbitSpeed;
+            const angle = group.userData.orbitAngle;
+            group.position.x = Math.cos(angle) * group.userData.orbitRadius;
+            group.position.z = Math.sin(angle) * group.userData.orbitRadius;
+            group.position.y = group.userData.heightOffset + Math.sin(angle * 2) * 2;  // Reduced vertical movement
+            
+            group.rotation.y = -angle - Math.PI / 2;  // Simplified rotation
+          }
+        });
+      }
+
+      // Update the click handler
+      async function onPointerClick(event) {
         pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
         pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
         raycaster.setFromCamera(pointer, camera);
-        const intersects = raycaster.intersectObjects([jeff, ...textMeshes]);
+        const intersects = raycaster.intersectObjects([jeff, model, ...textMeshes], true);
 
         if (intersects.length > 0) {
-          document.body.style.cursor = 'pointer';
           const object = intersects[0].object;
+          const group = object.parent;
           
           if (object === jeff) {
-            if (!isHovered) {
-              isHovered = true;
-              jeff.scale.set(1.2, 1.2, 1.2);
-            }
-          } else if (object.userData?.isClickable) {
-            object.material.emissiveIntensity = 5.0;
-            object.scale.set(1.1, 1.1, 1.1);
+            window.open('https://github.com/jb0gie', '_blank');
+          } else if (object.parent === model || object === model) {
+            // Reset camera when clicking the 3D model
+            new TWEEN.Tween(controls.target)
+              .to(new THREE.Vector3(0, 0, 0), 1000)
+              .easing(TWEEN.Easing.Cubic.InOut)
+              .start();
+
+            new TWEEN.Tween(camera.position)
+              .to({
+                x: 0,
+                y: 0,
+                z: 50
+              }, 1000)
+              .easing(TWEEN.Easing.Cubic.InOut)
+              .start();
+
+            return;
+          } else if (group.userData?.isClickable || object.userData?.isClickable) {
+            const targetGroup = group.userData?.isClickable ? group : object;
+            
+            // Get the group position
+            const targetPos = new THREE.Vector3();
+            targetGroup.getWorldPosition(targetPos);
+
+            // Toggle description visibility
+            targetGroup.children.forEach(child => {
+              if (child.userData.isDescriptionText) {
+                new TWEEN.Tween(child.material)
+                  .to({ opacity: child.material.opacity === 0 ? 1 : 0 }, 500)
+                  .easing(TWEEN.Easing.Cubic.InOut)
+                  .start();
+              }
+            });
+
+            // Camera movement
+            const textDirection = new THREE.Vector3(0, 0, -1);
+            textDirection.applyQuaternion(targetGroup.quaternion);
+            
+            const cameraTargetPos = targetPos.clone()
+              .add(textDirection.multiplyScalar(-20))
+              .add(new THREE.Vector3(0, 2, 0));
+            
+            const tempCamera = camera.clone();
+            tempCamera.position.copy(cameraTargetPos);
+            tempCamera.lookAt(targetPos);
+            const targetRot = tempCamera.rotation.clone();
+
+            new TWEEN.Tween(controls.target)
+              .to(targetPos, 1000)
+              .easing(TWEEN.Easing.Cubic.InOut)
+              .start();
+
+            new TWEEN.Tween(camera.position)
+              .to(cameraTargetPos, 1000)
+              .easing(TWEEN.Easing.Cubic.InOut)
+              .start();
+
+            new TWEEN.Tween(camera.rotation)
+              .to(targetRot, 1000)
+              .easing(TWEEN.Easing.Cubic.InOut)
+              .start();
           }
-        } else {
-          document.body.style.cursor = 'default';
-          if (isHovered) {
-            isHovered = false;
-            jeff.scale.set(1, 1, 1);
-          }
-          // Reset all text meshes
-          textMeshes.forEach(mesh => {
-            mesh.material.emissiveIntensity = 2.0;
-            mesh.scale.set(1, 1, 1);
-          });
         }
       }
 
-      // Update animateText to remove click mesh updates
-      function animateText(time) {
-        textMeshes.forEach(mesh => {
-          if (mesh.userData) {
-            // Update orbit angle
-            mesh.userData.orbitAngle += mesh.userData.orbitSpeed;
-            
-            // Calculate new position
-            mesh.position.x = Math.cos(mesh.userData.orbitAngle) * mesh.userData.orbitRadius;
-            mesh.position.z = Math.sin(mesh.userData.orbitAngle) * mesh.userData.orbitRadius;
-            mesh.position.y = mesh.userData.heightOffset + Math.sin(mesh.userData.orbitAngle * 2) * 3;
-            
-            // Calculate angle to face outward and be readable
-            const rotationY = -Math.atan2(mesh.position.z, mesh.position.x) - Math.PI / 2;
-            mesh.rotation.set(0, rotationY, 0);
-          }
-        });
-      }
+      // Add click event listener
+      window.addEventListener('click', onPointerClick);
 
-      // Helpers
-      // const lightHelper = new THREE.PointLightHelper(pointLight)
-      // const gridHelper = new THREE.GridHelper(200, 50);
-      // scene.add(lightHelper, gridHelper)
-
-      // Stars
-      function addStar() {
-        const geometry = new THREE.SphereGeometry(0.25, 24, 24);
-        const material = new THREE.MeshStandardMaterial({
-          color: 0xffffff,
-          emissive: 0xffffff,
-          emissiveIntensity: 1,
-        });
-        const star = new THREE.Mesh(geometry, material);
-        const [x, y, z] = Array(3)
-          .fill()
-          .map(() => THREE.MathUtils.randFloatSpread(100));
-        star.position.set(x, y, z);
-
-        // Add required properties for animation
-        star.userData = {
-          angle: Math.random() * Math.PI * 2,
-          orbitSpeed: 0.001 + Math.random() * 0.003,
-          orbitRadius: 0.5 + Math.random() * 2,
-          originalPosition: { x, y, z }
-        };
-
-        stars.push(star); // Add to stars array
-        scene.add(star);
-      }
-      Array(200).fill().forEach(addStar);
-      // Animate stars
-      function animateStars(time) {
-        stars.forEach(star => {
-          // Twinkling effect
-          star.material.emissiveIntensity = Math.random() * 0.3 + 0.7;
-          // Orbital movement
-          star.userData.angle += star.userData.orbitSpeed;
-          const x = star.userData.originalPosition.x + Math.cos(star.userData.angle) * star.userDataorbitRadius;
-          const y = star.userData.originalPosition.y + Math.sin(star.userData.angle) * star.userDataorbitRadius;
-          const z = star.userData.originalPosition.z + Math.sin(time * 0.001 + star.userData.angle) *
-            star.userData.orbitRadius;
-          star.position.set(x, y, z);
-        });
-      }
-      // Background
-      const spaceTexture = new THREE.TextureLoader().load(
-        'images/space.jpg',
-        undefined,
-        undefined,
-        (error) => {
-          console.error('An error happened while loading the texture:', error);
-        }
-      );
-      scene.background = spaceTexture;
-
-      // Add this function before onPointerMove
       function getRandomColor() {
         const colors = [
           0xff0000, // red
@@ -551,485 +800,21 @@
         return colors[Math.floor(Math.random() * colors.length)];
       }
 
-      // Post processing setup
-      composer = new EffectComposer(renderer);
-      const renderPass = new RenderPass(scene, camera);
-      composer.addPass(renderPass);
-
-      // Afterimage effect
-      afterimagePass = new AfterimagePass();
-      afterimagePass.uniforms["damp"].value = 0.8;
-      composer.addPass(afterimagePass);
-
-      // Update bloom parameters
-      const bloomParams = {
-        exposure: 1,
-        bloomStrength: 2.0,
-        bloomThreshold: 0.2,
-        bloomRadius: 1.0
-      };
-
-      // Update the post-processing setup
-      bloomPass = new UnrealBloomPass(
-        new THREE.Vector2(window.innerWidth, window.innerHeight),
-        bloomParams.bloomStrength,
-        bloomParams.bloomRadius,
-        bloomParams.bloomThreshold
-      );
-      bloomPass.enabled = true;  // Always enabled for constant glow
-
-      // GUI Controls
-      const gui = new dat.GUI();
-      
-      const postProcessing = {
-        afterimage: {
-          enabled: true,
-          damp: 0.8
-        },
-        bloom: {
-          enabled: false,
-          strength: 3.0,
-          radius: 0.4,
-          threshold: 0.85
-        }
-      };
-
-      // Afterimage controls
-      const afterimageFolder = gui.addFolder('Afterimage');
-      afterimageFolder.add(postProcessing.afterimage, 'enabled')
-        .onChange(value => afterimagePass.enabled = value);
-      afterimageFolder.add(postProcessing.afterimage, 'damp', 0, 1)
-        .onChange(value => afterimagePass.uniforms["damp"].value = value);
-      afterimageFolder.open();
-
-      // Bloom controls
-      const bloomFolder = gui.addFolder('Bloom');
-      bloomFolder.add(postProcessing.bloom, 'enabled')
-        .onChange(value => bloomPass.enabled = value);
-      bloomFolder.add(postProcessing.bloom, 'strength', 0, 5)
-        .onChange(value => bloomPass.strength = value);
-      bloomFolder.add(postProcessing.bloom, 'radius', 0, 1)
-        .onChange(value => bloomPass.radius = value);
-      bloomFolder.add(postProcessing.bloom, 'threshold', 0, 1)
-        .onChange(value => bloomPass.threshold = value);
-      bloomFolder.open();
-
-      // Click handler
-      function onPointerClick(event) {
-        pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-        pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-        raycaster.setFromCamera(pointer, camera);
-        const intersects = raycaster.intersectObjects([jeff, ...textMeshes]);
-
-        if (intersects.length > 0) {
-          const object = intersects[0].object;
-          
-          if (object === jeff) {
-            window.open('https://github.com/jb0gie', '_blank');
-          } else if (object.userData?.isClickable) {
-            // Get the clicked text mesh position and rotation
-            const targetPos = new THREE.Vector3();
-            object.getWorldPosition(targetPos);
-
-            // Check if clicked text is TECHSHAMAN
-            if (object.userData.text === 'TECHSHAMAN') {
-              // Reset camera to initial position
-              new TWEEN.Tween(controls.target)
-                .to(new THREE.Vector3(0, 0, 0), 1000)
-                .easing(TWEEN.Easing.Cubic.InOut)
-                .start();
-
-              new TWEEN.Tween(camera.position)
-                .to({
-                  x: 0,
-                  y: 0,
-                  z: 50
-                }, 1000)
-                .easing(TWEEN.Easing.Cubic.InOut)
-                .start();
-
-              new TWEEN.Tween(camera.rotation)
-                .to({
-                  x: 0,
-                  y: 0,
-                  z: 0
-                }, 1000)
-                .easing(TWEEN.Easing.Cubic.InOut)
-                .start();
-
-              return; // Exit early to skip the normal text focus behavior
-            }
-            
-            // Calculate camera position in front of the text
-            // Get the direction the text is facing (it's already rotated to face outward)
-            const textDirection = new THREE.Vector3(0, 0, -1);
-            textDirection.applyQuaternion(object.quaternion);
-            
-            // Position camera 15 units in front of the text, slightly elevated
-            const cameraTargetPos = targetPos.clone()
-              .add(textDirection.multiplyScalar(-15))  // Move back from text
-              .add(new THREE.Vector3(0, 2, 0));  // Slight elevation
-            
-            // Create a temporary camera to calculate the target rotation
-            const tempCamera = camera.clone();
-            tempCamera.position.copy(cameraTargetPos);
-            tempCamera.lookAt(targetPos);
-            const targetRot = tempCamera.rotation.clone();
-
-            // Update controls target
-            new TWEEN.Tween(controls.target)
-              .to(targetPos, 1000)
-              .easing(TWEEN.Easing.Cubic.InOut)
-              .start();
-
-            // Tween camera position
-            new TWEEN.Tween(camera.position)
-              .to({
-                x: cameraTargetPos.x,
-                y: cameraTargetPos.y,
-                z: cameraTargetPos.z
-              }, 1000)
-              .easing(TWEEN.Easing.Cubic.InOut)
-              .start();
-
-            // Tween camera rotation
-            new TWEEN.Tween(camera.rotation)
-              .to({
-                x: targetRot.x,
-                y: targetRot.y,
-                z: targetRot.z
-              }, 1000)
-              .easing(TWEEN.Easing.Cubic.InOut)
-              .start();
-
-            // Show modal with text info
-            modal.innerHTML = `
-              <h2 style="font-size: 28px; margin-bottom: 20px; color: #fff; text-align: center; font-weight: bold;">
-                ${object.userData.text || 'Information'}
-              </h2>
-              <p style="font-size: 18px; line-height: 1.6; margin-bottom: 20px; color: #eee;">
-                ${object.userData.description}
-              </p>
-              <button onclick="this.parentElement.style.display='none'" 
-                      style="position: absolute; top: 15px; right: 15px; background: none; border: none; color: white; 
-                             cursor: pointer; font-size: 24px; padding: 5px; transition: transform 0.2s;">
-                ×
-              </button>
-            `;
-            modal.style.display = 'block';
-
-            // Add double click handler to reset camera
-            const resetCamera = () => {
-              new TWEEN.Tween(controls.target)
-                .to(new THREE.Vector3(0, 0, 0), 1000)
-                .easing(TWEEN.Easing.Cubic.InOut)
-                .start();
-
-              new TWEEN.Tween(camera.position)
-                .to({
-                  x: 0,
-                  y: 0,
-                  z: 50
-                }, 1000)
-                .easing(TWEEN.Easing.Cubic.InOut)
-                .start();
-
-              new TWEEN.Tween(camera.rotation)
-                .to({
-                  x: 0,
-                  y: 0,
-                  z: 0
-                }, 1000)
-                .easing(TWEEN.Easing.Cubic.InOut)
-                .start();
-
-              window.removeEventListener('dblclick', resetCamera);
-            };
-
-            window.addEventListener('dblclick', resetCamera);
-          }
-        }
-      }
-
-      // Add click event listener
-      window.addEventListener('click', onPointerClick);
-
-      // Pulse animation for the cube
-      function animateJeff(time) {
-        if (!isHovered) {
-          const pulseFactor = Math.sin(time * 0.003) * 0.1 + 1;
-          jeff.scale.set(originalScale.x * pulseFactor, originalScale.y * pulseFactor, originalScale.z * pulseFactor);
-        }
-      }
-      // Add the event listener
-      window.addEventListener('mousemove', onPointerMove);
-      window.addEventListener('click', onPointerClick);
-      // cubed pfp
-      const jeffTexture = new THREE.TextureLoader().load(
-        'images/jeff.png',
-        undefined,
-        undefined,
-        (error) => {
-          console.error('An error happened while loading the texture:', error);
-        }
-      );
-      jeff = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 3), new THREE.MeshBasicMaterial({ map: jeffTexture }));
-      scene.add(jeff);
-      // schwepe moon
-      const moonTexture = new THREE.TextureLoader().load(
-        'images/moon.jpg',
-        undefined,
-        undefined,
-        (error) => {
-          console.error('An error happened while loading the texture:', error);
-        }
-      );
-      // const normalTexture = new THREE.TextureLoader().load('images/normal.jpg');
-      const moon = new THREE.Mesh(
-        new THREE.SphereGeometry(3, 32, 32),
-        new THREE.MeshStandardMaterial({
-          map: moonTexture,
-          // normalMap: normalTexture,
-        })
-      );
-      scene.add(moon);
-      moon.position.z = 30;
-      moon.position.setX(-10);
-      jeff.position.z = 15;
-      jeff.position.x = 8;
-      // Fixed camera position
-      camera.position.set(0, 2, 10);
-      camera.lookAt(0, 0, 0);
-
-      // Update window resize handler
-      function onWindowResize() {
-        if (isPerspective) {
-          camera.aspect = window.innerWidth / window.innerHeight;
-          camera.updateProjectionMatrix();
-        } else {
-          orthoCamera.left = window.innerWidth / -32;
-          orthoCamera.right = window.innerWidth / 32;
-          orthoCamera.top = window.innerHeight / 32;
-          orthoCamera.bottom = window.innerHeight / -32;
-          orthoCamera.updateProjectionMatrix();
-        }
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        composer.setSize(window.innerWidth, window.innerHeight);
-      }
-
-      // Update animation loop
-      function animate(time) {
-        TWEEN.update();
-        requestAnimationFrame(animate);
-
-        // Animate 3D text
-        animateText(time);
-
-        // Update animations
-        if (mixer) {
-          const delta = clock.getDelta();
-          mixer.update(delta);
-        }
-
-        torus.rotation.x += 0.01;
-        torus.rotation.y += 0.005;
-        torus.rotation.z += 0.01;
-        moon.rotation.x += 0.005;
-
-        animateStars(time);
-        animateJeff(time);
-
-        controls.update();
-        composer.render();
-      }
-      animate();
     })();
   </script>
-  <canvas id="bg"></canvas>
-  <main style="display: none">
-    <div>
+</head>
 
-      <header class="bg-opacity-80 bg-gray-900 rounded-lg p-6 mb-12 text-section">
-        <h2 class="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-center">
-          there once was a : <span>{
-            <code
-              style="color: transparent; background-clip: text; -webkit-background-clip: text; background-image: url('https://i.giphy.com/media/5xtDarAhnwnse0JQP28/giphy.webp');">
-              <a href="https://irb0gie.vercel.app">techshaman.</a>
-            </code>}🧞</span>
-        </h2>
-        <br />
-        <blockquote class="text-sm sm:text-lg md:text-xl lg:text-2xl font-bold text-center">
-          <p class="text-black p-4 inline-block rounded-lg">
-            @here on <span class="tooltip">🌍</span> here to help people <span class="tooltip">���</span>
-          </p>
-        </blockquote>
-      </header>
-
-      <section class="bg-opacity-80 bg-gray-900 rounded-lg p-6 mb-12 text-section">
-        <h1 class="text-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4">Ye X Zu</h1>
-        <h3 class="text-center text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-4">connecting the connecting
-        </h3>
-        <div class="space-y-4 text-base sm:text-lg md:text-xl lg:text-2xl">
-          <p>
-            the techshaman, a pioneer of a new era of human evolution.
-            believes that the current state of humanity is unsustainable,
-            fragmented, and disconnected. we are living in a world of scarcity,
-            inequality, and violence. we are trapped in a system that exploits us,
-            controls us, and limits us.
-          </p>
-          <p>
-            they have a vision of a different world, a world of abundance, harmony,
-            and connection. a world where every human being is free, empowered,
-            and valued. a world where we can unleash our full potential, express
-            our creativity, and collaborate with each other
-          </p>
-          <p>
-            the mission: to bring about this world, by creating yexzu, the
-            human blockchain. yexzu is not a technology, but a philosophy, a way
-            of life, a collective consciousness. yexzu is the metaphor of living
-            being interconnected, of being part of a larger whole, of being a node
-            in a network of trustlessness and cooperation.
-          </p>
-        </div>
-      </section>
-
-      <section class="bg-opacity-80 bg-gray-900 rounded-lg p-6 mb-12 text-section">
-        <h1
-          class="text-center text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-8 text-gradient bg-gradient-to-r from-green-400 via-pink-500 to-purple-500 rounded-lg">
-          Various 👩����‍🚀 Projects
-        </h1>
-
-        <article class="mb-12">
-          <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-            <span class="text-green-400">247</span>🟢
-            <sub class="text-sm text-white-400">69</sub>���
-            <span class="text-purple-400">420</span>
-          </h2>
-          <p class="sm:text-lg md:text-xl lg:text-2xl mb-4 leading-relaxed">
-            a decentralized platform that allows anyone to
-            create, share, and watch content of any kind, without censorship,
-            surveillance, or interference. using p2p technology, blockchain encryption, and smart contracts to ensure
-            the security, privacy, and integrity of the network and its users.
-          </p>
-        </article>
-        <article class="mb-12">
-          <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-pink-400">
-            Schwepe ���
-          </h2>
-          <p class="sm:text-lg md:text-xl lg:text-2xl mb-4 leading-relaxed">
-            Schwepe is a skinless frog. The essence of schwepe speaks to the mind that drives ultimate realisation that
-            jokes are funny. It creates a sense of peace that can be enjoyed during any activity. Schwepe is a
-            superhero, a lover, a business man, and he sometimes sells heroin to kids. In his normal form his power
-            levels are above 9000. In his ultimate form his power levels cannot be measured.
-          </p>
-        </article>
-        <article class="mb-12">
-          <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-blue-400">BladesOfGrass</h2>
-          <p class="text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-4 leading-relaxed">
-            BladesOfGrass is an innovative project that aims to reconnect humanity with nature through technology.
-            More details coming soon...
-          </p>
-        </article>
-
-      </section>
-
-      <section class="bg-opacity-80 bg-gray-900 rounded-lg p-6 mb-12">
-        <h1
-          class="text-center text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-8 text-gradient bg-gradient-to-r from-green-400 via-pink-500 to-purple-500 rounded-lg">
-          🏆 Accolades
-        </h1>
-        <p class="sm:text-lg md:text-xl lg:text-2xl mb-4 leading-relaxed">
-          Our journey has been marked by numerous achievements and collaborations, including:
-          <ul class="list-disc list-inside mt-4 space-y-2 sm:text-lg md:text-xl lg:text-2xl">
-            <li><a href="https://x.com/irb0gie/status/1410374529629761547">The McAfee Job</a>: A groundbreaking
-              cybersecurity initiative</li>
-            <li><a href="https://irb0gie.vercel.app/works/mona">MonaJob</a>: Revolutionizing the gig economy</li>
-            <li><a href="https://irb0gie.vercel.app/works/swagtag">MoralisJob</a>: Pushing the boundaries of blockchain
-              technology</li>
-            <li><a href="https://metagame.wtf">MetaGame</a>: Pioneering the future of decentralized gaming</li>
-          </ul>
-        </p>
-      </section>
-
-      <blockquote id="random-quote">
-        <p>Loading inspiring quote...</p>
-      </blockquote>
-
-      <section class="bg-opacity-80 bg-gray-900 rounded-lg p-6 mb-12">
-        <h2>🌮Yexzu is based</h2>
-        <h3>on three principles:</h3>
-        <div class="principle-container">
-          <h3
-            class="principle-title text-2xl font-bold mb-4 text-gradient bg-gradient-to-r from-blue-400 to-purple-500">
-            Decentralization</h3>
-          <p class="principle-text text-lg mb-6 leading-relaxed">
-            We champion the dissolution of centralized power structures, advocating for a world where authority is
-            distributed among the people. Our vision: a society where every individual's right to self-determination,
-            self-organization, and self-governance is not just respected, but celebrated.
-          </p>
-        </div>
-
-        <div class="principle-container">
-          <h3 class="principle-title text-2xl font-bold mb-4 text-gradient bg-gradient-to-r from-green-400 to-blue-500">
-            Transparency</h3>
-          <p class="principle-text text-lg mb-6 leading-relaxed">
-            We stand as beacons of openness in information, communication, and knowledge. In our world, secrecy has no
-            place to hide. We uphold every human's inalienable right to access, share, and verify the truth, fostering a
-            culture of honesty and accountability.
-          </p>
-        </div>
-
-        <div class="principle-container">
-          <h3 class="principle-title text-2xl font-bold mb-4 text-gradient bg-gradient-to-r from-yellow-400 to-red-500">
-            Incentivization</h3>
-          <p class="principle-text text-lg mb-6 leading-relaxed">
-            We cultivate a harmonious alignment of individual and collective interests, values, and goals. Rejecting the
-            notion that competition is the only path forward, we instead nurture an environment where every person can
-            meaningfully contribute, receive, and exchange value.
-          </p>
-        </div>
-      </section>
-      <footer class="bg-opacity-80 bg-gray-900 rounded-lg p-8 mt-12">
-        <div class="max-w-6xl mx-auto">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="text-center md:text-left">
-              <h4 class="text-xl font-bold mb-4 text-gradient bg-gradient-to-r from-green-400 to-pink-400">Connect</h4>
-              <ul class="space-y-2">
-                <li><a href="https://twitter.com/irb0gie" class="hover:text-pink-500 transition-colors">Twitter</a>
-                </li>
-                <li><a href="https://github.com/irb0gie" class="hover:text-purple-400 transition-colors">GitHub</a></li>
-                <li><a href="https://linkedin.com/in/irb0gie"
-                    class="hover:text-purple-400 transition-colors">LinkedIn</a></li>
-              </ul>
-            </div>
-
-            <div class="text-center">
-              <h4 class="text-xl font-bold mb-4 text-gradient bg-gradient-to-r from-pink-400 to-pink-400">Navigation
-              </h4>
-              <ul class="space-y-2">
-                <li><a href="#" class="hover:text-pink-400 transition-colors">Home</a></li>
-                <li><a href="#" class="hover:text-pink-400 transition-colors">Projects</a></li>
-                <li><a href="#" class="hover:text-pink-400 transition-colors">About</a></li>
-              </ul>
-            </div>
-
-            <div class="text-center md:text-right " border-t border-gray-700 mt-8 pt-8 "">
-              <h4 class="text-xl font-bold mb-4 text-gradient bg-gradient-to-r from-red-400 to-yellow-500">Contact</h4>
-              <p class="mb-2">📍 Earth, Milky Way</p>
-              <p class="mb-2">📧 hello@yexzu.xyz</p>
-            </div>
-          </div>
-          <div class="text-center">
-            <p class="text-sm text-gray-400">
-              © ${new Date().getFullYear()} irb0gie. All rights reserved. Built with 💜 and Web3 magic.
-            </p>
-          </div>
-        </div>
-      </footer>
+<body>
+  <div id="loader-container">
+    <div id="loader">
+      <div class="loader-face"></div>
+      <div class="loader-face" style="transform: rotateX(90deg)"></div>
+      <div class="loader-face" style="transform: rotateY(90deg)"></div>
+      <div class="loader-text">loading techshaman...</div>
     </div>
-  </main>
+  </div>
 
-  </body>
+  <canvas id="bg"></canvas>
+</body>
 
 </html>
