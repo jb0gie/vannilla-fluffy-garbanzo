@@ -370,23 +370,23 @@
       gltfLoader.load(
         model_path,
         function (gltf) {
-          model = gltf.scene;
+        model = gltf.scene;
           model.position.set(0, 0, 0);
-          model.scale.set(3, 3, 3);
-          scene.add(model);
+        model.scale.set(3, 3, 3);
+        scene.add(model);
 
-          // Setup animations
-          mixer = new THREE.AnimationMixer(model);
+        // Setup animations
+        mixer = new THREE.AnimationMixer(model);
 
-          // Play each animation with specific settings
-          gltf.animations.forEach((clip) => {
-            const action = mixer.clipAction(clip);
+        // Play each animation with specific settings
+        gltf.animations.forEach((clip) => {
+          const action = mixer.clipAction(clip);
             action.setLoop(THREE.LoopRepeat);
-            action.clampWhenFinished = true;
+          action.clampWhenFinished = true;
             action.timeScale = 1;
-            action.play();
-          });
-        },
+          action.play();
+        });
+      },
         function (xhr) {
           console.log((xhr.loaded / xhr.total * 100) + '% loaded');
         },
@@ -484,13 +484,36 @@
         // Update renderer and composer
         renderer.setSize(width, height);
         composer.setSize(width, height);
+
+        // Update pixel ratio for mobile
+        const pixelRatio = Math.min(window.devicePixelRatio, 2);
+        renderer.setPixelRatio(pixelRatio);
       }
 
-      // Pointer move handler
-      function onPointerMove(event) {
-        // Calculate pointer position in normalized device coordinates (-1 to +1)
-        pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-        pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+      // Update OrbitControls settings for better cross-platform handling
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.rotateSpeed = 0.5;
+      controls.enableZoom = true;
+      controls.zoomSpeed = 0.5;
+      controls.enablePan = false;  // Disable panning for simpler interaction
+      controls.maxPolarAngle = Math.PI * 0.8;  // Limit vertical rotation
+      controls.minPolarAngle = Math.PI * 0.2;  // Limit vertical rotation
+      controls.touches = {
+        ONE: THREE.TOUCH.ROTATE,
+        TWO: THREE.TOUCH.DOLLY  // Only allow zoom with two fingers
+      };
+
+      // Unified pointer event handler for both touch and mouse
+      function onPointerEvent(event) {
+        // Prevent default behavior only for touch events
+        if (event.pointerType === 'touch') {
+          event.preventDefault();
+        }
+
+        // Update pointer coordinates
+        pointer.x = ((event.clientX || event.touches?.[0]?.clientX || 0) / window.innerWidth) * 2 - 1;
+        pointer.y = -((event.clientY || event.touches?.[0]?.clientY || 0) / window.innerHeight) * 2 + 1;
 
         // Update the picking ray with the camera and pointer position
         raycaster.setFromCamera(pointer, camera);
@@ -510,54 +533,30 @@
           document.body.style.cursor = 'default';
           isHovered = false;
         }
-      }
 
-      // Jeff animation
-      function animateJeff(time) {
-        if (!isHovered) {
-          const pulseFactor = Math.sin(time * 0.003) * 0.1 + 1;
-          jeff.scale.set(originalScale.x * pulseFactor, originalScale.y * pulseFactor, originalScale.z * pulseFactor);
+        // If this is a click/touch event (pointerdown), handle the click
+        if (event.type === 'pointerdown') {
+          onPointerClick(event);
         }
       }
 
-      // Add event listeners
+      // Add unified event listeners
+      window.addEventListener('pointermove', onPointerEvent);
+      window.addEventListener('pointerdown', onPointerEvent);
       window.addEventListener('resize', onWindowResize);
-      window.addEventListener('pointermove', onPointerMove);
-      window.addEventListener('pointerdown', onPointerClick);
-      window.addEventListener('touchstart', onTouchStart, { passive: false });
-      window.addEventListener('touchmove', onTouchMove, { passive: false });
 
-      // Touch event handlers
-      function onTouchStart(event) {
-        event.preventDefault();
-        const touch = event.touches[0];
-        onPointerClick({
-          clientX: touch.clientX,
-          clientY: touch.clientY
-        });
+      // Remove old event listeners
+      // window.removeEventListener('touchstart', onTouchStart);
+      // window.removeEventListener('touchmove', onTouchMove);
+
+      // Add meta viewport tag for proper mobile scaling
+      const metaViewport = document.querySelector('meta[name=viewport]');
+      if (!metaViewport) {
+        const meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+        document.head.appendChild(meta);
       }
-
-      function onTouchMove(event) {
-        event.preventDefault();
-        const touch = event.touches[0];
-        onPointerMove({
-          clientX: touch.clientX,
-          clientY: touch.clientY
-        });
-      }
-
-      // Update OrbitControls settings for touch
-      controls.enableDamping = true;
-      controls.dampingFactor = 0.05;
-      controls.rotateSpeed = 0.5;  // Reduced for smoother touch rotation
-      controls.enableZoom = true;
-      controls.zoomSpeed = 0.5;    // Reduced for smoother touch zooming
-      controls.enablePan = true;
-      controls.panSpeed = 0.5;     // Reduced for smoother touch panning
-      controls.touches = {
-        ONE: THREE.TOUCH.ROTATE,
-        TWO: THREE.TOUCH.DOLLY_PAN
-      };
 
       // Start animation loop
       animate();
@@ -679,7 +678,7 @@
           
           // Create description text with simpler material
           const lines = info.description.split('\n');
-          const wordsPerLine = 6;  // Control words per line
+          const wordsPerLine = 8;  // Increased from 6 to allow more words per line
           const formattedLines = [];
           
           // Format description into multiple lines
@@ -693,8 +692,8 @@
           for (let i = 0; i < formattedLines.length; i++) {
             const descGeometry = new TextGeometry(formattedLines[i], {
               font: font,
-              size: 1.2,  // Increased from 0.8
-              height: 0.15,  // Increased from 0.1
+              size: 0.8,  // Reduced from 1.2
+              height: 0.1,  // Reduced from 0.15
               curveSegments: 8,
               bevelEnabled: false
             });
@@ -709,8 +708,8 @@
             descMesh.userData.isDescriptionText = true;
             descGeometry.computeBoundingBox();
             const descWidth = descGeometry.boundingBox.max.x - descGeometry.boundingBox.min.x;
-            // Move text down and increase line spacing
-            descGeometry.translate(-descWidth/2, -i * 3 - 6, 2);  // Increased vertical spacing and initial offset
+            // Move text down and adjust line spacing
+            descGeometry.translate(-descWidth/2, -i * 2 - 6, 2);  // Reduced vertical spacing from 3 to 2
             textGroup.add(descMesh);
           }
           
@@ -776,14 +775,14 @@
               .easing(TWEEN.Easing.Cubic.InOut)
               .start();
 
-            new TWEEN.Tween(camera.position)
-              .to({
+        new TWEEN.Tween(camera.position)
+          .to({
                 x: 0,
                 y: 0,
                 z: 50
-              }, 1000)
-              .easing(TWEEN.Easing.Cubic.InOut)
-              .start();
+          }, 1000)
+          .easing(TWEEN.Easing.Cubic.InOut)
+          .start();
 
             return;
           } else if (group.userData?.isClickable || object.userData?.isClickable) {
@@ -842,9 +841,6 @@
           }
         }
       }
-
-      // Add click event listener
-      window.addEventListener('click', onPointerClick);
 
       function getRandomColor() {
         const colors = [
