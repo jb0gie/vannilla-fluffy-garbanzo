@@ -214,13 +214,13 @@
       let isPerspective = true;
 
       let scene, camera, renderer, controls;
-      let jeff, model;
+      let jeff, model, moon;
       let mixer;
       let composer, afterimagePass;
       let isHovered = false;
       let originalScale = new THREE.Vector3(1, 1, 1);
       let tooltipDiv;
-      let moon;
+
 
       // Initialize raycaster settings
       raycaster.near = 0.1;
@@ -305,8 +305,8 @@
       const renderPass = new RenderPass(scene, camera);
       composer.addPass(renderPass);
 
-      // Add subtle afterimage effect
-      afterimagePass = new AfterimagePass(0.3);
+      // Add afterimage effect
+      afterimagePass = new AfterimagePass(0.8);
       composer.addPass(afterimagePass);
 
       // Load textures and initialize objects
@@ -748,31 +748,40 @@
               }
             });
 
-            // Camera movement
-            const textDirection = new THREE.Vector3(0, 0, -1);
-            textDirection.applyQuaternion(targetGroup.quaternion);
+            // Position camera behind techshaman model
+            const modelPos = new THREE.Vector3(0, 2, 0);  // Model's position plus slight height offset
+            const lookAtPos = targetPos.clone();  // Position of the clicked text
             
-            const cameraTargetPos = targetPos.clone()
-              .add(textDirection.multiplyScalar(-20))
-              .add(new THREE.Vector3(0, 2, 0));
-            
-            const tempCamera = camera.clone();
-            tempCamera.position.copy(cameraTargetPos);
-            tempCamera.lookAt(targetPos);
-            const targetRot = tempCamera.rotation.clone();
+            // Calculate camera position behind model
+            const directionToText = new THREE.Vector3().subVectors(lookAtPos, modelPos).normalize();
+            const cameraOffset = new THREE.Vector3().copy(directionToText).multiplyScalar(-10);
+            const cameraTargetPos = modelPos.clone()
+              .add(cameraOffset)
+              .add(new THREE.Vector3(0, 8, 0));
 
+            // Calculate rotation for the model to face the text
+            const modelRotation = new THREE.Euler(0, Math.atan2(
+              lookAtPos.x - modelPos.x,
+              lookAtPos.z - modelPos.z
+            ), 0);
+
+            // Rotate the model to face the text
+            if (model) {
+              new TWEEN.Tween(model.rotation)
+                .to({ y: modelRotation.y }, 1000)
+                .easing(TWEEN.Easing.Cubic.InOut)
+                .start();
+            }
+
+            // Update controls target to the text position
             new TWEEN.Tween(controls.target)
-              .to(targetPos, 1000)
+              .to(lookAtPos, 1000)
               .easing(TWEEN.Easing.Cubic.InOut)
               .start();
 
+            // Move camera to position behind model
             new TWEEN.Tween(camera.position)
               .to(cameraTargetPos, 1000)
-              .easing(TWEEN.Easing.Cubic.InOut)
-              .start();
-
-            new TWEEN.Tween(camera.rotation)
-              .to(targetRot, 1000)
               .easing(TWEEN.Easing.Cubic.InOut)
               .start();
           }
