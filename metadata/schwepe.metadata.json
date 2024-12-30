@@ -29,65 +29,61 @@
       "display_type": "boost_percentage",
       "trait_type": "Mana Regeneration",
       "value": 69
+    }
+  ],
+  "game_data": {
+    "model_version": "0.0",
+    "collision_bounds": {
+      "height": 1.8,
+      "radius": 0.3
     },
-    {
-      "game_data": {
-        "model_version": "0.0",
-        "collision_bounds": {
-          "height": 1.8,
-          "radius": 0.3
-        },
-        "animation_sets": ["idle", "walk", "run", "cast"],
-        "allowed_zones": [
-          "forest",
-          "temple",
-          "city",
-          "desert",
-          "mountain",
-          "ocean",
-          "swamp",
-          "volcano",
-          "space",
-          "underwater",
-          "sky"
-        ],
-        "special_effects": {
-          "trail_effect": "spirit_wisps",
-          "cast_effect": "nature_burst"
-        }
-      }
+    "animation_sets": ["idle", "walk", "run", "cast"],
+    "allowed_zones": [
+      "forest",
+      "temple",
+      "city",
+      "desert",
+      "mountain",
+      "ocean",
+      "swamp",
+      "volcano",
+      "space",
+      "underwater",
+      "sky"
+    ],
+    "special_effects": {
+      "trail_effect": "spirit_wisps",
+      "cast_effect": "nature_burst"
+    }
+  },
+  "godot_metadata": {
+    "scene_path": "res://scenes/characters/schwepe.tscn",
+    "default_animations": {
+      "IDLE": "idle_loop",
+      "WALK": "walk_loop",
+      "RUN": "run_loop"
     },
-    {
-      "godot_metadata": {
-        "scene_path": "res://scenes/characters/schwepe.tscn",
-        "default_animations": {
-          "IDLE": "idle_loop",
-          "WALK": "walk_loop",
-          "RUN": "run_loop"
-        },
-        "physics_properties": {
-          "mass": 70,
-          "movement_speed": 50,
-          "jump_force": 50
-        },
-        "ability_mappings": {
-          "spirit_walk": {
-            "cooldown": 30,
-            "mana_cost": 50,
-            "effect_duration": 10
-          },
-          "pumpkin_blast": {
-            "cooldown": 1,
-            "mana_cost": 1,
-            "effect_duration": 60
-          },
-          "pumpkin_heal": {
-            "cooldown": 1,
-            "mana_cost": 1,
-            "effect_duration": 60
-          }
-        }
+    "physics_properties": {
+      "mass": 70,
+      "movement_speed": 50,
+      "jump_force": 50
+    },
+    "ability_mappings": {
+      "spirit_walk": {
+        "cooldown": 30,
+        "mana_cost": 50,
+        "effect_duration": 10
+      },
+      "pumpkin_blast": {
+        "cooldown": 1,
+        "mana_cost": 1,
+        "effect_duration": 60
+      },
+      "pumpkin_heal": {
+        "cooldown": 1,
+        "mana_cost": 1,
+        "effect_duration": 60
       }
     }
-  ]
+  }
 }
