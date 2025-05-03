@@ -312,10 +312,6 @@
       const renderPass = new RenderPass(scene, camera);
       composer.addPass(renderPass);
 
-      // Add afterimage effect
-      afterimagePass = new AfterimagePass(0.8);
-      composer.addPass(afterimagePass);
-
       // Load textures and initialize objects
       textureLoader.load(
         'images/space.jpg',
@@ -401,6 +397,7 @@
           font: await new Promise(resolve => fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', resolve)),
           size: 0.5,
           height: 0.1,
+          depth:1, 
           curveSegments: 32,
           bevelEnabled: true,
           bevelThickness: 0.02,
@@ -591,6 +588,7 @@
 
       // Create 3D Text with optimized settings
       fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', async function(font) {
+        // Add orbiting 3D text for each info entry
         const textInfo = [
           {
             text: 'TECHSHAMAN',
@@ -641,87 +639,62 @@
             heightOffset: -15
           }
         ];
-
         for (const info of textInfo) {
           const geometry = new TextGeometry(info.text, {
             font: font,
             size: info.size,
-            height: 0.2,
-            curveSegments: 12,  // Reduced from 32
+            height: 0.1, 
+            depth:1, // thin extrusion
+            curveSegments: 12,
             bevelEnabled: true,
-            bevelThickness: 0.03,
-            bevelSize: 0.02,
+            bevelThickness: 0.02,
+            bevelSize: 0.01,
             bevelOffset: 0,
-            bevelSegments: 3  // Reduced from 8
+            bevelSegments: 3
           });
-          
           geometry.computeBoundingBox();
           const textWidth = geometry.boundingBox.max.x - geometry.boundingBox.min.x;
           const textHeight = geometry.boundingBox.max.y - geometry.boundingBox.min.y;
-          const textDepth = geometry.boundingBox.max.z - geometry.boundingBox.min.z;
-          
-          geometry.translate(-textWidth/2, -textHeight/2, -textDepth/2);
-          
-          const randomColor = getRandomColor();
-          const randomTextMaterial = new THREE.MeshPhongMaterial({  // Changed from MeshPhysicalMaterial
-            color: randomColor,
-            emissive: randomColor,
-            emissiveIntensity: 0.5,
-            shininess: 50
+          geometry.translate(-textWidth/2, -textHeight/2, 0);
+          const material = new THREE.MeshPhongMaterial({
+            color: getRandomColor(),
+            emissive: getRandomColor(),
+            shininess: 30
           });
-          
-          const textMesh = new THREE.Mesh(geometry, randomTextMaterial);
-          
-          // Create a group to hold both title and description
+          const textMesh = new THREE.Mesh(geometry, material);
           const textGroup = new THREE.Group();
           textGroup.add(textMesh);
-          
-          // Create description text with simpler material
           const lines = info.description.split('\n');
-          const wordsPerLine = 8;  // Increased from 6 to allow more words per line
+          const wordsPerLine = 8;
           const formattedLines = [];
-          
-          // Format description into multiple lines
           lines.forEach(line => {
             const words = line.split(' ');
             for (let i = 0; i < words.length; i += wordsPerLine) {
               formattedLines.push(words.slice(i, i + wordsPerLine).join(' '));
             }
           });
-
           for (let i = 0; i < formattedLines.length; i++) {
             const descGeometry = new TextGeometry(formattedLines[i], {
               font: font,
-              size: 0.8,  // Reduced from 1.2
-              height: 0.1,  // Reduced from 0.15
+              size: 0.8,
+              height: 0.05,
+              depth:1,
               curveSegments: 8,
               bevelEnabled: false
             });
-            
-            const descMaterial = new THREE.MeshBasicMaterial({
-              color: 0xffffff,
-              transparent: true,
-              opacity: 0
-            });
-            
-            const descMesh = new THREE.Mesh(descGeometry, descMaterial);
-            descMesh.userData.isDescriptionText = true;
             descGeometry.computeBoundingBox();
             const descWidth = descGeometry.boundingBox.max.x - descGeometry.boundingBox.min.x;
-            // Move text down and adjust line spacing
-            descGeometry.translate(-descWidth/2, -i * 2 - 6, 2);  // Reduced vertical spacing from 3 to 2
+            descGeometry.translate(-descWidth/2, -i * 2 - 6, 0);
+            const descMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0 });
+            const descMesh = new THREE.Mesh(descGeometry, descMaterial);
+            descMesh.userData.isDescriptionText = true;
             textGroup.add(descMesh);
           }
-          
-          // Set initial position and rotation for the group
           const orbitAngle = (textInfo.indexOf(info) / textInfo.length) * Math.PI * 2;
           textGroup.position.x = Math.cos(orbitAngle) * info.orbitRadius;
           textGroup.position.z = Math.sin(orbitAngle) * info.orbitRadius;
           textGroup.position.y = info.heightOffset;
-          
-          const rotationY = -Math.atan2(textGroup.position.z, textGroup.position.x) - Math.PI / 2;
-          textGroup.rotation.set(0, rotationY, 0);
-          
+          textGroup.rotation.set(0, -orbitAngle - Math.PI / 2, 0);
           textGroup.userData = {
             description: info.description,
             orbitRadius: info.orbitRadius,
@@ -731,28 +704,10 @@
             isClickable: true,
             text: info.text
           };
-          
-          // Remove background panel code
-          
           textMeshes.push(textGroup);
           scene.add(textGroup);
         }
       });
-
-      // Optimize text animation
-      function animateText(time) {
-        textMeshes.forEach(group => {
-          if (group.userData) {
-            group.userData.orbitAngle += group.userData.orbitSpeed;
-            const angle = group.userData.orbitAngle;
-            group.position.x = Math.cos(angle) * group.userData.orbitRadius;
-            group.position.z = Math.sin(angle) * group.userData.orbitRadius;
-            group.position.y = group.userData.heightOffset + Math.sin(angle * 2) * 2;  // Reduced vertical movement
-            
-            group.rotation.y = -angle - Math.PI / 2;  // Simplified rotation
-          }
-        });
-      }
 
       // Update the click handler
       async function onPointerClick(event) {
