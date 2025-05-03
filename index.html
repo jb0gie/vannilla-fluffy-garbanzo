@@ -724,21 +724,18 @@
           if (object === jeff) {
             window.open('https://github.com/jb0gie', '_blank');
           } else if (object.parent === model || object === model) {
-            // Reset camera when clicking the 3D model
+            console.log('techshaman.glb model clicked: resetting camera');
+            // Reset camera and controls to original position and target
             new TWEEN.Tween(controls.target)
-              .to(new THREE.Vector3(0, 0, 0), 1000)
+              .to({ x: 0, y: 0, z: 0 }, 1000)
               .easing(TWEEN.Easing.Cubic.InOut)
+              .onUpdate(() => controls.update())
               .start();
-
-        new TWEEN.Tween(camera.position)
-          .to({
-                x: 0,
-                y: 0,
-                z: 50
-          }, 1000)
-          .easing(TWEEN.Easing.Cubic.InOut)
-          .start();
-
+            new TWEEN.Tween(camera.position)
+              .to({ x: 0, y: 0, z: 50 }, 1000)
+              .easing(TWEEN.Easing.Cubic.InOut)
+              .onUpdate(() => controls.update())
+              .start();
             return;
           } else if (group.userData?.isClickable || object.userData?.isClickable) {
             const targetGroup = group.userData?.isClickable ? group : object;
@@ -814,6 +811,123 @@
         ];
         return colors[Math.floor(Math.random() * colors.length)];
       }
+
+      // Restore AfterimagePass
+      afterimagePass = new AfterimagePass(0.8);
+      composer.addPass(afterimagePass);
+
+      // Add ambient particles
+      const particleCount = 200;
+      const particleGeometry = new THREE.BufferGeometry();
+      const positions = new Float32Array(particleCount * 3);
+      for (let i = 0; i < particleCount; i++) {
+        positions[i * 3] = (Math.random() - 0.5) * 200;
+        positions[i * 3 + 1] = (Math.random() - 0.5) * 120;
+        positions[i * 3 + 2] = (Math.random() - 0.5) * 200;
+      }
+      particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      const particleMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.8, transparent: true, opacity: 0.7 });
+      const particles = new THREE.Points(particleGeometry, particleMaterial);
+      scene.add(particles);
+
+      // Animate particles (gentle float)
+      function animateParticles(time) {
+        const positions = particleGeometry.attributes.position.array;
+        for (let i = 0; i < particleCount; i++) {
+          positions[i * 3 + 1] += Math.sin(time * 0.0005 + i) * 0.01;
+        }
+        particleGeometry.attributes.position.needsUpdate = true;
+      }
+
+      // --- ASTEROIDS (VARIED) ---
+      const asteroidCount = 8;
+      const asteroids = [];
+      for (let i = 0; i < asteroidCount; i++) {
+        const geo = new THREE.IcosahedronGeometry(Math.random() * 2 + 1, 1);
+        const mat = new THREE.MeshStandardMaterial({ color: 0x888888, flatShading: true });
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.position.set(
+          (Math.random() - 0.5) * 120,
+          (Math.random() - 0.5) * 80,
+          (Math.random() - 0.5) * 120
+        );
+        mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
+        mesh.userData = {
+          rotSpeed: (Math.random() - 0.5) * 0.01,
+          drift: new THREE.Vector3(
+            (Math.random() - 0.5) * 0.01,
+            (Math.random() - 0.5) * 0.01,
+            (Math.random() - 0.5) * 0.01
+          )
+        };
+        asteroids.push(mesh);
+        scene.add(mesh);
+      }
+
+      function animateAsteroids() {
+        for (const mesh of asteroids) {
+          mesh.rotation.x += mesh.userData.rotSpeed;
+          mesh.rotation.y += mesh.userData.rotSpeed;
+          mesh.position.add(mesh.userData.drift);
+          // Wrap around
+          if (mesh.position.length() > 100) {
+            mesh.position.set(
+              (Math.random() - 0.5) * 120,
+              (Math.random() - 0.5) * 80,
+              (Math.random() - 0.5) * 120
+            );
+          }
+        }
+      }
+
+      // --- METEOR STREAKS ---
+      const meteorCount = 18;
+      const meteorGeometry = new THREE.BufferGeometry();
+      const meteorPositions = new Float32Array(meteorCount * 6); // 2 points per line
+      const meteorSpeeds = [];
+      for (let i = 0; i < meteorCount; i++) {
+        const x = (Math.random() - 0.5) * 200;
+        const y = (Math.random() - 0.5) * 120;
+        const z = (Math.random() - 0.5) * 200;
+        meteorPositions.set([x, y, z, x + Math.random() * 2, y + Math.random() * 2, z + Math.random() * 2], i * 6);
+        meteorSpeeds.push(new THREE.Vector3(
+          (Math.random() - 0.5) * 0.6 + 0.3,
+          (Math.random() - 0.5) * 0.6 + 0.3,
+          (Math.random() - 0.5) * 0.6 + 0.3
+        ));
+      }
+      meteorGeometry.setAttribute('position', new THREE.BufferAttribute(meteorPositions, 3));
+      const meteorMaterial = new THREE.LineBasicMaterial({ color: 0xffe066, transparent: true, opacity: 0.7 });
+      const meteors = new THREE.LineSegments(meteorGeometry, meteorMaterial);
+      scene.add(meteors);
+
+      function animateMeteors() {
+        const pos = meteorGeometry.attributes.position.array;
+        for (let i = 0; i < meteorCount; i++) {
+          for (let j = 0; j < 2; j++) {
+            pos[i * 6 + j * 3 + 0] += meteorSpeeds[i].x;
+            pos[i * 6 + j * 3 + 1] += meteorSpeeds[i].y;
+            pos[i * 6 + j * 3 + 2] += meteorSpeeds[i].z;
+          }
+          // Reset if out of bounds
+          if (Math.abs(pos[i * 6]) > 120 || Math.abs(pos[i * 6 + 1]) > 80 || Math.abs(pos[i * 6 + 2]) > 120) {
+            const x = (Math.random() - 0.5) * 200;
+            const y = (Math.random() - 0.5) * 120;
+            const z = (Math.random() - 0.5) * 200;
+            pos.set([x, y, z, x + Math.random() * 2, y + Math.random() * 2, z + Math.random() * 2], i * 6);
+          }
+        }
+        meteorGeometry.attributes.position.needsUpdate = true;
+      }
+
+      // --- PATCH ANIMATE ---
+      const prevAnimate = animate;
+      animate = function(time) {
+        prevAnimate(time);
+        animateParticles(time);
+        animateAsteroids();
+        animateMeteors();
+      };
 
     })();
   </script>
