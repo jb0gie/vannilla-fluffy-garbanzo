@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio #167",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/revealed/34b009a3b1a2a1a33dea3e46a99b0d5da237c7a151a4085da3aa768f183fe987.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 167,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Schizo Yoshi Kart"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Lobster Pink"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Rectangle"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Schizo OG White"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Sad"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Dark Red Fringe Flow"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Schizo Network Tshirt"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "Sonic Beanie"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Kevin Perry"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

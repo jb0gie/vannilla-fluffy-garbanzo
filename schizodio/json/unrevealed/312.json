@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio Pixelated #312",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator. Pixelated Edition.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/unrevealed/7299e5b38d620e01f8fdc58ac7482252ad6dd65f84dd9d037e4ad8b09ce7ab0e.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 312,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "China Courtyard"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Snowflake"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smiley"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Dead"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Sad"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Rainbow Curtain Bob"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Golden Boy Tracksuit"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "HEX Cap"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Laughing"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

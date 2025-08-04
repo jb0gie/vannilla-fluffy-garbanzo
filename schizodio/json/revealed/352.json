@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio #352",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/revealed/b6522a9226a9a31b5ac447b5e4c36a27611516dbd3e0e9d38a6102b8a9e87a02.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 352,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Cour d'honneur"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Lobster Pink"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Open"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Purple Urkle"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Purple Camo"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Purple Pompadour"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Purple Aki Tshirt "
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Hey Mamma"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

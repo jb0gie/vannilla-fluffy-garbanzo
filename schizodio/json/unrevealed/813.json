@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio Pixelated #813",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator. Pixelated Edition.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/unrevealed/3440e9c1c9c56d1dec65fadf84307efa2d278161e11dc705c823e8ca78443e4f.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 813,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Jiggas in paris"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Lobster Pink"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Squiggly Blue"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Dead"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Black Notched Slits"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "White Jellycut"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Agbada Tshirt"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "Nigerian Clown Headwarmer"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Doll"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

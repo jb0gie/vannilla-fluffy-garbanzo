@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio #396",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/revealed/f84dbb22bbf2ae59ea14221de0d15d7b0bfb0801bfe3f015482962755d0f6f94.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 396,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Furīza no Uchūsen"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Snowflake"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Neutral"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Schizo Yellow"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Sad"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Green Fringe Flow"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Strapped Schizo Tshirt"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Lean Harry"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

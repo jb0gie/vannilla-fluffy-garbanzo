@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio #643",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/revealed/df1b57e2e9fe6a0864b4a1aa4c635ad391244bda5bd62e223cce970a44d8b9d1.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 643,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "The Canal"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Gora"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Rectangle"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Crying"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Cyan Camo"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Remilio Madoka Red"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "Schizo Scouter"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Tamil Tiger Tshirt"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Baboon"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

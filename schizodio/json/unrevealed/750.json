@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio Pixelated #750",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator. Pixelated Edition.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/unrevealed/e816d2a84fbf4f4df1d57ecf7803ab670e8eeca0c1be839a1ebec285a1ddd858.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 750,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Rekt Bardock"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Greeny"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Neutral"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Stoned Red"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Blue Notched Slit"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Quan Red Black"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Bob Sponge Tshirt"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Randall"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "Eating The Pets"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

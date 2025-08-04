@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio Pixelated #342",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator. Pixelated Edition.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/unrevealed/4a9e239de8cbc66858dd0ae5bd07b81fc9f5b2539642599275f770be123419d5.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 342,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "CountrySide 2"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Schizo Blue"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Neutral"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Schizo Purple"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Purple Camo"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Black Pompadour"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Tuxedo"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Monkey Bomb"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "Eating The Pets"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

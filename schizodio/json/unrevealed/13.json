@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio Pixelated #13",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator. Pixelated Edition.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/unrevealed/e6bdc6cbe978a46f9f0cfefc838cfd287867dfcd6c8999285dd3a45961f28850.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 13,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Bajan Bando"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Lobster Pink"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "Schizodio OG Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Squiggly Blue"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Schizo OG White"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Purple Camo"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Light Blonde Pompadour"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Bitchari T shirt"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "Braavos Shield"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Monkey Bomb"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

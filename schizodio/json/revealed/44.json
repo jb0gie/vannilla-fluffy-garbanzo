@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio #44",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/revealed/f2bd5681ce2597b638e7d7ec4f8b6ba064b51f91603e0f559a4ce44df588de0e.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 44,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Nacht der Untoten 2"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Schizo Blue"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Open"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Schizo OG White"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Sad"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Remilio Madoka"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Kurta Jeet"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Weasel"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

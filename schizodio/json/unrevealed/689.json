@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio Pixelated #689",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator. Pixelated Edition.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/unrevealed/20db07f28ab734abc64072c779301db3daf0352b3a7aa21239aa02f11487d9f3.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 689,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "White Widow"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Lobster Pink"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "U"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Reptilian Red"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Cyan Camo"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Remilio Madoka"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Turkey Track Jacket"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "Man Hunt Spade"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Sifu"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

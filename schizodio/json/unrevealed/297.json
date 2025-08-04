@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio Pixelated #297",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator. Pixelated Edition.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/unrevealed/b9e9e14067e9ce1b209be9b22717546d3d1696b8940f67cc0c3695401a897772.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 297,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Cloud Nine"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Stone Cyborg"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Squiggle"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Purple Urkle"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Blue Notched Slit"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Black Pompadour"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Relax Vest"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "Gengar Winterhat"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Laughing"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

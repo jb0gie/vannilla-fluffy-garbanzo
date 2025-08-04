@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio Pixelated #729",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator. Pixelated Edition.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/unrevealed/2cc168867ad31e42b627f7cf2f7fea38d4215ce633e64b8e0b7d90e917d9557d.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 729,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Hyperbolic Timechamber"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Schizo Blue"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "Schizodio OG Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smiley"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Stoned Red"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Red Eyebrows "
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Rainbow Sherbet Fringe Flow"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "ADHD Tshirt"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Purple Aki"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Honey Comb Blunt"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

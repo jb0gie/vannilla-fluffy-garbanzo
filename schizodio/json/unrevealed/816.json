@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio Pixelated #816",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator. Pixelated Edition.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/unrevealed/f5bd28034fefc6543f93b026847c53dbd23f330377b89495cbca063a50cd50ef.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 816,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Paradise 3"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Snowflake"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Squiggle"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Schizo Tattoo Eyes"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Red Eyebrows "
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Light Blonde Pompadour"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Faguar Tshirt"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Sifu"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "I Believed in Something"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

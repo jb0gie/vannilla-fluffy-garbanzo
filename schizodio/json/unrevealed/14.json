@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio Pixelated #14",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator. Pixelated Edition.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/unrevealed/f5764fd5cfc8153d69c643b97a607c9f732b058519dc1db86faef171d8546be0.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 14,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Chuppa pillz"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Lobster Pink"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Squiggly"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Hazelnut"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Black Slits"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Cyan Blue Pompadour"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Schizodio Company Blue Tshirt"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "Hyperlane Bazooka"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Toasty"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio #19",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/revealed/8142009e3a09ceb5de6ef67611e00022c4fa37441b711ab031a38a92c45d958b.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 19,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Rekt Bardock"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Snowflake"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "W"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Purple Urkle"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Sad"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Blue Sherbert Fringe Flow"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Pink Puffer"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "Stwo Cap"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "yasin sidekick "
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

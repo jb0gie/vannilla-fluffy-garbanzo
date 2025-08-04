@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio Pixelated #50",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator. Pixelated Edition.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/unrevealed/6121e6ef66794b8335fd0f6ad114dafeeb1352c8327586b6884cd6b2dae0ab23.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 50,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Honest werk"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Boy Who Cried Wolf"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Happy"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Schizo Yellow"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Blue Notched Slit"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Brown Fringe Flow"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Chaatgpt Tshirt"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Kevin Perry"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

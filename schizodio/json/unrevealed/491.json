@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio Pixelated #491",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator. Pixelated Edition.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/unrevealed/04a4b1b7ff79d07844d42e306cea82aabb7f3f3a583f280c785f66d5e50978a8.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 491,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Hadoken 波動拳"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Brother"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Squiggly Blue"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Confusion"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Sad"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Quan Pink"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Bob Sponge Tshirt"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "Frieza Helmet"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Tuff Times"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "Your Soul is Mine"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio Pixelated #75",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator. Pixelated Edition.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/unrevealed/7f5ff63bb3ef97cc8d9984d82d036683ed3193d8d55f3ba9ead703ff19e783b8.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 75,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Duck hunt"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Purple Urkle"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Rectangle"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Hazelnut"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Black Slits"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Light Blonde Pompadour"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Okay Now Tshirt"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Tuff Times"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Memory Card Chain"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

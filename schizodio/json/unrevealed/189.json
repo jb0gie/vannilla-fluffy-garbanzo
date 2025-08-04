@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio Pixelated #189",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator. Pixelated Edition.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/unrevealed/879e015b52ba7c74aed03fbe535b318d9a99fc07c9553260d4e187d09984449b.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 189,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Open Sea 2"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Lobster Pink"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Squiggly"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Schizo Tattoo Eyes"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Cyan Camo"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Black Pompadour"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Argent Tshirt"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Chiliz"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

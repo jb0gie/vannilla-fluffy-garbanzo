@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio Pixelated #523",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator. Pixelated Edition.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/unrevealed/ec4f248a8ac8a82104c64d5d9fa36f0ecc2a9fd905354e7b8736de087f31d3db.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 523,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Mega Drive"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Snowflake"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Squiggle"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Crying"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Purple Slits"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Fringe Pink"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Guru Suit"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Tuff Times"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

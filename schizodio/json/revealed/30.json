@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio #30",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/revealed/9cd604d8f5681be9e1e439cfb8eab853b675931f8d9d77e545232cb579d11d0c.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 30,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Touch grass"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Snowflake"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "Cyborg Hypio"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Rectangle"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Schizo OG White"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Standard"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Cyan Blue Pompadour"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Bob Sponge Tshirt"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Kevin Perry 2"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

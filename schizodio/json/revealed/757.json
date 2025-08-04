@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio #757",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/revealed/fa9ee6ff5f4cee89502b3512ea9f7c520f8bc1634526a506f321e4f10b772aa2.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 757,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "The Office SZN2"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Stone Cyborg"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "V Blue"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Schizo Tattoo Eyes"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Purple Camo"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Dark Red Fringe Flow"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Backwoods Hoodie"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "HEX Cap"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Eli Owl"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

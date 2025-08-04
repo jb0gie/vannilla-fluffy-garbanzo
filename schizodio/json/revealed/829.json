@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio #829",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/revealed/b43b953e82de4e64aef08dbdde327eaf3eb02a7ee57223602ee5a5615edea44c.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 829,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Chongqing 磁器口古镇 "
+    },
+    {
+      "trait_type": "Body",
+      "value": "Greeny"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Squiggle"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Schizo Light Blue"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Blue Notched Slit"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Blondie Brown Pompadour"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Guru Suit"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Blobby"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

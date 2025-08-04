@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio #389",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/revealed/e7a313aa8fc56b426cb9e303aa67110cbbff24339584ed794185a1b5a57c6894.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 389,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Money Shot"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Snowflake"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Squiggly Blue"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Milady Schizo Tattoo"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Black Notched Slits"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Ginger Curtain Bob"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Schizoberry Tshirt"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "Soul Sword 2"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Billy no Mates"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

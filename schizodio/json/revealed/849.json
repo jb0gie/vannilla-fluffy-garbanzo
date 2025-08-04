@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio #849",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/revealed/3ead082b7ac7ecf70f447a234102e9a062009468c2816d565bbe70b46d410690.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 849,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Pink Champagne"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Greeny"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Open"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Schizo Tattoo Eyes"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Purple Slits"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Fringe Pink"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "School Uniform"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "Wif Beanie"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Bernard"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio #837",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/revealed/7f2c2ff28d01eb7b84a565cb2b26409089f52ab74ec21af389cbd9897f4ef849.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 837,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Honest werk"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Purple Urkle"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "Schizodio OG Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "W Red"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Dead"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Red Eyebrows "
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Green Fringe Flow"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Peaky Blind Tshirt"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "Turkish Shooter"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "yasin sidekick "
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

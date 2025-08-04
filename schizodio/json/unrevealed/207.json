@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio Pixelated #207",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator. Pixelated Edition.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/unrevealed/1307c4732c3cd919d4addce0c13ac736cc1449449e4a0323cd227c63d333cada.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 207,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Hyperbolic Timechamber"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Purple Urkle"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smiley"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Green Pilled"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Schizodio Blue"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Brown Fringe Flow"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Pink Puffer"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "Xverse Cap"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Pinky"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

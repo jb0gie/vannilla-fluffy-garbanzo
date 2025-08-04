@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio Pixelated #409",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator. Pixelated Edition.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/unrevealed/59c41fdfbdd1f52c8870b6a740ea64dd0b10c09f6ed06b5623462e484e92a9ee.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 409,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "The Office SZN2"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Purple Urkle"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Rectangle"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Schizo Red"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Sad"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Quan Red Black"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Baby Schizo White Tshirt"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Billy no Mates"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "There is a Meme"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

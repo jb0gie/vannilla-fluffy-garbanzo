@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio #56",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/revealed/432159ffbcd94a135cb7a1d3167a88d6e72a6177f80c7d47b4f30ba91fe9232e.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 56,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "The Pit"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Purple Urkle"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Open"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Dead"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Standard 2"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Milady Green"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Flintstones Tshirt"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "Spamco Arcade Gun"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Slinky"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

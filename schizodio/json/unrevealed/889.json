@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio Pixelated #889",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator. Pixelated Edition.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/unrevealed/d05f1f3ba51270017cd9db11f4d6122beab7b15210f25a866df4cc19e5b20380.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 889,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Nacht der Untoten 2"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Stone Cyborg"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smiley"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Milady Blue"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Schizodio Blue"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Fringe White"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Mushroomon Jacket"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "Man Hunt Bat"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Ogb"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Grime Reaper Candle"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio #100",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/revealed/9da6786ac05c2769e2192f6a2966e2705330945aa8b4989fec3d580944f89230.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 100,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Light & Mist"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Greeny"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Rectangle"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Stoned Red"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Purple Camo"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Light Blonde Pompadour"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Gold Skull Shirt"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Schizo Barney 2"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

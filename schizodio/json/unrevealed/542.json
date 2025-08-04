@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio Pixelated #542",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator. Pixelated Edition.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/unrevealed/eea073074a8d3cae989dbe4cc7d4c4bb4d82d46a8056a707bcacd2f16f8bf73a.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 542,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Pick'n Mix"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Schizo Blue"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "U"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Confusion"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Blue Notched Slit"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Yellowy Orange Curtain Bob"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Kurta Jeet"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Kekec"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

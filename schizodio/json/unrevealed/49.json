@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio Pixelated #49",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator. Pixelated Edition.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/unrevealed/5239bffd1e8ed0b64d0d883ebef59b5e37c6cf55a0627fd6fa378f6c420e42b3.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 49,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Raffles City"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Schizo Blue"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Rectangle"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Kano's Bionic Eyes"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Black Slits"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Dark Red Fringe Flow"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "ADHD Tshirt"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "Ronnie Beanie"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "Man Hunt Bat"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Black Kangal"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

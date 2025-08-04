@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio #824",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/revealed/bfe920205e0ba1892d902130b89c4d573da8e6ed026ffdbff8d2a9a8ce47b1fe.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 824,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Marina Skyline"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Schizo Blue"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "U"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Schizo Light Blue"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Schizodio Blue"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Dark Red Fringe Flow"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Im with Schizodio Tshirt"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "Nigerian Clown Headwarmer"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Dexter"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

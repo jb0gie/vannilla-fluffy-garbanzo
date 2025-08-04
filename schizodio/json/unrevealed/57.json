@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio Pixelated #57",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator. Pixelated Edition.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/unrevealed/e0ef53004ba8d5a1ca07f0b6e9b9aa8045c998437ea4d2148193b968d74789e9.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 57,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Tesla Pillz"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Snowflake"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "U"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Schizo Yellow"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Black Notched Slits"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Milady Red"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Polymarket Tshirt"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "Remilia Black Cap"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Lean Harry"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "Turkey Twizzlers"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

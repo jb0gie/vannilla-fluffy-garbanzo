@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio Pixelated #373",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator. Pixelated Edition.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/unrevealed/acdbe1715affa9bfa1b9420cb41a38324332be57e637c4880a441fa74e78e1b9.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 373,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Fenty Bando"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Snowflake"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "U"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Schizo Purple"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Black Slits"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Rainbow Sherbet Fringe Flow"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Saiyan Suit"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Kevin Perry"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Memory Card Chain"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

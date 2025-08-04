@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio #706",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/revealed/7b2f996bf023672691a5d472c09905337d1519144c65c3170a1b96ecc0ced14e.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 706,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "The Office SZN2"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Schizo Blue"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Squiggly"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Schizo Green"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Black Slits"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Brown Curtain Bob"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "I Am Carrying Tshirt"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Dexter"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "Hai Hai"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio Pixelated #718",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator. Pixelated Edition.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/unrevealed/6459074831d505f3d9d57bef5df7be0b43c952ec953fb18cbc88b396f5cf3075.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 718,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Rekt Bardock"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Boy Who Cried Wolf"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "W"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Crying"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Tinted Green Notched Slit"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Dark Green Jelly Cut"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Argent Tshirt"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "Paradex Axe"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Kekec"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

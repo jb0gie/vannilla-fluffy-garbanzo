@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio #95",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/revealed/b8075d5ea21f9edf85c6aaf26fa523b81d31e1d99705ac7bd363ef48ee5d1c6c.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 95,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Bajan Safehouse"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Purple Urkle"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Neutral"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Schizo OG White"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Tinted Green Notched Slit"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Fringe Cyan"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Stop Being Poor Vest"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Black Kangal"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

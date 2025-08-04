@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio #584",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/revealed/f0180ba2cfa66b3f194ef5e2f7608c1ee582f048ed77ce680ef707332972c99b.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 584,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Touch grass"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Stone Cyborg"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Open"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Schizo Green"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Purple Slits"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Fringe Pink"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Baby Schizo White Tshirt"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "yasin sidekick "
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "I is Carrying"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

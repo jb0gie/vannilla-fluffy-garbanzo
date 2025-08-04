@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio Pixelated #504",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator. Pixelated Edition.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/unrevealed/fcdb1938f3fb1cb45de96cad99a51c7111d9b54f657177d421068ae9002b7a50.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 504,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Chongqing"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Snowflake"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Squiggly Blue"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Dead"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Black Slits"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Black Pompadour"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "Safety Glasses Blue"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Life is Soup Tshirt"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Eli Owl"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

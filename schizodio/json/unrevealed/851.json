@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio Pixelated #851",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator. Pixelated Edition.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/unrevealed/2ed4b51acbcad86cb7d9edc13aded94c9d9c3408fd9ff9be2f670e3b8a5d6d37.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 851,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Dubai Desert 2"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Snowflake"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Squiggly"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Ekubo Bionic Eyes"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Cyan Camo"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Quan Red Black"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Tuxedo"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Kekec"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio Pixelated #550",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator. Pixelated Edition.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/unrevealed/c8fcafffb9f44adf98bbb691fbaaa0beb675deff43813b75308984ea0c709f53.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 550,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "White Widow"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Greeny"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Open"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Crying"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Funky"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Milady Black"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "I Am Carrying Tshirt"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Bernard"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

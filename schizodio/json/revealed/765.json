@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio #765",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/revealed/4ebf70891e8f572d90d4e1e1034cd7cd51e08fb2909fd19069d709ebd7b12bcb.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 765,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Honest werk"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Purple Urkle"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "W"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Dead Splash"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Red Eyebrows "
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Milady Black"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "I Have A Weapon"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Kazuya"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

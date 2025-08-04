@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio #931",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/revealed/570e0c30c0cd01da01183bbd4109b9b84efd0d0436f12cfa117df3df16da5837.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 931,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Marina Skyline"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Snowflake"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "W"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Hazelnut"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Standard"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Ginger Curtain Bob"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Get Money Tshirt"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Baboon"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

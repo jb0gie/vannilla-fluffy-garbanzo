@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio Pixelated #274",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator. Pixelated Edition.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/unrevealed/54d0b413931843bb5ee8cc45604acf0876323ebfbf2426541a2d18e73a01701d.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 274,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Honest werk"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Gora"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Open"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Reptilian Red"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Sad"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Milady Dark Blue"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Black Jacket"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Tuff Times"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "There is a Meme"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}

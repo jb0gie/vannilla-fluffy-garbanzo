@@ -1,0 +1,69 @@
+{
+  "name": "Schizodio #83",
+  "symbol": "SCHIZOBRO",
+  "description": "SchizodioBrothers. The derivative of all derivatives. The first born child. The creator.",
+  "image": "https://techshaman.42024769.xyz/schizodio/images/revealed/8d12f103f9b8f1908e93018479ab91aa106b65db6a6586a5c861fe61ab24fa1e.png",
+  "external_url": "https://schizodio.xyz/",
+  "edition": 83,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Planet Kai"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Lobster Pink"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "No Mask"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smiley"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Schizo Tattoo Eyes"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Standard"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Light Blonde Pompadour"
+    },
+    {
+      "trait_type": "Eyewear",
+      "value": "No Eyewear"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Schizo Duck Tshirt"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "trait_type": "Weapons",
+      "value": "No Weapons"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Chiliz"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "No_Accessories"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "No Overlay"
+    }
+  ],
+  "properties": {
+    "category": "image"
+  }
+}
