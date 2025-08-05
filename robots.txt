@@ -1,0 +1,13 @@
+User-agent: *
+Disallow: /schizodio/
+Disallow: /metadata/
+Disallow: /.git/
+Disallow: /.well-known/
+Disallow: /models/
+Disallow: /hypcity/
+
+# Allow main site
+Allow: /
+
+# Sitemap (if you have one)
+# Sitemap: https://techshaman.42024769.xyz/sitemap.xml 
