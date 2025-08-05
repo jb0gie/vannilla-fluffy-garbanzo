@@ -1,0 +1,1 @@
+{"version":1,"contracts":[{"id":"a4db74g6urb1e","package_name":"hello_schizo","contract_name":"SchizodioBrother","module_path":"hello_schizo::SchizodioBrother","artifacts":{"sierra":"hello_schizo_SchizodioBrother.contract_class.json","casm":null}}]}
