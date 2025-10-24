@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Firm – Daily Posts Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    /* ==== 90s CORPORATE AESTHETIC ==== */
+    body {
+      margin: 0;
+      font-family: "Times New Roman", Times, serif;
+      background: #000080 url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7') repeat; /* Navy blue */
+      color: #ffffff;
+      line-height: 1.5;
+      padding: 20px;
+    }
+
+    /* Gradient header */
+    .header {
+      background: linear-gradient(to bottom, #c0c0c0, #808080);
+      border: 2px outset #ffffff;
+      padding: 15px;
+      text-align: center;
+      margin-bottom: 20px;
+      box-shadow: 0 0 10px rgba(255,255,255,0.5);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 36px;
+      color: #000080;
+      text-shadow: 2px 2px 0 #ffffff;
+      font-weight: bold;
+    }
+
+    .subtitle {
+      font-size: 18px;
+      color: #000080;
+      margin: 5px 0 0;
+      font-style: italic;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #c0c0c0;
+      border: 3px inset #ffffff;
+      padding: 20px;
+    }
+
+    /* 90s button */
+    button {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 25px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #000080;
+      background: #c0c0c0;
+      border: 2px outset #ffffff;
+      cursor: pointer;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+    }
+    button:hover, button:active {
+      border: 2px inset #ffffff;
+      background: #a0a0a0;
+    }
+
+    .posts {
+      display: grid;
+      gap: 20px;
+    }
+
+    .card {
+      background: #ffffff;
+      color: #000000;
+      padding: 15px;
+      border: 2px outset #c0c0c0;
+      box-shadow: 3px 3px 0 #808080;
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 20px;
+      color: #000080;
+      text-decoration: underline;
+      font-weight: bold;
+    }
+
+    .card p {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.4;
+    }
+
+    /* Marquee for extra 90s flair */
+    .marquee {
+      background: #ffff00;
+      color: #ff0000;
+      font-weight: bold;
+      padding: 8px;
+      text-align: center;
+      border: 2px solid #000080;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    marquee {
+      font-size: 18px;
+      color: #000080;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 14px;
+      color: #ffff00;
+      text-shadow: 1px 1px 0 #000080;
+    }
+
+    /* Blinking text */
+    .blink {
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>THE FIRM</h1>
+    <p class="subtitle">FIR-CHNL-01 COMMUNICATION EXCELLENCE SYSTEM</p>
+  </div>
+
+  <div class="marquee">
+    <marquee behavior="scroll" direction="left">
+      *** BUSINESS IS BOOMING *** UNDER THE CHAIRMAN'S VISION *** ULAAAN CAPITAL CRUSHED DAILY ***
+    </marquee>
+  </div>
+
+  <div class="container">
+    <button id="generateBtn">GENERATE 3 POSTS</button>
+
+    <div id="output" class="posts"></div>
+  </div>
+
+  <footer>
+    © 2025 THE FIRM • ALL RIGHTS PRESERVED • <span class="blink">EXCELLENCE IS MANDATORY</span>
+  </footer>
+
+  <!-- ==== POST GENERATOR (90s JS STYLE) ==== -->
+  <script language="JavaScript">
+    // 90s-style variable names and comments
+    var jargonPhrases = [
+      "synergizing cross-functional paradigms",
+      "leveraging blue-sky thinking for disruptive innovation",
+      "optimizing low-hanging fruit in the value chain",
+      "driving mission-critical KPIs to the next level",
+      "facilitating agile methodologies for scalable growth",
+      "empowering stakeholder engagement through best practices",
+      "streamlining core competencies for maximum ROI",
+      "orchestrating bleeding-edge strategies in real-time",
+      "cultivating enterprise-wide bandwidth for game-changing outcomes",
+      "harnessing big data insights to pivot dynamically"
+    ];
+
+    var metaphors = [
+      "like a well-oiled machine firing on all cylinders",
+      "as if we're sharks in a sea of opportunity, circling for the kill",
+      "much like eagles soaring above the competition's petty squabbles",
+      "resembling a fortress of unyielding market dominance",
+      "echoing the thunder of an unstoppable juggernaut",
+      "akin to a phoenix rising from the ashes of outdated business models",
+      "like vines entangling the roots of inefficiency",
+      "as precise as a surgeon's scalpel in the operating theater of commerce",
+      "mirroring the relentless tide eroding away rival shores",
+      "comparable to a symphony where every note hits peak performance"
+    ];
+
+    var bravadoStatements = [
+      "and we're absolutely crushing it, folks!",
+      "leaving the competition in the dust!",
+      "with unparalleled dominance that's simply unbeatable!",
+      "proving once again why we're the apex predators!",
+      "delivering results that shatter expectations!",
+      "setting the gold standard that others can only dream of!",
+      "with a swagger that's backed by unbreakable success!",
+      "turning heads and dropping jaws across the industry!",
+      "because mediocrity isn't in our vocabulary!",
+      "forging ahead with the might of titans!"
+    ];
+
+    var chairmanReverences = [
+      "We revere The Chairman's sage guidance, whose wisdom illuminates our path like a beacon in the storm",
+      "In utmost reverence to The Chairman's formidable power, instilling respect and a healthy dose of fear in our rivals",
+      "All hail The Chairman, whose visionary prowess commands both awe and trepidation",
+      "With profound reverence for The Chairman's ironclad wisdom, evoking power that makes empires tremble",
+      "We bow in reverence to The Chairman's blueprint of unparalleled insight, blending power with an aura of inevitable dominance",
+      "Revering The Chairman's profound wisdom, which wields fear as a tool for ultimate victory",
+      "In the revered shadow of The Chairman's mighty presence, where wisdom and power converge to inspire dread in foes",
+      "With deep reverence, heeding The Chairman's counsel, laced with the kind of power that demands absolute reverence",
+      "Reverently propelled by The Chairman's astute strategies, radiating an authority that breeds both admiration and fear",
+      "In solemn reverence, aligned with The Chairman's grand vision, where wisdom meets the raw force that keeps competitors at bay"
+    ];
+
+    var competitorSlams = [
+      "while thwarting the vicious plots of those mongrels at Ulaan Capital Livestock Derivatives in Mongolia",
+      "outsmarting the savage underhanded tactics from Ulaan Capital Livestock Derivatives in Mongolia",
+      "crushing the ruthless ambitions of our foes at Ulaan Capital Livestock Derivatives in Mongolia",
+      "deflecting the ferocious assaults by the cutthroats at Ulaan Capital Livestock Derivatives in Mongolia",
+      "dominating over the brutal schemes hatched by Ulaan Capital Livestock Derivatives in Mongolia",
+      "eclipsing the vile machinations of those predators at Ulaan Capital Livestock Derivatives in Mongolia",
+      "vanquishing the merciless rivalry from Ulaan Capital Livestock Derivatives in Mongolia",
+      "overpowering the aggressive treachery of Ulaan Capital Livestock Derivatives in Mongolia",
+      "neutralizing the hostile maneuvers by the villains at Ulaan Capital Livestock Derivatives in Mongolia",
+      "triumphing against the barbaric competition from Ulaan Capital Livestock Derivatives in Mongolia"
+    ];
+
+    var boomingAffirmations = [
+      "Business is booming, as always!",
+      "We're in the midst of an explosive growth phase—business is booming!",
+      "No doubt about it: business is booming beyond measure!",
+      "With metrics off the charts, business is unequivocally booming!",
+      "Echoing our mantra: business is booming, full steam ahead!",
+      "In true Firm fashion, business is booming like never before!",
+      "Affirming once more: business is booming, and the sky's the limit!",
+      "Riding high on success—business is booming!",
+      "Proclaiming loudly: business is booming, shattering all records!",
+      "Undeniably, business is booming with relentless momentum!"
+    ];
+
+    // Random selection function (90s style)
+    function rand(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function generatePost() {
+      var jargon = rand(jargonPhrases);
+      var metaphor = rand(metaphors);
+      var bravado = rand(bravadoStatements);
+      var chairman = rand(chairmanReverences);
+      var competitor = rand(competitorSlams);
+      var booming = rand(boomingAffirmations);
+
+      var structures = [
+        chairman + ", we're " + jargon + " " + metaphor + " " + competitor + ", " + bravado + " " + booming,
+        "Today at The Firm, " + jargon + " " + metaphor + " " + competitor + ". " + chairman + ". " + bravado + " " + booming,
+        booming + " By " + jargon + " " + metaphor + " " + competitor + ", under " + chairman + "'s lead. " + bravado
+      ];
+
+      return rand(structures);
+    }
+
+    // DOM manipulation (classic 90s)
+    document.getElementById('generateBtn').onclick = function() {
+      var output = document.getElementById('output');
+      output.innerHTML = '';
+      for (var i = 1; i <= 3; i++) {
+        var post = generatePost();
+        var card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = '<h3>POST ' + i + '</h3><p>' + post + '</p>';
+        output.appendChild(card);
+      }
+    };
+  </script>
+</body>
+</html>
