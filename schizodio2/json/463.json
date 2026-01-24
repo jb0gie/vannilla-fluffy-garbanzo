@@ -1,0 +1,64 @@
+{
+  "name": "Schizodio The Second Instalment #463",
+  "symbol": "SCHIZOBRO",
+  "description": "Schizodio The Second Instalment. The Redpill Remix. The Starknet Spawn. The Solana Schizo.",
+  "seller_fee_basis_points": 1000,
+  "image": "https://techshaman.42024769.xyz/schizodio2/images/463.png",
+  "external_url": "https://solana.schizodio.art/",
+  "edition": 463,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Eternal Paradise"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Boy Who Cried Wolf Upgrade"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "Schizodio OG Mask Purple"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Schizodio Remilio Blue"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Grey Camo"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Schizo Bitch Sweater"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Fringe Neon Green"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Squiggly"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "White Crushed Strawberry Head Warmer"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Gali"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "None"
+    }
+  ],
+  "properties": {
+    "category": "image",
+    "creators": [
+      {
+        "address": "5xdKUe2A28T8it164qczZV3yumVJit79kFFo3jEajaSd",
+        "share": 100
+      }
+    ]
+  }
+}

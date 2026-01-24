@@ -1,0 +1,64 @@
+{
+  "name": "Schizodio The Second Instalment #727",
+  "symbol": "SCHIZOBRO",
+  "description": "Schizodio The Second Instalment. The Redpill Remix. The Starknet Spawn. The Solana Schizo.",
+  "seller_fee_basis_points": 1000,
+  "image": "https://techshaman.42024769.xyz/schizodio2/images/727.png",
+  "external_url": "https://solana.schizodio.art/",
+  "edition": 727,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "X Tabs"
+    },
+    {
+      "trait_type": "Body",
+      "value": "White Diamond"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "None"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "BTC"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Black Slits"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Ukraine Tshirt"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Pharaoh"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Slug"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "Schizo Pilled Frogsplash Winterhat"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Peepo"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "Locked"
+    }
+  ],
+  "properties": {
+    "category": "image",
+    "creators": [
+      {
+        "address": "5xdKUe2A28T8it164qczZV3yumVJit79kFFo3jEajaSd",
+        "share": 100
+      }
+    ]
+  }
+}

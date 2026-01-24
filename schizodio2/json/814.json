@@ -1,0 +1,64 @@
+{
+  "name": "Schizodio The Second Instalment #814",
+  "symbol": "SCHIZOBRO",
+  "description": "Schizodio The Second Instalment. The Redpill Remix. The Starknet Spawn. The Solana Schizo.",
+  "seller_fee_basis_points": 1000,
+  "image": "https://techshaman.42024769.xyz/schizodio2/images/814.png",
+  "external_url": "https://solana.schizodio.art/",
+  "edition": 814,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Benidorm Beach"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Purple Aki"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "None"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Purple"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Standard"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Learing Tshirt"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Jellycut Grey"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "W"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "None"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Mandy"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "None"
+    }
+  ],
+  "properties": {
+    "category": "image",
+    "creators": [
+      {
+        "address": "5xdKUe2A28T8it164qczZV3yumVJit79kFFo3jEajaSd",
+        "share": 100
+      }
+    ]
+  }
+}

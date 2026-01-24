@@ -1,0 +1,64 @@
+{
+  "name": "Schizodio The Second Instalment #30",
+  "symbol": "SCHIZOBRO",
+  "description": "Schizodio The Second Instalment. The Redpill Remix. The Starknet Spawn. The Solana Schizo.",
+  "seller_fee_basis_points": 1000,
+  "image": "https://techshaman.42024769.xyz/schizodio2/images/30.png",
+  "external_url": "https://solana.schizodio.art/",
+  "edition": 30,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Super Ranger"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Sun Kissed Peach"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "Schizodio OG Mask Purple"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Milady Brown"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Green Camo"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Dubai Tshirt"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Fringe Blue"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "sluggy smile"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "None"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "Biff"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "None"
+    }
+  ],
+  "properties": {
+    "category": "image",
+    "creators": [
+      {
+        "address": "5xdKUe2A28T8it164qczZV3yumVJit79kFFo3jEajaSd",
+        "share": 100
+      }
+    ]
+  }
+}

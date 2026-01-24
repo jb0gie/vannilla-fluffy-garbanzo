@@ -1,0 +1,64 @@
+{
+  "name": "Schizodio The Second Instalment #668",
+  "symbol": "SCHIZOBRO",
+  "description": "Schizodio The Second Instalment. The Redpill Remix. The Starknet Spawn. The Solana Schizo.",
+  "seller_fee_basis_points": 1000,
+  "image": "https://techshaman.42024769.xyz/schizodio2/images/668.png",
+  "external_url": "https://solana.schizodio.art/",
+  "edition": 668,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Nfsu Dev"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Karla"
+    },
+    {
+      "trait_type": "Mask",
+      "value": "None"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Schizodio Red"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Purple Cyan Hybrid Camo"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "Nonce Tshirt"
+    },
+    {
+      "trait_type": "Hair",
+      "value": "Legolas Red"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Rectangle"
+    },
+    {
+      "trait_type": "Headwear",
+      "value": "None"
+    },
+    {
+      "trait_type": "Sidekick",
+      "value": "A White Whale"
+    },
+    {
+      "trait_type": "Overlays",
+      "value": "Illuminati"
+    }
+  ],
+  "properties": {
+    "category": "image",
+    "creators": [
+      {
+        "address": "5xdKUe2A28T8it164qczZV3yumVJit79kFFo3jEajaSd",
+        "share": 100
+      }
+    ]
+  }
+}
