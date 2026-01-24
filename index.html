@@ -32,12 +32,17 @@
     main {
       width: 100vw;
       color: white;
-      z-index: 99;
+      z-index: 10;
       position: absolute;
       margin: 0px auto;
       padding: 60px 20px;
       display: grid;
       grid-template-columns: repeat(12, 1fr);
+      pointer-events: none;
+    }
+
+    main>* {
+      pointer-events: auto;
     }
 
     h1,
@@ -53,8 +58,9 @@
       position: fixed;
       top: 0;
       left: 0;
-      z-index: -1;
+      z-index: 1;
       cursor: pointer;
+      pointer-events: auto;
     }
 
     blockquote p {
@@ -202,6 +208,7 @@
   <script src="https://cdn.jsdelivr.net/npm/three/examples/fonts/helvetiker_regular.typeface.json"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.9/dat.gui.min.js"></script>
   <script type="module">
+
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -210,7 +217,9 @@
     import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
     import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
     import { AfterimagePass } from 'three/addons/postprocessing/AfterimagePass.js';
-    
+    import { sdk } from 'https://esm.sh/@farcaster/miniapp-sdk' 
+
+
     (function () {
       // Initialize all variables first
       const textMeshes = [];
@@ -227,6 +236,78 @@
       let isHovered = false;
       let originalScale = new THREE.Vector3(1, 1, 1);
       let tooltipDiv;
+      let clickParticles;
+      let interactionLight, pulseLight;
+      let activeUIPanel = null;
+      let uiPanels = [];
+      let cyberpunkMaterials;
+      let uiManager;
+      let bugs = [];
+      let bugsSquashed = 0;
+      let totalBugs = 5;
+      let afterimageEnabled = true;
+      let bugSpawnInterval;
+      let bugManager;
+
+      // Stats tracking variables
+      let stats = {
+        fps: 60,
+        frameCount: 0,
+        lastTime: performance.now(),
+        startTime: Date.now(),
+        clickCount: 0
+      };
+
+      // Audio context for sound effects
+      let audioContext;
+
+      // Initialize audio context on first user interaction
+      function initAudio() {
+        if (!audioContext) {
+          audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+      }
+
+      // Play synthetic sound effect
+      function playSound(type = 'click') {
+        if (!audioContext) return;
+
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+
+        switch(type) {
+          case 'click':
+            oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.1);
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+            break;
+          case 'hover':
+            oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(600, audioContext.currentTime + 0.05);
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.05);
+            break;
+          case 'reset':
+            oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.2);
+            gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+            break;
+          case 'toggle':
+            oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(1200, audioContext.currentTime + 0.15);
+            gainNode.gain.setValueAtTime(0.25, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
+            break;
+        }
+
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.3);
+      }
 
 
       // Initialize raycaster settings
@@ -257,9 +338,32 @@
           setTimeout(() => {
             loaderContainer.style.display = 'none';
             document.querySelector('main').style.display = 'block';
+            // Show stats HUD after loading
+            document.querySelector('#stats-hud').style.display = 'block';
           }, 500);
         }
       };
+
+      // Add error handler for missing assets
+      loadingManager.onError = function(url) {
+        console.warn('Asset failed to load:', url);
+        // Continue loading despite missing assets
+        loadingManager.itemEnd(url);
+      };
+
+      // Fallback timeout to ensure page loads even with stuck assets
+      setTimeout(() => {
+        const loaderContainer = document.querySelector('#loader-container');
+        if (loaderContainer && loaderContainer.style.display !== 'none') {
+          console.log('Loading timeout - forcing page to show');
+          loaderContainer.style.opacity = '0';
+          setTimeout(() => {
+            loaderContainer.style.display = 'none';
+            document.querySelector('main').style.display = 'block';
+            document.querySelector('#stats-hud').style.display = 'block';
+          }, 500);
+        }
+      }, 5000); // 5 second fallback
 
       // Initialize scene and camera first
       scene = new THREE.Scene();
@@ -298,8 +402,56 @@
       // Colored ambient lights
       const ambientLight1 = new THREE.AmbientLight(0x247420, 0.3);  // Green tint
       const ambientLight2 = new THREE.AmbientLight(0x420247, 0.3);  // Purple tint
-      
+
       scene.add(pointLight, pointLight2, pointLight3, ambientLight1, ambientLight2);
+
+      // Dynamic lighting for interactions
+      interactionLight = new THREE.PointLight(0xffffff, 0, 20);
+      interactionLight.position.set(0, 0, 10);
+      scene.add(interactionLight);
+
+      pulseLight = new THREE.PointLight(0x00ffff, 0.5, 30);
+      pulseLight.position.set(0, 0, 0);
+      scene.add(pulseLight);
+
+      // Click particle system
+      const clickParticleCount = 50;
+      const clickParticleGeometry = new THREE.BufferGeometry();
+      const clickParticlePositions = new Float32Array(clickParticleCount * 3);
+      const clickParticleVelocities = [];
+      const clickParticleColors = new Float32Array(clickParticleCount * 3);
+      const clickParticleSizes = new Float32Array(clickParticleCount);
+      const clickParticleAlphas = new Float32Array(clickParticleCount);
+
+      for (let i = 0; i < clickParticleCount; i++) {
+        clickParticlePositions[i * 3] = 0;
+        clickParticlePositions[i * 3 + 1] = 0;
+        clickParticlePositions[i * 3 + 2] = 0;
+        clickParticleVelocities.push(new THREE.Vector3(0, 0, 0));
+        clickParticleColors[i * 3] = Math.random();
+        clickParticleColors[i * 3 + 1] = Math.random();
+        clickParticleColors[i * 3 + 2] = Math.random();
+        clickParticleSizes[i] = Math.random() * 0.1 + 0.05;
+        clickParticleAlphas[i] = 0;
+      }
+
+      clickParticleGeometry.setAttribute('position', new THREE.BufferAttribute(clickParticlePositions, 3));
+      clickParticleGeometry.setAttribute('color', new THREE.BufferAttribute(clickParticleColors, 3));
+      clickParticleGeometry.setAttribute('size', new THREE.BufferAttribute(clickParticleSizes, 1));
+      clickParticleGeometry.setAttribute('alpha', new THREE.BufferAttribute(clickParticleAlphas, 1));
+
+      const clickParticleMaterial = new THREE.PointsMaterial({
+        size: 0.1,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.8,
+        blending: THREE.AdditiveBlending,
+        sizeAttenuation: true
+      });
+
+      clickParticles = new THREE.Points(clickParticleGeometry, clickParticleMaterial);
+      clickParticles.visible = false;
+      scene.add(clickParticles);
 
       // Directional light for sun
       const sunLight = new THREE.DirectionalLight(0xffffff, 1);
@@ -397,23 +549,20 @@
           font: await new Promise(resolve => fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', resolve)),
           size: 0.5,
           height: 0.1,
-          depth:1, 
-          curveSegments: 32,
+          depth: 1,
+          curveSegments: 12,
           bevelEnabled: true,
           bevelThickness: 0.02,
           bevelSize: 0.01,
           bevelOffset: 0,
-          bevelSegments: 8
+          bevelSegments: 3
         });
 
-        const material = new THREE.MeshPhysicalMaterial({
+        const material = new THREE.MeshPhongMaterial({
           color: 0xffffff,
           transparent: true,
           opacity: 0,
-          metalness: 0.2,
-          roughness: 0.1,
-          emissive: 0xffffff,
-          emissiveIntensity: 1.0
+          shininess: 30
         });
 
         const mesh = new THREE.Mesh(geometry, material);
@@ -444,12 +593,40 @@
         }
       }
 
-      // Single animation loop
+      // Performance optimization: culling and frustum checking
+      const frustum = new THREE.Frustum();
+      const cameraMatrix = new THREE.Matrix4();
+
+      // Visibility caching for performance
+      const visibilityCache = new Map();
+
+      // Optimized animation loop with frame limiting
+      let lastFrameTime = 0;
+      const targetFPS = 60;
+      const frameInterval = 1000 / targetFPS;
+
       function animate(time) {
+        // Frame rate limiting for performance
+        const deltaTime = time - lastFrameTime;
+        if (deltaTime < frameInterval) {
+          requestAnimationFrame(animate);
+          return;
+        }
+        lastFrameTime = time;
+
         requestAnimationFrame(animate);
-        
+
         // Update TWEEN
         TWEEN.update();
+
+        // Frustum culling for optimization
+        cameraMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+        frustum.setFromProjectionMatrix(cameraMatrix);
+
+        // Handle keyboard controls (only if keys are pressed)
+        if (Object.keys(keysPressed).length > 0) {
+          handleKeyboardControls();
+        }
 
         // Update animations
         if (mixer) {
@@ -457,10 +634,44 @@
           mixer.update(delta);
         }
 
-        // Animate objects
-        if (moon) moon.rotation.x += 0.005;
-        if (typeof animateText === 'function') animateText(time);
-        if (!isHovered && jeff) animateJeff(time);
+        // Optimize object animations with distance-based LOD
+        const cameraPos = camera.position;
+
+        // Animate moon only if visible
+        if (moon) {
+          const distance = moon.position.distanceTo(cameraPos);
+          if (distance < 100 && frustum.intersectsObject(moon)) {
+            moon.rotation.x += 0.005 * (1 / Math.max(1, distance * 0.01));
+          }
+        }
+
+        // Optimize text animation
+        if (typeof animateText === 'function') {
+          animateText(time);
+        }
+
+        // Optimize Jeff animation only if in view
+        if (!isHovered && jeff) {
+          if (frustum.intersectsObject(jeff)) {
+            animateJeff(time);
+          }
+        }
+
+        // Animate click particles only if visible
+        if (clickParticles.visible) {
+          animateClickParticles();
+        }
+
+        // Optimize pulsing light animation
+        if (pulseLight) {
+          pulseLight.intensity = Math.sin(time * 0.002) * 0.3 + 0.5;
+          pulseLight.color.setHSL((time * 0.0001) % 1, 0.7, 0.5);
+        }
+
+        // Update stats HUD every 60 frames to reduce overhead
+        if (stats.frameCount % 60 === 0) {
+          updateStats();
+        }
 
         // Update controls
         controls.update();
@@ -501,16 +712,113 @@
         TWO: THREE.TOUCH.DOLLY  // Only allow zoom with two fingers
       };
 
-      // Unified pointer event handler for both touch and mouse
-      function onPointerEvent(event) {
-        // Prevent default behavior only for touch events
-        if (event.pointerType === 'touch') {
-          event.preventDefault();
+      // Create particle burst at position
+      function createParticleBurst(position, color = null) {
+        const positions = clickParticles.geometry.attributes.position.array;
+        const velocities = clickParticleVelocities;
+        const alphas = clickParticles.geometry.attributes.alpha.array;
+
+        // Flash interaction light at burst position
+        interactionLight.position.copy(position);
+        interactionLight.intensity = 2;
+        new TWEEN.Tween(interactionLight)
+          .to({ intensity: 0 }, 500)
+          .easing(TWEEN.Easing.Cubic.Out)
+          .start();
+
+        // Place particles at burst position
+        for (let i = 0; i < clickParticleCount; i++) {
+          positions[i * 3] = position.x;
+          positions[i * 3 + 1] = position.y;
+          positions[i * 3 + 2] = position.z;
+
+          // Random velocity burst
+          const speed = Math.random() * 0.3 + 0.1;
+          const theta = Math.random() * Math.PI * 2;
+          const phi = Math.random() * Math.PI;
+
+          velocities[i].set(
+            speed * Math.sin(phi) * Math.cos(theta),
+            speed * Math.sin(phi) * Math.sin(theta),
+            speed * Math.cos(phi)
+          );
+
+          // Set colors
+          if (color) {
+            const colors = clickParticles.geometry.attributes.color.array;
+            colors[i * 3] = color.r;
+            colors[i * 3 + 1] = color.g;
+            colors[i * 3 + 2] = color.b;
+          }
+
+          alphas[i] = 1;
         }
 
-        // Update pointer coordinates
-        pointer.x = ((event.clientX || event.touches?.[0]?.clientX || 0) / window.innerWidth) * 2 - 1;
-        pointer.y = -((event.clientY || event.touches?.[0]?.clientY || 0) / window.innerHeight) * 2 + 1;
+        clickParticles.geometry.attributes.position.needsUpdate = true;
+        clickParticles.geometry.attributes.alpha.needsUpdate = true;
+        if (color) {
+          clickParticles.geometry.attributes.color.needsUpdate = true;
+        }
+
+        clickParticles.visible = true;
+      }
+
+      // Animate click particles
+      function animateClickParticles() {
+        if (!clickParticles.visible) return;
+
+        const positions = clickParticles.geometry.attributes.position.array;
+        const velocities = clickParticleVelocities;
+        const alphas = clickParticles.geometry.attributes.alpha.array;
+        let hasVisibleParticles = false;
+
+        for (let i = 0; i < clickParticleCount; i++) {
+          // Update positions
+          positions[i * 3] += velocities[i].x;
+          positions[i * 3 + 1] += velocities[i].y;
+          positions[i * 3 + 2] += velocities[i].z;
+
+          // Apply gravity and damping
+          velocities[i].y -= 0.002;
+          velocities[i].multiplyScalar(0.98);
+
+          // Fade out
+          alphas[i] -= 0.02;
+
+          if (alphas[i] > 0) {
+            hasVisibleParticles = true;
+          }
+        }
+
+        clickParticles.geometry.attributes.position.needsUpdate = true;
+        clickParticles.geometry.attributes.alpha.needsUpdate = true;
+
+        if (!hasVisibleParticles) {
+          clickParticles.visible = false;
+        }
+      }
+
+      // Unified pointer event handler for both touch and mouse
+      function onPointerEvent(event) {
+        // Prevent default behavior and stop propagation
+        event.preventDefault();
+        event.stopPropagation();
+
+        // Update pointer coordinates with better touch handling
+        let clientX, clientY;
+        if (event.touches && event.touches.length > 0) {
+          clientX = event.touches[0].clientX;
+          clientY = event.touches[0].clientY;
+        } else if (event.changedTouches && event.changedTouches.length > 0) {
+          clientX = event.changedTouches[0].clientX;
+          clientY = event.changedTouches[0].clientY;
+        } else {
+          clientX = event.clientX || 0;
+          clientY = event.clientY || 0;
+        }
+
+        pointer.x = (clientX / window.innerWidth) * 2 - 1;
+        pointer.y = -(clientY / window.innerHeight) * 2 + 1;
 
         // Update the picking ray with the camera and pointer position
         raycaster.setFromCamera(pointer, camera);
@@ -519,28 +827,362 @@
         const intersects = raycaster.intersectObjects(scene.children, true);
 
         // Handle hover effects
-        const textIntersects = intersects.filter(intersect => 
+        const textIntersects = intersects.filter(intersect =>
           textMeshes.some(mesh => intersect.object === mesh || mesh.children.includes(intersect.object))
         );
 
-        if (textIntersects.length > 0) {
-          document.body.style.cursor = 'pointer';
+        const bugIntersects = intersects.filter(intersect =>
+          intersect.object.userData?.isBug || intersect.object.parent?.userData?.isBug
+        );
+
+        if (textIntersects.length > 0 || bugIntersects.length > 0) {
+          renderer.domElement.style.cursor = 'pointer';
           isHovered = true;
         } else {
-          document.body.style.cursor = 'default';
+          renderer.domElement.style.cursor = 'default';
           isHovered = false;
         }
 
         // If this is a click/touch event (pointerdown), handle the click
-        if (event.type === 'pointerdown') {
+        if (event.type === 'pointerdown' || event.type === 'click') {
+          // Initialize audio on first interaction
+          initAudio();
+
+          // Increment click counter
+          stats.clickCount++;
+
+          // Play click sound
+          playSound('click');
+
+          // Always create particle burst at click position
+          const clickPoint = new THREE.Vector3();
+          raycaster.ray.at(10, clickPoint); // Get a point in world space
+          createParticleBurst(clickPoint);
+
           onPointerClick(event);
         }
       }
 
-      // Add unified event listeners
-      window.addEventListener('pointermove', onPointerEvent);
-      window.addEventListener('pointerdown', onPointerEvent);
+      // Update stats HUD
+      function updateStats() {
+        // Calculate FPS
+        stats.frameCount++;
+        const currentTime = performance.now();
+        if (currentTime >= stats.lastTime + 1000) {
+          stats.fps = Math.round((stats.frameCount * 1000) / (currentTime - stats.lastTime));
+          stats.frameCount = 0;
+          stats.lastTime = currentTime;
+        }
+
+        // Update HUD elements
+        document.getElementById('fps').textContent = stats.fps;
+        document.getElementById('camera-distance').textContent = camera.position.length().toFixed(1);
+        document.getElementById('object-count').textContent = scene.children.length;
+        document.getElementById('interaction-time').textContent = Math.floor((Date.now() - stats.startTime) / 1000);
+        document.getElementById('click-count').textContent = stats.clickCount;
+      }
+
+      // Add unified event listeners directly to canvas for better capture
+      renderer.domElement.addEventListener('pointermove', onPointerEvent);
+      renderer.domElement.addEventListener('pointerdown', onPointerEvent);
+      renderer.domElement.addEventListener('click', onPointerEvent);
       window.addEventListener('resize', onWindowResize);
+
+      // Keyboard controls for enhanced interaction
+      const keysPressed = {};
+      const keyboardSpeed = 0.5;
+
+      function handleKeyboardControls() {
+        const delta = 0.1;
+
+        // Camera zoom
+        if (keysPressed['w'] || keysPressed['W']) {
+          camera.position.multiplyScalar(0.95);
+        }
+        if (keysPressed['s'] || keysPressed['S']) {
+          camera.position.multiplyScalar(1.05);
+        }
+
+        // Camera orbit
+        if (keysPressed['a'] || keysPressed['A']) {
+          const angle = delta;
+          const x = camera.position.x;
+          const z = camera.position.z;
+          camera.position.x = x * Math.cos(angle) - z * Math.sin(angle);
+          camera.position.z = x * Math.sin(angle) + z * Math.cos(angle);
+        }
+        if (keysPressed['d'] || keysPressed['D']) {
+          const angle = -delta;
+          const x = camera.position.x;
+          const z = camera.position.z;
+          camera.position.x = x * Math.cos(angle) - z * Math.sin(angle);
+          camera.position.z = x * Math.sin(angle) + z * Math.cos(angle);
+        }
+
+        // Vertical movement
+        if (keysPressed['q'] || keysPressed['Q']) {
+          camera.position.y += delta;
+        }
+        if (keysPressed['e'] || keysPressed['E']) {
+          camera.position.y -= delta;
+        }
+
+        // Reset camera (R key)
+        if (keysPressed['r'] || keysPressed['R']) {
+          initAudio();
+          playSound('reset');
+          new TWEEN.Tween(controls.target)
+            .to({ x: 0, y: 0, z: 0 }, 800)
+            .easing(TWEEN.Easing.Cubic.InOut)
+            .onUpdate(() => controls.update())
+            .start();
+          new TWEEN.Tween(camera.position)
+            .to({ x: 0, y: 0, z: 50 }, 800)
+            .easing(TWEEN.Easing.Cubic.InOut)
+            .onUpdate(() => controls.update())
+            .start();
+          delete keysPressed['r'];
+          delete keysPressed['R'];
+        }
+
+        // Toggle orbiting text visibility (T key)
+        if (keysPressed['t'] || keysPressed['T']) {
+          initAudio();
+          playSound('toggle');
+          textMeshes.forEach(group => {
+            new TWEEN.Tween(group.children[0].material)
+              .to({ opacity: group.children[0].material.opacity === 0 ? 1 : 0.3 }, 300)
+              .easing(TWEEN.Easing.Cubic.InOut)
+              .start();
+          });
+          delete keysPressed['t'];
+          delete keysPressed['T'];
+        }
+
+        // Pause/resume animations (Space key)
+        if (keysPressed[' ']) {
+          initAudio();
+          const currentSpeed = mixer?.timeScale || 1;
+          if (mixer) mixer.timeScale = currentSpeed === 0 ? 1 : 0;
+          delete keysPressed[' '];
+        }
+
+        // Close UI panels (ESC key)
+        if (keysPressed['Escape'] || keysPressed['esc']) {
+          initAudio();
+          playSound('toggle');
+          uiManager.hideAll();
+          delete keysPressed['Escape'];
+          delete keysPressed['esc'];
+        }
+
+        camera.lookAt(controls.target);
+      }
+
+      window.addEventListener('keydown', (e) => {
+        keysPressed[e.key] = true;
+      });
+
+      window.addEventListener('keyup', (e) => {
+        delete keysPressed[e.key];
+      });
+
+      // Enhanced mobile support with better touch detection and controls
+      let useAccelerometer = false;
+      let accelerometerStartOrientation = null;
+      let baseCameraPosition = null;
+      let touchStartDistance = 0;
+      let touchStartRotation = { x: 0, y: 0 };
+      let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+      // Mobile detection and optimization
+      if (isMobile) {
+        // Optimize renderer for mobile
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+        renderer.shadowMap.enabled = false; // Disable shadows on mobile for performance
+
+        // Reduce particle count on mobile
+        if (particles) particles.material.size = 0.4;
+
+        // Simplify controls for mobile
+        controls.enableDamping = false;
+        controls.enablePan = false;
+        controls.maxPolarAngle = Math.PI * 0.7;
+        controls.minDistance = 25;
+        controls.maxDistance = 60;
+
+        // Enhanced touch detection
+        let touchStartTime = 0;
+        let lastTouchEnd = 0;
+
+        renderer.domElement.addEventListener('touchstart', (event) => {
+          touchStartTime = Date.now();
+
+          if (event.touches.length === 2) {
+            // Pinch to zoom
+            const touch1 = event.touches[0];
+            const touch2 = event.touches[1];
+            touchStartDistance = Math.hypot(
+              touch2.clientX - touch1.clientX,
+              touch2.clientY - touch1.clientY
+            );
+            event.preventDefault();
+          }
+        });
+
+        renderer.domElement.addEventListener('touchmove', (event) => {
+          if (event.touches.length === 2 && touchStartDistance > 0) {
+            // Handle pinch zoom
+            const touch1 = event.touches[0];
+            const touch2 = event.touches[1];
+            const currentDistance = Math.hypot(
+              touch2.clientX - touch1.clientX,
+              touch2.clientY - touch1.clientY
+            );
+
+            const scale = currentDistance / touchStartDistance;
+            const cameraDistance = camera.position.length();
+            const newDistance = cameraDistance / scale;
+
+            camera.position.setLength(THREE.MathUtils.clamp(newDistance, 25, 60));
+            touchStartDistance = currentDistance;
+            event.preventDefault();
+          }
+        }, { passive: false });
+
+        renderer.domElement.addEventListener('touchend', (event) => {
+          const currentTime = Date.now();
+          const timeDiff = currentTime - lastTouchEnd;
+          lastTouchEnd = currentTime;
+
+          // Detect double tap (within 300ms)
+          if (timeDiff < 300 && currentTime - touchStartTime < 300) {
+            // Double tap to reset camera
+            initAudio();
+            playSound('reset');
+            new TWEEN.Tween(controls.target)
+              .to({ x: 0, y: 0, z: 0 }, 800)
+              .easing(TWEEN.Easing.Cubic.InOut)
+              .start();
+            new TWEEN.Tween(camera.position)
+              .to({ x: 0, y: 0, z: 50 }, 800)
+              .easing(TWEEN.Easing.Cubic.InOut)
+              .start();
+          }
+        });
+      }
+
+      // Enhanced accelerometer with better calibration
+      if (window.DeviceOrientationEvent) {
+        const enableAccelerometer = () => {
+          useAccelerometer = true;
+          accelerometerStartOrientation = { alpha: 0, beta: 45, gamma: 0 };
+          baseCameraPosition = camera.position.clone();
+
+          // Request permission for iOS 13+
+          if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+            DeviceOrientationEvent.requestPermission()
+              .then(response => {
+                if (response === 'granted') {
+                  useAccelerometer = true;
+                  // Show haptic feedback if available
+                  if (navigator.vibrate) {
+                    navigator.vibrate(100);
+                  }
+                }
+              })
+              .catch(console.error);
+          }
+        };
+
+        // Enhanced accelerometer button with visual feedback
+        const accelToggle = document.createElement('button');
+        accelToggle.textContent = '📱 Tilt Controls';
+        accelToggle.style.cssText = `
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          background: ${useAccelerometer ? 'rgba(0, 255, 0, 0.3)' : 'rgba(0, 255, 255, 0.2)'};
+          color: #00ffff;
+          border: 2px solid ${useAccelerometer ? 'rgba(0, 255, 0, 0.8)' : 'rgba(0, 255, 255, 0.5)'};
+          padding: 12px 18px;
+          border-radius: 25px;
+          font-family: 'brandon-grotesque', sans-serif;
+          font-size: 14px;
+          font-weight: bold;
+          z-index: 1001;
+          cursor: pointer;
+          backdrop-filter: blur(10px);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        `;
+
+        accelToggle.addEventListener('click', () => {
+          enableAccelerometer();
+          if (useAccelerometer) {
+            accelToggle.textContent = '📱 Tilt Controls ✓';
+            accelToggle.style.background = 'rgba(0, 255, 0, 0.3)';
+            accelToggle.style.borderColor = 'rgba(0, 255, 0, 0.8)';
+          }
+        });
+
+        accelToggle.addEventListener('mouseenter', () => {
+          accelToggle.style.transform = 'scale(1.05)';
+          accelToggle.style.boxShadow = '0 6px 12px rgba(0, 255, 255, 0.3)';
+        });
+        accelToggle.addEventListener('mouseleave', () => {
+          accelToggle.style.transform = 'scale(1)';
+          accelToggle.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+        });
+
+        // Only show on mobile devices
+        if (isMobile) {
+          document.body.appendChild(accelToggle);
+        }
+
+        // Enhanced device orientation handling with smoothing
+        let orientationHistory = [];
+        const maxHistory = 5;
+
+        window.addEventListener('deviceorientation', (event) => {
+          if (!useAccelerometer || !baseCameraPosition) return;
+
+          const { alpha, beta, gamma } = event;
+          if (!beta || !gamma) return;
+
+          // Smooth orientation data
+          orientationHistory.push({ alpha, beta, gamma });
+          if (orientationHistory.length > maxHistory) {
+            orientationHistory.shift();
+          }
+
+          // Average the orientation for smoothing
+          const avgOrientation = orientationHistory.reduce((acc, curr) => ({
+            alpha: acc.alpha + curr.alpha / orientationHistory.length,
+            beta: acc.beta + curr.beta / orientationHistory.length,
+            gamma: acc.gamma + curr.gamma / orientationHistory.length
+          }), { alpha: 0, beta: 0, gamma: 0 });
+
+          const sensitivity = isMobile ? 0.015 : 0.01;
+          const clampBeta = Math.max(-20, Math.min(90, avgOrientation.beta - 45));
+
+          const horizontalAngle = avgOrientation.gamma * sensitivity;
+          const verticalOffset = clampBeta * sensitivity * 0.3;
+
+          const radius = baseCameraPosition.length();
+          const newX = Math.sin(horizontalAngle) * radius;
+          const newZ = Math.cos(horizontalAngle) * radius;
+          const newY = baseCameraPosition.y + verticalOffset;
+
+          // Smooth camera movement with easing
+          new TWEEN.Tween(camera.position)
+            .to({ x: newX, y: newY, z: newZ }, 300)
+            .easing(TWEEN.Easing.Cubic.Out)
+            .start();
+
+          camera.lookAt(controls.target);
+        });
+      }
 
       // Remove old event listeners
       // window.removeEventListener('touchstart', onTouchStart);
@@ -564,6 +1206,58 @@
         new THREE.MeshBasicMaterial({ color: 0xff0000 })
       );
       // scene.add(debugSphere);
+
+      // Global debug access
+      window.debugRaycast = function() {
+        console.log('Raycaster:', raycaster);
+        console.log('Pointer:', pointer);
+        console.log('Text Meshes:', textMeshes);
+        console.log('Intersects:', raycaster.intersectObjects(scene.children, true));
+        return scene;
+      };
+
+      // Extended debugging globals for development
+      window.THREE = THREE;
+      window.scene = scene;
+      window.camera = camera;
+      window.renderer = renderer;
+      window.controls = controls;
+      window.stats = stats;
+      window.textMeshes = textMeshes;
+      window.model = model;
+      window.jeff = jeff;
+      window.moon = moon;
+      window.bugManager = bugManager;
+      window.uiManager = uiManager;
+      window.composer = composer;
+      window.mixer = mixer;
+      window.clickParticles = clickParticles;
+
+      // Debug utilities
+      window.debug = {
+        getObjects: () => scene.children,
+        getObjectByName: (name) => scene.getObjectByName(name),
+        getPerformance: () => ({
+          fps: stats.fps,
+          objectCount: scene.children.length,
+          memoryUsage: performance.memory ? {
+            used: Math.round(performance.memory.usedJSHeapSize / 1048576) + 'MB',
+            total: Math.round(performance.memory.totalJSHeapSize / 1048576) + 'MB'
+          } : 'unavailable'
+        }),
+        toggleWireframe: () => {
+          scene.traverse((child) => {
+            if (child.material) {
+              child.material.wireframe = !child.material.wireframe;
+            }
+          });
+        },
+        logScene: () => {
+          console.log('Scene:', scene);
+          console.log('Camera:', camera);
+          console.log('Performance:', window.debug.getPerformance());
+        }
+      };
 
       // Modal setup
       const modal = document.createElement('div');
@@ -664,32 +1358,6 @@
           const textMesh = new THREE.Mesh(geometry, material);
           const textGroup = new THREE.Group();
           textGroup.add(textMesh);
-          const lines = info.description.split('\n');
-          const wordsPerLine = 8;
-          const formattedLines = [];
-          lines.forEach(line => {
-            const words = line.split(' ');
-            for (let i = 0; i < words.length; i += wordsPerLine) {
-              formattedLines.push(words.slice(i, i + wordsPerLine).join(' '));
-            }
-          });
-          for (let i = 0; i < formattedLines.length; i++) {
-            const descGeometry = new TextGeometry(formattedLines[i], {
-              font: font,
-              size: 0.8,
-              height: 0.05,
-              depth:1,
-              curveSegments: 8,
-              bevelEnabled: false
-            });
-            descGeometry.computeBoundingBox();
-            const descWidth = descGeometry.boundingBox.max.x - descGeometry.boundingBox.min.x;
-            descGeometry.translate(-descWidth/2, -i * 2 - 6, 0);
-            const descMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0 });
-            const descMesh = new THREE.Mesh(descGeometry, descMaterial);
-            descMesh.userData.isDescriptionText = true;
-            textGroup.add(descMesh);
-          }
           const orbitAngle = (textInfo.indexOf(info) / textInfo.length) * Math.PI * 2;
           textGroup.position.x = Math.cos(orbitAngle) * info.orbitRadius;
           textGroup.position.z = Math.sin(orbitAngle) * info.orbitRadius;
@@ -715,12 +1383,31 @@
         pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
         raycaster.setFromCamera(pointer, camera);
-        const intersects = raycaster.intersectObjects([jeff, model, ...textMeshes], true);
+        const allClickableObjects = [jeff, model, ...textMeshes];
+
+        // Add bugs to clickable objects
+        bugManager.bugs.forEach(bug => {
+          allClickableObjects.push(bug.group);
+        });
+
+        const intersects = raycaster.intersectObjects(allClickableObjects, true);
 
         if (intersects.length > 0) {
           const object = intersects[0].object;
           const group = object.parent;
-          
+
+          // Check if bug was clicked
+          if (object.userData?.isBug || group?.userData?.isBug) {
+            const bugGroup = object.userData?.isBug ? object : group;
+            const bug = bugGroup.userData.bugInstance;
+
+            if (bug && bug.isAlive) {
+              bug.squash();
+              bugManager.squashBug(bug);
+              return;
+            }
+          }
+
           if (object === jeff) {
             window.open('https://github.com/jb0gie', '_blank');
           } else if (object.parent === model || object === model) {
@@ -739,25 +1426,23 @@
             return;
           } else if (group.userData?.isClickable || object.userData?.isClickable) {
             const targetGroup = group.userData?.isClickable ? group : object;
-            
+
             // Get the group position
             const targetPos = new THREE.Vector3();
             targetGroup.getWorldPosition(targetPos);
 
-            // Toggle description visibility
-            targetGroup.children.forEach(child => {
-              if (child.userData.isDescriptionText) {
-                new TWEEN.Tween(child.material)
-                  .to({ opacity: child.material.opacity === 0 ? 1 : 0 }, 500)
-                  .easing(TWEEN.Easing.Cubic.InOut)
-                  .start();
-              }
-            });
+            // Position cyberpunk UI panel near the clicked text
+            const panelPosition = targetPos.clone();
+            panelPosition.z += 15; // Position panel in front of text
+            panelPosition.y += 5; // Raise panel up slightly
+
+            // Show cyberpunk UI panel with dynamic text
+            uiManager.showPanel(targetGroup.userData.text || 'UNKNOWN', targetGroup.userData.description || '', panelPosition);
 
             // Position camera behind techshaman model
             const modelPos = new THREE.Vector3(0, 2, 0);  // Model's position plus slight height offset
             const lookAtPos = targetPos.clone();  // Position of the clicked text
-            
+
             // Calculate camera position behind model
             const directionToText = new THREE.Vector3().subVectors(lookAtPos, modelPos).normalize();
             const cameraOffset = new THREE.Vector3().copy(directionToText).multiplyScalar(-10);
@@ -812,32 +1497,855 @@
         return colors[Math.floor(Math.random() * colors.length)];
       }
 
-      // Restore AfterimagePass
+      // Enhanced post-processing pipeline
       afterimagePass = new AfterimagePass(0.8);
       composer.addPass(afterimagePass);
 
-      // Add ambient particles
-      const particleCount = 200;
+      // Add enhanced ambient particle system with colors and sizes
+      const particleCount = 300;
       const particleGeometry = new THREE.BufferGeometry();
       const positions = new Float32Array(particleCount * 3);
+      const colors = new Float32Array(particleCount * 3);
+      const sizes = new Float32Array(particleCount);
+      const velocities = [];
+
       for (let i = 0; i < particleCount; i++) {
         positions[i * 3] = (Math.random() - 0.5) * 200;
         positions[i * 3 + 1] = (Math.random() - 0.5) * 120;
         positions[i * 3 + 2] = (Math.random() - 0.5) * 200;
+
+        // Varied particle colors
+        colors[i * 3] = Math.random() * 0.5 + 0.5;     // R: 0.5-1
+        colors[i * 3 + 1] = Math.random() * 0.5 + 0.5; // G: 0.5-1
+        colors[i * 3 + 2] = Math.random() * 0.8 + 0.2; // B: 0.2-1
+
+        sizes[i] = Math.random() * 0.5 + 0.3;
+
+        // Store velocities for animation
+        velocities.push(new THREE.Vector3(
+          (Math.random() - 0.5) * 0.001,
+          (Math.random() - 0.5) * 0.001,
+          (Math.random() - 0.5) * 0.001
+        ));
       }
+
       particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-      const particleMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.8, transparent: true, opacity: 0.7 });
+      particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+      particleGeometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+      // Enhanced particle material with vertex colors
+      const particleMaterial = new THREE.PointsMaterial({
+        color: 0xffffff,
+        size: 0.8,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.7,
+        blending: THREE.AdditiveBlending,
+        sizeAttenuation: true
+      });
+
       const particles = new THREE.Points(particleGeometry, particleMaterial);
       scene.add(particles);
 
-      // Animate particles (gentle float)
+      // Enhanced particle animation with turbulence
       function animateParticles(time) {
         const positions = particleGeometry.attributes.position.array;
+        const sizes = particleGeometry.attributes.size.array;
+
         for (let i = 0; i < particleCount; i++) {
-          positions[i * 3 + 1] += Math.sin(time * 0.0005 + i) * 0.01;
+          // Apply velocities
+          positions[i * 3] += velocities[i].x;
+          positions[i * 3 + 1] += velocities[i].y;
+          positions[i * 3 + 2] += velocities[i].z;
+
+          // Add turbulence
+          positions[i * 3] += Math.sin(time * 0.0003 + i * 0.1) * 0.005;
+          positions[i * 3 + 1] += Math.cos(time * 0.0005 + i * 0.2) * 0.008;
+          positions[i * 3 + 2] += Math.sin(time * 0.0004 + i * 0.15) * 0.006;
+
+          // Pulse size based on distance from camera
+          const distance = Math.sqrt(
+            positions[i * 3] ** 2 +
+            positions[i * 3 + 1] ** 2 +
+            positions[i * 3 + 2] ** 2
+          );
+          sizes[i] = (Math.sin(time * 0.002 + i) * 0.2 + 0.6) * (1 / Math.max(1, distance * 0.01));
+
+          // Wrap around boundaries
+          if (Math.abs(positions[i * 3]) > 100) positions[i * 3] = -Math.sign(positions[i * 3]) * 100;
+          if (Math.abs(positions[i * 3 + 1]) > 60) positions[i * 3 + 1] = -Math.sign(positions[i * 3 + 1]) * 60;
+          if (Math.abs(positions[i * 3 + 2]) > 100) positions[i * 3 + 2] = -Math.sign(positions[i * 3 + 2]) * 100;
         }
+
         particleGeometry.attributes.position.needsUpdate = true;
+        particleGeometry.attributes.size.needsUpdate = true;
       }
+
+      // --- BUG SQUASHER MINIGAME ---
+      // Bug materials
+      const bugMaterials = {
+        body: new THREE.MeshPhongMaterial({
+          color: 0x00ff00,
+          emissive: 0x00ff00,
+          emissiveIntensity: 0.3,
+          shininess: 100
+        }),
+        eye: new THREE.MeshBasicMaterial({
+          color: 0xff0000
+        }),
+        wing: new THREE.MeshBasicMaterial({
+          color: 0x008800,
+          transparent: true,
+          opacity: 0.7
+        })
+      };
+
+      // Bug 3D Model Constructor with types and difficulty scaling
+      class Bug {
+        constructor(position, type = 'basic', difficulty = 1) {
+          this.group = new THREE.Group();
+          this.position = position.clone();
+          this.type = type;
+          this.difficulty = difficulty;
+
+          // Type-specific properties
+          const typeStats = {
+            basic: { speed: 0.2, scale: 1, health: 1, color: 0x00ff00 },
+            fast: { speed: 0.4, scale: 0.8, health: 0.7, color: 0xffff00 },
+            tank: { speed: 0.1, scale: 1.5, health: 2, color: 0xff0000 }
+          };
+
+          const stats = typeStats[type];
+          this.baseSpeed = stats.speed * (1 + difficulty * 0.2);
+          this.scale = stats.scale;
+          this.health = stats.health;
+          this.maxHealth = stats.health;
+
+          this.velocity = new THREE.Vector3(
+            (Math.random() - 0.5) * this.baseSpeed,
+            0,
+            (Math.random() - 0.5) * this.baseSpeed
+          );
+
+          this.rotationSpeed = {
+            x: (Math.random() - 0.5) * 0.1,
+            y: (Math.random() - 0.5) * 0.1,
+            z: (Math.random() - 0.5) * 0.1
+          };
+
+          this.isAlive = true;
+          this.squashAnimation = 0;
+          this.color = stats.color;
+
+          this.createBugModel();
+          this.positionBug();
+        }
+
+        createBugModel() {
+          // Create dynamic material based on bug type
+          const bodyMaterial = new THREE.MeshPhongMaterial({
+            color: this.color,
+            emissive: this.color,
+            emissiveIntensity: 0.3 * (this.health / this.maxHealth),
+            shininess: 100
+          });
+
+          // Bug body (main ellipse)
+          const bodyGeometry = new THREE.SphereGeometry(0.5, 8, 6);
+          bodyGeometry.scale(1.5, 1, 1);
+          const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+          this.group.add(body);
+
+          // Bug head (smaller sphere)
+          const headGeometry = new THREE.SphereGeometry(0.3, 6, 5);
+          const head = new THREE.Mesh(headGeometry, bodyMaterial);
+          head.position.x = 0.6;
+          this.group.add(head);
+
+          // Eyes
+          const eyeGeometry = new THREE.SphereGeometry(0.1, 4, 4);
+          const leftEye = new THREE.Mesh(eyeGeometry, bugMaterials.eye);
+          leftEye.position.set(0.7, 0.15, 0.2);
+          this.group.add(leftEye);
+
+          const rightEye = new THREE.Mesh(eyeGeometry, bugMaterials.eye);
+          rightEye.position.set(0.7, 0.15, -0.2);
+          this.group.add(rightEye);
+
+          // Wings (animated)
+          this.wings = [];
+          for (let i = 0; i < 2; i++) {
+            const wingGeometry = new THREE.PlaneGeometry(0.8, 0.3);
+            const wing = new THREE.Mesh(wingGeometry, bugMaterials.wing);
+            wing.position.x = -0.2;
+            wing.position.z = i === 0 ? 0.3 : -0.3;
+            wing.rotation.z = i === 0 ? 0.5 : -0.5;
+            this.group.add(wing);
+            this.wings.push(wing);
+          }
+
+          // Legs
+          for (let i = 0; i < 6; i++) {
+            const legGeometry = new THREE.CylinderGeometry(0.02, 0.02, 0.8);
+            const leg = new THREE.Mesh(legGeometry, bugMaterials.body);
+            const angle = (i / 6) * Math.PI * 2;
+            leg.position.x = Math.cos(angle) * 0.4;
+            leg.position.z = Math.sin(angle) * 0.4;
+            leg.position.y = -0.4;
+            leg.rotation.z = Math.sin(angle) * 0.5;
+            this.group.add(leg);
+          }
+
+          // Mark as clickable bug
+          this.group.userData = {
+            isBug: true,
+            bugInstance: this
+          };
+
+          // Add glow effect
+          const glowGeometry = new THREE.SphereGeometry(1, 8, 6);
+          const glowMaterial = new THREE.MeshBasicMaterial({
+            color: 0x00ff00,
+            transparent: true,
+            opacity: 0.1
+          });
+          this.glow = new THREE.Mesh(glowGeometry, glowMaterial);
+          this.group.add(this.glow);
+        }
+
+        positionBug() {
+          this.group.position.copy(this.position);
+        }
+
+        animate(time) {
+          if (!this.isAlive) {
+            // Squash animation
+            this.squashAnimation += 0.05;
+            if (this.squashAnimation >= 1) {
+              return false; // Bug should be removed
+            }
+
+            this.group.scale.setScalar(1 - this.squashAnimation * 0.8);
+            this.group.rotation.y += 0.3;
+            this.group.position.y -= 0.5;
+
+            // Fade out
+            this.group.children.forEach(child => {
+              if (child.material) {
+                child.material.opacity = 1 - this.squashAnimation;
+              }
+            });
+
+            return true;
+          }
+
+          // Normal bug movement
+          this.position.add(this.velocity);
+
+          // Random wandering
+          this.velocity.x += (Math.random() - 0.5) * 0.01;
+          this.velocity.z += (Math.random() - 0.5) * 0.01;
+
+          // Limit speed
+          this.velocity.x = Math.max(-0.3, Math.min(0.3, this.velocity.x));
+          this.velocity.z = Math.max(-0.3, Math.min(0.3, this.velocity.z));
+
+          // Update position
+          this.positionBug();
+
+          // Rotation animation
+          this.group.rotation.x += this.rotationSpeed.x;
+          this.group.rotation.y += this.rotationSpeed.y;
+          this.group.rotation.z += this.rotationSpeed.z;
+
+          // Wing flapping
+          const wingFlap = Math.sin(time * 0.01) * 0.3;
+          this.wings.forEach((wing, i) => {
+            wing.rotation.y = wingFlap * (i === 0 ? 1 : -1);
+          });
+
+          // Glow pulsing
+          this.glow.material.opacity = 0.1 + Math.sin(time * 0.005) * 0.05;
+
+          // Keep bugs in bounds
+          const boundary = 40;
+          if (Math.abs(this.position.x) > boundary) {
+            this.velocity.x *= -1;
+            this.position.x = Math.sign(this.position.x) * boundary;
+          }
+          if (Math.abs(this.position.z) > boundary) {
+            this.velocity.z *= -1;
+            this.position.z = Math.sign(this.position.z) * boundary;
+          }
+
+          return true;
+        }
+
+        squash() {
+          this.isAlive = false;
+          playSound('click');
+
+          // Create squash particles
+          createParticleBurst(this.position, { r: 0, g: 1, b: 0 });
+        }
+
+        dispose() {
+          this.group.children.forEach(child => {
+            if (child.geometry) child.geometry.dispose();
+            if (child.material) child.material.dispose();
+          });
+          scene.remove(this.group);
+        }
+      }
+
+      // Enhanced Bug Management System with improved AI and behaviors
+      class BugManager {
+        constructor() {
+          this.bugs = [];
+          this.maxBugs = totalBugs;
+          this.respawnDelay = 3000; // 3 seconds
+          this.difficulty = 1; // Dynamic difficulty
+          this.swarmBehavior = true;
+          this.bugTypes = ['basic', 'fast', 'tank'];
+        }
+
+        spawnBug(type = 'basic') {
+          if (this.bugs.length >= this.maxBugs) return;
+
+          // Spawn position with better distribution
+          const angle = Math.random() * Math.PI * 2;
+          const distance = 30 + Math.random() * 20;
+          const position = new THREE.Vector3(
+            Math.cos(angle) * distance,
+            Math.random() * 10 + 5,
+            Math.sin(angle) * distance
+          );
+
+          const bug = new Bug(position, type, this.difficulty);
+          scene.add(bug.group);
+          this.bugs.push(bug);
+
+          // Track resource
+          resourceManager.track(bug.group);
+        }
+
+        squashBug(bug) {
+          const index = this.bugs.indexOf(bug);
+          if (index > -1) {
+            this.bugs.splice(index, 1);
+            bugsSquashed++;
+
+            // Create particle explosion
+            createParticleBurst(bug.position, { r: 0, g: 1, b: 0.2 });
+
+            // Increase difficulty gradually
+            if (bugsSquashed % 5 === 0) {
+              this.difficulty = Math.min(3, this.difficulty + 0.2);
+            }
+
+            // Check if all bugs are squashed
+            if (bugsSquashed >= totalBugs && afterimageEnabled) {
+              this.disableAfterimage();
+            }
+          }
+        }
+
+        disableAfterimage() {
+          afterimageEnabled = false;
+          if (afterimagePass) {
+            afterimagePass.enabled = false;
+          }
+
+          // Visual feedback for achievement
+          const achievementColor = { r: 1, g: 0.8, b: 0 };
+          for (let i = 0; i < 5; i++) {
+            setTimeout(() => {
+              const pos = new THREE.Vector3(
+                (Math.random() - 0.5) * 30,
+                Math.random() * 10,
+                (Math.random() - 0.5) * 30
+              );
+              createParticleBurst(pos, achievementColor);
+            }, i * 200);
+          }
+
+          // Re-enable bugs after 10 seconds
+          setTimeout(() => {
+            this.resetBugs();
+          }, 10000);
+        }
+
+        resetBugs() {
+          bugsSquashed = 0;
+          afterimageEnabled = true;
+          if (afterimagePass) {
+            afterimagePass.enabled = true;
+          }
+
+          // Spawn new wave with variety
+          for (let i = 0; i < this.maxBugs; i++) {
+            const type = this.bugTypes[Math.floor(Math.random() * this.bugTypes.length)];
+            setTimeout(() => this.spawnBug(type), i * 300);
+          }
+        }
+
+        updateBugs(time) {
+          this.bugs = this.bugs.filter(bug => bug.animate(time));
+
+          // Swarm behavior
+          if (this.swarmBehavior && this.bugs.length > 2) {
+            this.updateSwarmBehavior();
+          }
+
+          // Remove dead bugs
+          this.bugs.forEach(bug => {
+            if (!bug.isAlive && bug.squashAnimation >= 1) {
+              bug.dispose();
+            }
+          });
+        }
+
+        updateSwarmBehavior() {
+          // Simple flocking behavior
+          for (let i = 0; i < this.bugs.length; i++) {
+            const bug1 = this.bugs[i];
+            if (!bug1.isAlive) continue;
+
+            let separationForce = new THREE.Vector3();
+            let alignmentForce = new THREE.Vector3();
+            let cohesionForce = new THREE.Vector3();
+            let neighbors = 0;
+
+            for (let j = 0; j < this.bugs.length; j++) {
+              if (i === j) continue;
+              const bug2 = this.bugs[j];
+              if (!bug2.isAlive) continue;
+
+              const distance = bug1.position.distanceTo(bug2.position);
+
+              if (distance < 15) {
+                neighbors++;
+
+                // Separation (avoid crowding)
+                if (distance < 5) {
+                  const diff = new THREE.Vector3().subVectors(bug1.position, bug2.position).normalize();
+                  diff.divideScalar(distance);
+                  separationForce.add(diff);
+                }
+
+                // Alignment (match velocity)
+                alignmentForce.add(bug2.velocity);
+
+                // Cohesion (move toward group center)
+                cohesionForce.add(bug2.position);
+              }
+            }
+
+            if (neighbors > 0) {
+              // Apply forces
+              alignmentForce.divideScalar(neighbors).sub(bug1.velocity).multiplyScalar(0.05);
+              cohesionForce.divideScalar(neighbors).sub(bug1.position).multiplyScalar(0.01);
+              separationForce.multiplyScalar(0.1);
+
+              bug1.velocity.add(separationForce).add(alignmentForce).add(cohesionForce);
+
+              // Limit velocity
+              const maxSpeed = 0.3 * this.difficulty;
+              bug1.velocity.clampLength(0, maxSpeed);
+            }
+          }
+        }
+      }
+
+      bugManager = new BugManager();
+
+      // Spawn initial bugs
+      function startBugGame() {
+        // Spawn initial bugs
+        for (let i = 0; i < totalBugs; i++) {
+          setTimeout(() => bugManager.spawnBug(), i * 500);
+        }
+
+        // Respawn bugs periodically
+        bugSpawnInterval = setInterval(() => {
+          if (afterimageEnabled && bugManager.bugs.length < totalBugs) {
+            bugManager.spawnBug();
+          }
+        }, 2000);
+      }
+
+      // --- CYBERPUNK 3D UI SYSTEM ---
+      // Removed RoundedBoxGeometry - using simple PlaneGeometry instead
+
+      // Initialize cyberpunk materials (cleaned up)
+      cyberpunkMaterials = {
+        panel: new THREE.MeshBasicMaterial({
+          color: 0x001133,
+          transparent: true,
+          opacity: 0.6
+        }),
+        dataText: new THREE.MeshPhongMaterial({
+          color: 0x00ff88,
+          transparent: true,
+          shininess: 30
+        })
+      };
+
+      // 3D UI Panel Constructor
+      class CyberpunkUIPanel {
+        constructor(title, content, position) {
+          this.group = new THREE.Group();
+          this.title = title;
+          this.content = content;
+          this.position = position.clone();
+          this.isAnimating = false;
+          this.textElements = [];
+
+          this.createPanel();
+          this.positionPanel();
+        }
+
+        createPanel() {
+          // Clean simple panel - reduced complexity
+          const panelGeometry = new THREE.PlaneGeometry(12, 8);
+          const panel = new THREE.Mesh(panelGeometry, cyberpunkMaterials.panel);
+          this.group.add(panel);
+
+          // Simple clean border without animation
+          this.createSimpleBorder();
+
+          // Clean title (will be simplified)
+          this.createSimpleTitle();
+
+          // Content area initialization
+          this.contentGroup = new THREE.Group();
+          this.contentGroup.position.y = -1;
+          this.group.add(this.contentGroup);
+        }
+
+        createSimpleBorder() {
+          // Clean minimal border using simple lines
+          const borderColor = 0x00ffff;
+          const borderMaterial = new THREE.MeshBasicMaterial({
+            color: borderColor,
+            transparent: true,
+            opacity: 0.6
+          });
+
+          // Simple corner borders only (minimal design)
+          const borderGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.1);
+
+          // Four corners
+          const corners = [
+            { x: -5.5, y: 3.5 },
+            { x: 5.5, y: 3.5 },
+            { x: -5.5, y: -3.5 },
+            { x: 5.5, y: -3.5 }
+          ];
+
+          corners.forEach(pos => {
+            const corner = new THREE.Mesh(borderGeometry, borderMaterial);
+            corner.position.set(pos.x, pos.y, 0.05);
+            this.group.add(corner);
+          });
+        }
+
+        createBorderSegment(width, height, depth, color) {
+          const geometry = new THREE.BoxGeometry(width, height, depth);
+          const material = new THREE.MeshBasicMaterial({
+            color: color,
+            transparent: true,
+            opacity: 0.8
+          });
+          return new THREE.Mesh(geometry, material);
+        }
+
+        createAnimatedSideBorders() {
+          const segments = 8;
+          for (let i = 0; i < segments; i++) {
+            const segment = this.createBorderSegment(0.1, 0.5, 0.3, 0x00ffff);
+            const angle = (i / segments) * Math.PI * 2;
+            const radius = 6.2;
+            segment.position.x = Math.cos(angle) * radius;
+            segment.position.y = Math.sin(angle) * 4;
+            segment.userData = {
+              originalY: segment.position.y,
+              phase: i * 0.5,
+              amplitude: 0.2
+            };
+            this.group.add(segment);
+            this.borderSegments = this.group.children.filter(child => child.userData.phase !== undefined);
+          }
+        }
+
+        createSimpleTitle() {
+          // Clean title as simple text on panel surface
+          this.addTitleText();
+        }
+
+        async addTitleText() {
+          const font = await new Promise(resolve =>
+            fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', resolve)
+          );
+
+          const titleGeometry = new TextGeometry(this.title.toUpperCase(), {
+            font: font,
+            size: 0.8,
+            height: 0.1,
+            depth: 1,
+            curveSegments: 12,
+            bevelEnabled: true,
+            bevelThickness: 0.02,
+            bevelSize: 0.01,
+            bevelOffset: 0,
+            bevelSegments: 3
+          });
+
+          titleGeometry.computeBoundingBox();
+          const titleWidth = titleGeometry.boundingBox.max.x - titleGeometry.boundingBox.min.x;
+          titleGeometry.translate(-titleWidth/2, 0, 0.2);
+
+          const titleMaterial = new THREE.MeshPhongMaterial({
+            color: 0x00ff88,
+            transparent: true,
+            opacity: 0,
+            shininess: 30
+          });
+
+          const titleMesh = new THREE.Mesh(titleGeometry, titleMaterial);
+          titleMesh.position.set(0, 3, 0);
+          this.group.add(titleMesh);
+
+          // Animate title appearance
+          this.animateTextAppearance(titleMesh);
+        }
+
+        positionPanel() {
+          this.group.position.copy(this.position);
+          this.group.lookAt(camera.position);
+        }
+
+        async animateTextAppearance(textMesh) {
+          // Staggered fade-in animation
+          new TWEEN.Tween(textMesh.material)
+            .to({ opacity: 1 }, 1000)
+            .easing(TWEEN.Easing.Cubic.Out)
+            .delay(300)
+            .start();
+        }
+
+        async showContent() {
+          if (this.isAnimating) return;
+          this.isAnimating = true;
+
+          const font = await new Promise(resolve =>
+            fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', resolve)
+          );
+
+          const lines = this.formatContent();
+          let yOffset = 0;
+
+          for (let i = 0; i < lines.length; i++) {
+            await this.createAnimatedTextLine(lines[i], font, yOffset, i);
+            yOffset -= 0.8;
+          }
+
+          this.isAnimating = false;
+        }
+
+        formatContent() {
+          const maxLineLength = 40;
+          const words = this.content.split(' ');
+          const lines = [];
+          let currentLine = '';
+
+          words.forEach(word => {
+            if (currentLine.length + word.length + 1 <= maxLineLength) {
+              currentLine += (currentLine ? ' ' : '') + word;
+            } else {
+              lines.push(currentLine);
+              currentLine = word;
+            }
+          });
+          if (currentLine) lines.push(currentLine);
+
+          return lines;
+        }
+
+        async createAnimatedTextLine(text, font, yOffset, index) {
+          const textGeometry = new TextGeometry(text, {
+            font: font,
+            size: 0.5,
+            height: 0.1,
+            depth: 1,
+            curveSegments: 8,
+            bevelEnabled: true,
+            bevelThickness: 0.02,
+            bevelSize: 0.01,
+            bevelOffset: 0,
+            bevelSegments: 3
+          });
+
+          textGeometry.computeBoundingBox();
+          const textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x;
+          textGeometry.translate(-textWidth/2, yOffset, 0.1);
+
+          const textMaterial = cyberpunkMaterials.dataText.clone();
+          textMaterial.opacity = 0;
+
+          const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+          textMesh.userData = { originalY: yOffset };
+
+          this.contentGroup.add(textMesh);
+          this.textElements.push(textMesh);
+
+          // Typewriter effect
+          const delay = index * 150;
+          new TWEEN.Tween(textMesh.material)
+            .to({ opacity: 1 }, 800)
+            .easing(TWEEN.Easing.Cubic.Out)
+            .delay(delay)
+            .start();
+
+          // No glitch effects - clean design
+        }
+
+        // Removed glitch effects for clean design
+
+        animate() {
+          // Simplified animation - no border movements, glow pulsing, or text floating
+          // UI is now static for clean appearance
+        }
+
+        show() {
+          this.group.visible = true;
+          this.showContent();
+        }
+
+        hide() {
+          return new Promise(resolve => {
+            // Fade out animation
+            new TWEEN.Tween(this.group.position)
+              .to({ y: this.position.y + 2 }, 500)
+              .easing(TWEEN.Easing.Cubic.In)
+              .onComplete(() => {
+                this.group.visible = false;
+                this.group.position.copy(this.position);
+                resolve();
+              })
+              .start();
+
+            // Hide all text
+            this.textElements.forEach(text => {
+              new TWEEN.Tween(text.material)
+                .to({ opacity: 0 }, 300)
+                .start();
+            });
+          });
+        }
+
+        dispose() {
+          this.group.children.forEach(child => {
+            if (child.geometry) child.geometry.dispose();
+            if (child.material) child.material.dispose();
+          });
+          scene.remove(this.group);
+        }
+      }
+
+      // Test function for text extrusion
+      function testTextExtrusion() {
+        const fontLoader = new THREE.FontLoader();
+        fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function(font) {
+          const testTextGeometry = new THREE.TextGeometry('TEST', {
+            font: font,
+            size: 2.0,
+            height: 0.1,
+            depth: 1,
+            curveSegments: 12,
+            bevelEnabled: true,
+            bevelThickness: 0.02,
+            bevelSize: 0.01,
+            bevelOffset: 0,
+            bevelSegments: 3
+          });
+
+          const testTextMaterial = new THREE.MeshPhongMaterial({
+            color: 0xffffff,
+            shininess: 30
+          });
+
+          const testTextMesh = new THREE.Mesh(testTextGeometry, testTextMaterial);
+          testTextMesh.position.set(0, 10, 10);
+
+          scene.add(testTextMesh);
+          console.log('Test text extrusion created successfully!', testTextMesh);
+        }, function(error) {
+          console.error('Font loading error:', error);
+        });
+      }
+
+      // Test the text extrusion after scene loads
+      setTimeout(() => {
+        testTextExtrusion();
+        console.log('Testing text extrusion...');
+      }, 3000);
+
+      // UI Panel Manager
+      class UIManager {
+        constructor() {
+          this.panels = new Map();
+        }
+
+        async showPanel(title, content, position) {
+          // Hide existing panel
+          if (activeUIPanel) {
+            await activeUIPanel.hide();
+            activeUIPanel.dispose();
+          }
+
+          // Create new panel (clean design)
+          const panel = new CyberpunkUIPanel(title, content, position);
+
+          scene.add(panel.group);
+
+          // Show with construction animation
+          panel.group.visible = false;
+          panel.group.position.y = position.y - 5;
+
+          new TWEEN.Tween(panel.group.position)
+            .to({ y: position.y }, 1000)
+            .easing(TWEEN.Easing.Cubic.Out)
+            .onComplete(() => {
+              panel.show();
+            })
+            .start();
+
+          panel.group.visible = true;
+          activeUIPanel = panel;
+          this.panels.set(title, panel);
+        }
+
+        animateAll() {
+          this.panels.forEach(panel => {
+            panel.animate();
+            // Removed data stream animations for clean design
+          });
+        }
+
+        async hideAll() {
+          if (activeUIPanel) {
+            await activeUIPanel.hide();
+            activeUIPanel.dispose();
+            activeUIPanel = null;
+          }
+        }
+      }
+
+      uiManager = new UIManager();
+
+      // Start the bug squasher minigame
+      startBugGame();
 
       // --- ASTEROIDS (VARIED) ---
       const asteroidCount = 8;
@@ -920,6 +2428,71 @@
         meteorGeometry.attributes.position.needsUpdate = true;
       }
 
+      // Memory management and cleanup system
+      class ResourceManager {
+        constructor() {
+          this.geometries = new Set();
+          this.materials = new Set();
+          this.textures = new Set();
+          this.audioBuffers = new Set();
+        }
+
+        track(object) {
+          if (object.geometry) this.geometries.add(object.geometry);
+          if (object.material) {
+            if (Array.isArray(object.material)) {
+              object.material.forEach(mat => this.materials.add(mat));
+            } else {
+              this.materials.add(object.material);
+            }
+          }
+        }
+
+        dispose() {
+          // Dispose geometries
+          this.geometries.forEach(geometry => geometry.dispose());
+          this.geometries.clear();
+
+          // Dispose materials
+          this.materials.forEach(material => {
+            if (material.map) material.map.dispose();
+            if (material.normalMap) material.normalMap.dispose();
+            if (material.roughnessMap) material.roughnessMap.dispose();
+            if (material.metalnessMap) material.metalnessMap.dispose();
+            material.dispose();
+          });
+          this.materials.clear();
+
+          // Dispose textures
+          this.textures.forEach(texture => texture.dispose());
+          this.textures.clear();
+
+          // Clear audio context
+          if (audioContext) {
+            audioContext.close();
+          }
+        }
+      }
+
+      const resourceManager = new ResourceManager();
+
+      // Enhanced cleanup on page unload
+      window.addEventListener('beforeunload', () => {
+        // Clear intervals
+        if (bugSpawnInterval) clearInterval(bugSpawnInterval);
+
+        // Cancel animation frame
+        if (window.animationId) {
+          cancelAnimationFrame(window.animationId);
+        }
+
+        // Dispose resources
+        resourceManager.dispose();
+
+        // Clear TWEEN
+        TWEEN.removeAll();
+      });
+
       // --- PATCH ANIMATE ---
       const prevAnimate = animate;
       animate = function(time) {
@@ -927,10 +2500,14 @@
         animateParticles(time);
         animateAsteroids();
         animateMeteors();
+        bugManager.updateBugs(time); // Update bug animations
+        uiManager.animateAll(); // Animate all cyberpunk UI panels
       };
 
     })();
+    await sdk.actions.ready()
   </script>
+
 </head>
 
 <body>
@@ -942,6 +2519,43 @@
       <div class="loader-text">loading techshaman...</div>
     </div>
   </div>
+
+  <!-- Stats HUD Overlay -->
+  <div id="stats-hud" style="
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #00ffff;
+    padding: 15px;
+    border-radius: 8px;
+    font-family: monospace;
+    font-size: 12px;
+    z-index: 1000;
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    backdrop-filter: blur(5px);
+    display: none;
+    pointer-events: none;
+  ">
+    <div><strong>TECHSHAMAN INTERFACE</strong></div>
+    <hr style="border: 1px solid rgba(0, 255, 255, 0.3); margin: 8px 0;">
+    <div>FPS: <span id="fps">60</span></div>
+    <div>Camera Distance: <span id="camera-distance">50.0</span></div>
+    <div>Active Objects: <span id="object-count">0</span></div>
+    <div>Interaction Time: <span id="interaction-time">0</span>s</div>
+    <div>Clicks: <span id="click-count">0</span></div>
+    <hr style="border: 1px solid rgba(0, 255, 255, 0.3); margin: 8px 0;">
+    <div style="font-size: 10px; opacity: 0.8;">
+      <div>CONTROLS:</div>
+      <div>• WASD - Move camera</div>
+      <div>• Q/E - Up/Down</div>
+      <div>• T - Toggle text</div>
+      <div>• R - Reset view</div>
+      <div>• Space - Pause</div>
+      <div>• Click - Open cyberpunk UI</div>
+      <div>• ESC - Close UI panels</div>
+    </div>
+  </div>
   <!-- <div id="navigation-overlay" style="position: fixed; top: 20px; right: 20px; background-color: rgba(0, 0, 0, 0.7); color: #fff; padding: 15px; border-radius: 8px; font-family: Arial, sans-serif; font-size: 14px; z-index: 1000;">
     <strong>Navigation Instructions:</strong>
     <ul style="margin: 10px 0 0 20px; padding: 0; list-style: disc;">
@@ -951,6 +2565,124 @@
     </ul>
   </div> -->
   <canvas id="bg"></canvas>
+  <!-- =====  SIGMA-EDGE PATCH  ===== -->
+  <script type="module">
+    /* 1.  KILL THE OLD BUG SPAWNER (so we can re-write it) */
+if(window.bugManager) window.bugManager.dispose?.();
+
+/* 2.  NEW NANO-SWARM FACTORY */
+class NanoSwarm {
+  constructor(scene,camera,bm){
+    this.scene=scene;this.cam=camera;this.bm=bm;
+    this.bugs=[];this.max=8;this.respawn=2800;this.wave=1;
+    this.types=[ {speed:.18,scale:1 ,col:0x00ff00},   // basic
+                 {speed:.32,scale:.75,col:0xffff00},  // fast
+                 {speed:.09,scale:1.6,col:0xff0040}]; // tank
+    this.clock=new THREE.Clock();
+    this.spawnRing=35;                       // toroidal spawn zone
+    this.init();
+  }
+  init(){
+    for(let i=0;i<this.max;i++) setTimeout(()=>this.birth(),i*420);
+    setInterval(()=>{if(this.bugs.length<this.max)this.birth()},this.respawn);
+  }
+  birth(){
+    const t=this.types[Math.random()*this.types.length|0];
+    const b=new Bug3D(this.scene,this.cam,t,this.spawnRing);
+    this.bugs.push(b);
+  }
+  squash(b){                                // called from ray-handler
+    const idx=this.bugs.indexOf(b);
+    if(idx===-1)return;
+    b.die();
+    this.bugs.splice(idx,1);
+    if(this.bugs.length===0){               // wave complete
+      this.wave++;
+      setTimeout(()=>{for(let i=0;i<this.max+this.wave;i++)this.birth()},1200);
+    }
+  }
+  tick(time){
+    this.bugs=this.bugs.filter(b=>b.live(time));
+  }
+}
+
+/* 3.  SINGLE BUG ENTITY (full 3-DOF AI + squash) */
+class Bug3D {
+  constructor(scene,cam,stats,ring){
+    this.scene=scene;this.cam=cam;
+    this.s=stats;this.ring=ring;
+    this.g=new THREE.Group();
+    this.alive=true;this.hp=this.s.scale*100;
+
+    /* ---- model ---- */
+    const body=new THREE.Mesh(
+      new THREE.SphereGeometry(.5,12,8),
+      new THREE.MeshPhongMaterial({
+        color:this.s.col,emissive:this.s.col,emissiveIntensity:.4
+      })
+    );
+    body.scale.set(1.2,.8,1);
+    this.g.add(body);
+
+    const eyeMat=new THREE.MeshBasicMaterial({color:0xff0000});
+    for(let i=0;i<3;i++){
+      const eye=new THREE.Mesh(new THREE.SphereGeometry(.08,6,6),eyeMat);
+      eye.position.set(.45,Math.sin(i*2.1)*.18,Math.cos(i*2.1)*.18);
+      this.g.add(eye);
+    }
+
+    /* ---- physics ---- */
+    const ang=Math.random()*Math.PI*2;
+    this.pos=new THREE.Vector3(Math.cos(ang)*ring,Math.random()*8-4,Math.sin(ang)*ring);
+    this.vel=new THREE.Vector3().randomDirection().multiplyScalar(this.s.speed);
+    this.g.position.copy(this.pos);
+    this.g.userData={bug:this};
+    scene.add(this.g);
+  }
+  live(time){
+    if(!this.alive){
+      this.g.scale.lerp(new THREE.Vector3(1,.05,1),.12);
+      this.g.rotation.y+=.08;
+      this.g.children.forEach(c=>{if(c.material)c.material.opacity-=.03});
+      if(this.g.scale.y<.06){this.scene.remove(this.g);return false;}
+      return true;
+    }
+    /* orbital drift + obstacle avoidance */
+    this.vel.add(new THREE.Vector3().randomDirection().multiplyScalar(.008));
+    const avoidance=this.cam.position.clone().sub(this.pos).normalize().multiplyScalar(-.002);
+    this.vel.add(avoidance);
+    this.vel.clampLength(0,this.s.speed);
+    this.pos.add(this.vel);
+    this.g.position.copy(this.pos);
+    this.g.lookAt(this.pos.clone().add(this.vel));
+    /* wing flap */
+    this.g.children[0].rotation.z=Math.sin(time*.008)*.4;
+    return true;
+  }
+  die(){this.alive=false;}
+}
+
+/* 4.  RE-WIRE RAYCAST TO NEW SWARM */
+const oldClick=window.onPointerClick;
+window.onPointerClick=async(e)=>{
+  oldClick(e); // keep old logic
+  const ray=new THREE.Raycaster();
+  ray.setFromCamera(window.pointer,window.camera);
+  const hits=ray.intersectObjects(scene.children,true);
+  for(const h of hits){
+    const b=(h.object.userData?.bug)||(h.object.parent?.userData?.bug);
+    if(b&&b.alive){window.nanoSwarm.squash(b);break;}
+  }
+};
+
+/* 5.  KICK EVERYTHING OFF */
+window.nanoSwarm=new NanoSwarm(scene,camera,window.bugManager);
+
+/* 6.  HOOK INTO ANIM LOOP */
+const oldAnim=animate;
+animate=(t)=>{oldAnim(t);window.nanoSwarm.tick(t);};
+</script>
+  <!-- =====  END PATCH  ===== -->
 </body>
 
 </html>
