@@ -7,51 +7,51 @@
   "external_url": "https://solana.schizodio.art/",
   "edition": 282,
   "attributes": [
-    {
-      "trait_type": "Background",
-      "value": "SFighter"
-    },
-    {
-      "trait_type": "Body",
-      "value": "Pinky"
-    },
-    {
-      "trait_type": "Mask",
-      "value": "None"
-    },
-    {
-      "trait_type": "Eyes",
-      "value": "Milady Pick N Mix"
-    },
-    {
-      "trait_type": "Eyebrows",
-      "value": "Standard"
-    },
-    {
-      "trait_type": "Clothing",
-      "value": "Bahamas Tshirt"
-    },
-    {
-      "trait_type": "Hair",
-      "value": "Legolas White"
-    },
-    {
-      "trait_type": "Mouth",
-      "value": "Squiggle"
-    },
-    {
-      "trait_type": "Headwear",
-      "value": "None"
-    },
-    {
-      "trait_type": "Sidekick",
-      "value": "Harry Pothead"
-    },
-    {
-      "trait_type": "Overlays",
-      "value": "None"
-    }
-  ],
+       {
+         "trait_type": "Background",
+         "value": "Benidorm 2 Schizo Pilled"
+       },
+       {
+         "trait_type": "Body",
+         "value": "Zombie"
+       },
+       {
+         "trait_type": "Mask",
+         "value": "None"
+       },
+       {
+         "trait_type": "Eyes",
+         "value": "Love Mi Cousin Blue"
+       },
+       {
+         "trait_type": "Eyebrows",
+         "value": "Relieved"
+       },
+       {
+         "trait_type": "Clothing",
+         "value": "Dont Trust Tshirt"
+       },
+       {
+         "trait_type": "Hair",
+         "value": "Pharaoh Blue"
+       },
+       {
+         "trait_type": "Mouth",
+         "value": "sluggy smile"
+       },
+       {
+         "trait_type": "Headwear",
+         "value": "Zcash Cap"
+       },
+       {
+         "trait_type": "Sidekick",
+         "value": "Mr Money Bags"
+       },
+       {
+         "trait_type": "Overlays",
+         "value": "I showed you"
+       }
+     ],
   "properties": {
     "category": "image",
     "creators": [
