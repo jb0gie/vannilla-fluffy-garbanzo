@@ -9,11 +9,11 @@
   "attributes": [
     {
       "trait_type": "Background",
-      "value": "Claromeco"
+      "value": "Lavaux Switzerland"
     },
     {
       "trait_type": "Body",
-      "value": "Sun Kissed Peach"
+      "value": "Karla"
     },
     {
       "trait_type": "Mask",
@@ -21,23 +21,23 @@
     },
     {
       "trait_type": "Eyes",
-      "value": "Odd One"
+      "value": "Schizodio Remilio Red"
     },
     {
       "trait_type": "Eyebrows",
-      "value": "Purple Cyan Hybrid Camo"
+      "value": "Grey Camo"
     },
     {
       "trait_type": "Clothing",
-      "value": "Schizo Burger Tshirt"
+      "value": "Russia Tshirt"
     },
     {
       "trait_type": "Hair",
-      "value": "Jellycut Brownie Blonde"
+      "value": "Remilio Madoka Black"
     },
     {
       "trait_type": "Mouth",
-      "value": "W"
+      "value": "Rectangle"
     },
     {
       "trait_type": "Headwear",
@@ -45,11 +45,11 @@
     },
     {
       "trait_type": "Sidekick",
-      "value": "Suprano"
+      "value": "Akela"
     },
     {
       "trait_type": "Overlays",
-      "value": "S1 Bloodsplash"
+      "value": "None"
     }
   ],
   "properties": {

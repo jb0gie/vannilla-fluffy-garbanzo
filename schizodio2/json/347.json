@@ -9,11 +9,11 @@
   "attributes": [
     {
       "trait_type": "Background",
-      "value": "Benidorm Beach"
+      "value": "Cov"
     },
     {
       "trait_type": "Body",
-      "value": "Pinky"
+      "value": "Purple Aki"
     },
     {
       "trait_type": "Mask",
@@ -21,7 +21,7 @@
     },
     {
       "trait_type": "Eyes",
-      "value": "ETH Demon"
+      "value": "Pixelated Light Green"
     },
     {
       "trait_type": "Eyebrows",
@@ -29,15 +29,15 @@
     },
     {
       "trait_type": "Clothing",
-      "value": "Got Your Back Tshirt"
+      "value": "Stroking Tshirt"
     },
     {
       "trait_type": "Hair",
-      "value": "Fringe Neon Green"
+      "value": "Jellycut Purple"
     },
     {
       "trait_type": "Mouth",
-      "value": "Smiley"
+      "value": "Snorlax"
     },
     {
       "trait_type": "Headwear",
@@ -45,11 +45,11 @@
     },
     {
       "trait_type": "Sidekick",
-      "value": "Harold"
+      "value": "Lala"
     },
     {
       "trait_type": "Overlays",
-      "value": "None"
+      "value": "Do Not Cross"
     }
   ],
   "properties": {

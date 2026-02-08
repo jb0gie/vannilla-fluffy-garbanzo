@@ -6,52 +6,52 @@
   "image": "https://techshaman.42024769.xyz/schizodio2/images/345.png",
   "external_url": "https://solana.schizodio.art/",
   "edition": 345,
-  "attributes": [
-    {
-      "trait_type": "Background",
-      "value": "knuckles"
-    },
-    {
-      "trait_type": "Body",
-      "value": "Boy Who Cried Wolf Upgrade"
-    },
-    {
-      "trait_type": "Mask",
-      "value": "None"
-    },
-    {
-      "trait_type": "Eyes",
-      "value": "Dead Confused"
-    },
-    {
-      "trait_type": "Eyebrows",
-      "value": "Standard 2"
-    },
-    {
-      "trait_type": "Clothing",
-      "value": "Patrick Tshirt"
-    },
-    {
-      "trait_type": "Hair",
-      "value": "Remilio Madoka Brown"
-    },
-    {
-      "trait_type": "Mouth",
-      "value": "Triangle"
-    },
-    {
-      "trait_type": "Headwear",
-      "value": "None"
-    },
-    {
-      "trait_type": "Sidekick",
-      "value": "Sing"
-    },
-    {
-      "trait_type": "Overlays",
-      "value": "None"
-    }
-  ],
+    "attributes": [
+      {
+        "trait_type": "Background",
+        "value": "Claromeco"
+      },
+      {
+        "trait_type": "Body",
+        "value": "Sun Kissed Peach"
+      },
+      {
+        "trait_type": "Mask",
+        "value": "None"
+      },
+      {
+        "trait_type": "Eyes",
+        "value": "Odd One"
+      },
+      {
+        "trait_type": "Eyebrows",
+        "value": "Purple Cyan Hybrid Camo"
+      },
+      {
+        "trait_type": "Clothing",
+        "value": "Schizo Burger Tshirt"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Jellycut Brownie Blonde"
+      },
+      {
+        "trait_type": "Mouth",
+        "value": "W"
+      },
+      {
+        "trait_type": "Headwear",
+        "value": "None"
+      },
+      {
+        "trait_type": "Sidekick",
+        "value": "Suprano"
+      },
+      {
+        "trait_type": "Overlays",
+        "value": "S1 Bloodsplash"
+      }
+    ],
   "properties": {
     "category": "image",
     "creators": [
