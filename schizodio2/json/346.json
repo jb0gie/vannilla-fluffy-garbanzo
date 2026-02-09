@@ -9,15 +9,15 @@
   "attributes": [
     {
       "trait_type": "Background",
-      "value": "Shuriken Seamless"
+      "value": "Scrap Or Die"
     },
     {
       "trait_type": "Body",
-      "value": "Boy Who Cried Wolf Upgrade Alien"
+      "value": "Zombie"
     },
     {
       "trait_type": "Mask",
-      "value": "Schizodio OG Mask Grey"
+      "value": "None"
     },
     {
       "trait_type": "Eyes",
@@ -25,23 +25,23 @@
     },
     {
       "trait_type": "Eyebrows",
-      "value": "Pixelated"
+      "value": "Green Camo"
     },
     {
       "trait_type": "Clothing",
-      "value": "Solami Tshirt"
+      "value": "Scrap House Tshirt"
     },
     {
       "trait_type": "Hair",
-      "value": "Legolas White"
+      "value": "Pharaoh Green"
     },
     {
       "trait_type": "Mouth",
-      "value": "Drooling Dog"
+      "value": "Open"
     },
     {
       "trait_type": "Headwear",
-      "value": "Sol Cap"
+      "value": "None"
     },
     {
       "trait_type": "Sidekick",
@@ -49,7 +49,7 @@
     },
     {
       "trait_type": "Overlays",
-      "value": "Argentino Sign"
+      "value": "None"
     }
   ],
   "properties": {
