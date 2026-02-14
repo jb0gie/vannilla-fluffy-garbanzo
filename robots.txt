@@ -1,6 +1,5 @@
 User-agent: *
 Disallow: /schizodio/
-Disallow: /schizodio2/
 Disallow: /metadata/
 Disallow: /.git/
 Disallow: /.well-known/
