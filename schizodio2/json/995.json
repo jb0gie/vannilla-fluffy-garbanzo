@@ -9,11 +9,11 @@
   "attributes": [
     {
       "trait_type": "Background",
-      "value": "Grand Paradisio Italy"
+      "value": "Scrap and Died"
     },
     {
       "trait_type": "Body",
-      "value": "White Diamond"
+      "value": "Red Panda"
     },
     {
       "trait_type": "Mask",
@@ -21,37 +21,39 @@
     },
     {
       "trait_type": "Eyes",
-      "value": "ETH Demon Crying"
+      "value": "Pixelated Light Green"
     },
     {
       "trait_type": "Eyebrows",
-      "value": "Standard"
+      "value": "Green Camo"
     },
     {
       "trait_type": "Clothing",
-      "value": "Israel Is Calling Tshirt"
+      "value": "Pound Of Cheese Tshirt"
     },
     {
       "trait_type": "Hair",
-      "value": "Remilio Madoka Broly"
+      "value": "Pharaoh Green"
     },
     {
       "trait_type": "Mouth",
-      "value": "Neutral"
+      "value": "Triangle"
     },
     {
       "trait_type": "Headwear",
-      "value": "None"
+      "value": "Zabubus Cap"
     },
     {
       "trait_type": "Sidekick",
-      "value": "Aladeen"
+      "value": "Po"
     },
     {
       "trait_type": "Overlays",
-      "value": "None"
+      "value": "Zangria Pack"
     }
   ],
+  
+  
   "properties": {
     "category": "image",
     "creators": [
