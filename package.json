@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "practicing threeJS strats",
   "scripts": {
-    "start": "npx http-server ./ --port $PORT --no-dotfiles --no-cors --no-cache --no-logs --no-robots"
+    "start": "npx http-server ./ --port ${PORT:-8080} --no-dotfiles --no-cors --no-cache --no-logs --no-robots"
   },
   "author": "irb0gie",
   "license": "UNLICENSED"

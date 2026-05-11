@@ -1,0 +1,3710 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/x-icon" href="https://cdn.discordapp.com/emojis/893594073250807828.webp">
+  <meta property="og:title" content="techshaman" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://techshaman.247420.xyz" />
+  <meta property="og:image" content="https://cdn.discordapp.com/emojis/893594073250807828.webp" />
+  <meta property="og:description" content="the official website for the techshaman. an entrypoint probably emerging." />
+  <meta name="theme-color" content="#e094e6">
+  <!-- Include this to make the og:image larger -->
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="public/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>git~gud</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url("https://use.typekit.net/jmk3xov.css");
+    @import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
+
+    :root {
+      --dark-bg: rgba(15, 15, 15, 0.95);
+      --spacing: 350px;
+      --neon-cyan: #00ffff;
+      --neon-magenta: #ff0080;
+      --neon-purple: #4d00ff;
+      --neon-green: #00ff9d;
+      --neon-yellow: #ffd700;
+
+      font-family: brandon-grotesque, sans-serif;
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    main {
+      width: 100vw;
+      color: white;
+      z-index: 99;
+      position: absolute;
+      margin: 0px auto;
+      padding: 60px 20px;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+    }
+
+    h1,
+    h2,
+    h3,
+    blockquote {
+      font-family: elevon, sans-serif;
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      cursor: pointer;
+    }
+
+    blockquote p {
+      color: black;
+      background-color: white;
+      font-size: clamp(1rem, 5vw, 4rem);
+      display: inline;
+      line-height: 1.5;
+    }
+
+    .tooltip .tooltiptext {
+      font-size: clamp(1rem, 3vw, 3rem);
+    }
+
+    /* Flying text animations */
+    .text-section {
+      opacity: 0;
+      transform: translateX(100%);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow-x: hidden;
+      width: 100%;
+    }
+
+    .text-section.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .text-section.hidden {
+      opacity: 0;
+      transform: translateX(-100%);
+    }
+
+    /* Prevent horizontal scroll */
+    body {
+      overflow-x: hidden;
+      max-width: 100vw;
+    }
+
+    main {
+      overflow-x: hidden;
+    }
+
+    @media (min-width: 640px) {
+      main {
+        padding: 120px 0px;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .left {
+        grid-column: 6 / 12;
+      }
+
+      .right {
+        grid-column: 12 /12;
+      }
+    }
+
+    #loader-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease-out;
+    }
+
+    .loader-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, var(--neon-green), var(--neon-purple));
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transform-style: preserve-3d;
+      animation: rotate 1.5s linear infinite;
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+      box-shadow: 0 0 20px var(--neon-cyan);
+    }
+
+    .loader-text {
+      position: absolute;
+      bottom: -60px;
+      color: var(--neon-cyan);
+      font-size: 14px;
+      font-family: 'VT323', monospace;
+      text-align: center;
+      width: 300px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: 0.9;
+      font-weight: 400;
+      text-shadow: 0 0 10px var(--neon-cyan);
+      white-space: pre-line;
+    }
+
+    @keyframes rotate {
+      0% {
+        transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+      }
+
+      50% {
+        transform: rotateX(180deg) rotateY(180deg) rotateZ(180deg);
+      }
+
+      100% {
+        transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
+      }
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 0.6;
+      }
+
+      50% {
+        opacity: 0.9;
+      }
+    }
+
+    @keyframes glitch {
+      0%, 90%, 100% {
+        opacity: 0;
+        transform: scale(1);
+      }
+      10% {
+        opacity: 1;
+        transform: scale(1.2);
+      }
+      11% {
+        opacity: 0.3;
+        transform: translateX(2px);
+      }
+      12% {
+        opacity: 1;
+        transform: translateX(-2px);
+      }
+    }
+
+    @keyframes cursor-blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    .crt-text {
+      font-family: 'VT323', monospace;
+      text-shadow:
+        0 0 5px var(--neon-cyan),
+        0 0 10px var(--neon-cyan);
+    }
+
+    @keyframes data-fall {
+      0% {
+        transform: translateY(-100vh);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+    }
+  </style>
+  <script type="importmap">
+    {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three/examples/jsm/"
+        }
+      }
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three/examples/fonts/helvetiker_regular.typeface.json"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.9/dat.gui.min.js"></script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+    import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+    import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+    import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+    import { AfterimagePass } from 'three/addons/postprocessing/AfterimagePass.js';
+    
+    (function () {
+      // Initialize all variables first
+      const textMeshes = [];
+      const clock = new THREE.Clock();
+      const model_path = 'models/techshaman.glb';
+      const raycaster = new THREE.Raycaster();
+      const pointer = new THREE.Vector2();
+      let isPerspective = true;
+
+      let scene, camera, renderer, controls;
+      let jeff, model, moon;
+      let mixer;
+      let composer, afterimagePass;
+      let isHovered = false;
+      let originalScale = new THREE.Vector3(1, 1, 1);
+      let tooltipDiv;
+
+
+      // Initialize raycaster settings
+      raycaster.near = 0.1;
+      raycaster.far = 100;
+
+      // Initialize loading manager first
+      const loadingManager = new THREE.LoadingManager();
+
+      // Initialize all loaders with the loading manager
+      const gltfLoader = new GLTFLoader(loadingManager);
+      const textureLoader = new THREE.TextureLoader(loadingManager);
+      const fontLoader = new FontLoader(loadingManager);
+
+      // Setup loading manager handlers
+      loadingManager.onProgress = function(url, itemsLoaded, itemsTotal) {
+        const progress = (itemsLoaded / itemsTotal * 100).toFixed(0);
+        const loaderText = document.querySelector('.loader-text');
+        if (loaderText) {
+          loaderText.textContent = `[[ CYBER_NEURAL_BOOT ]]
+██▓▒░ ${progress}% ░▒▓██
+INITIALIZING QUANTUM MATRIX...`
+        }
+      };
+
+      loadingManager.onLoad = function() {
+        const loaderContainer = document.querySelector('#loader-container');
+        if (loaderContainer) {
+          loaderContainer.style.opacity = '0';
+          setTimeout(() => {
+            loaderContainer.style.display = 'none';
+            document.querySelector('main').style.display = 'block';
+          }, 500);
+        }
+      };
+
+      // Initialize scene and camera first
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.set(0, 0, 50);
+      camera.lookAt(0, 0, 0);
+
+      // Initialize renderer
+      renderer = new THREE.WebGLRenderer({ 
+        canvas: document.querySelector('#bg'),
+        antialias: true,
+        powerPreference: "high-performance"
+      });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      // Initialize orbit controls
+      controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.screenSpacePanning = false;
+      controls.minDistance = 30;
+      controls.maxDistance = 100;
+      controls.maxPolarAngle = Math.PI;
+      controls.target.set(0, 0, 0);
+
+      // Lights setup
+      const pointLight = new THREE.PointLight(0x00ff9d, 2.0);    // Electric cyan
+      const pointLight2 = new THREE.PointLight(0xff0080, 1.5);   // Hot magenta
+      const pointLight3 = new THREE.PointLight(0x4d00ff, 1.2);   // Electric purple
+      const pointLight4 = new THREE.PointLight(0xffd700, 1.0);   // Gold
+      const pointLight5 = new THREE.PointLight(0x00ffff, 0.8);   // Pure cyan
+
+      pointLight.position.set(25, 15, 25);
+      pointLight2.position.set(-25, 10, 15);
+      pointLight3.position.set(0, -20, 30);
+      pointLight4.position.set(15, 30, -20);
+      pointLight5.position.set(-15, -10, -25);
+
+      // Colored ambient lights with stronger intensity
+      const ambientLight1 = new THREE.AmbientLight(0x0a0044, 0.5);  // Deep purple
+      const ambientLight2 = new THREE.AmbientLight(0x003366, 0.4);  // Deep blue
+      const ambientLight3 = new THREE.AmbientLight(0x440022, 0.3);  // Deep magenta
+
+      scene.add(pointLight, pointLight2, pointLight3, pointLight4, pointLight5, ambientLight1, ambientLight2, ambientLight3);
+
+      // Directional light for sun
+      const sunLight = new THREE.DirectionalLight(0xffffff, 1);
+      sunLight.position.set(50, 50, 50);  // Position the sun
+      sunLight.castShadow = true;
+      scene.add(sunLight);
+
+      // Initialize post-processing
+      composer = new EffectComposer(renderer);
+      const renderPass = new RenderPass(scene, camera);
+      composer.addPass(renderPass);
+
+      // Load textures and initialize objects
+      textureLoader.load(
+        'images/space.jpg',
+        (texture) => {
+          scene.background = texture;
+        },
+        undefined,
+        (error) => {
+          console.error('An error happened while loading the texture:', error);
+        }
+      );
+
+      // Initialize moon
+      textureLoader.load(
+        'images/moon.jpg',
+        (texture) => {
+          moon = new THREE.Mesh(
+            new THREE.SphereGeometry(3, 32, 32),
+            new THREE.MeshStandardMaterial({
+              map: texture,
+            })
+          );
+          scene.add(moon);
+          moon.position.z = 30;
+          moon.position.setX(-10);
+        },
+        undefined,
+        (error) => {
+          console.error('An error happened while loading the texture:', error);
+        }
+      );
+
+      // Initialize jeff cube
+      textureLoader.load(
+        'images/jeff.png',
+        (texture) => {
+          jeff = new THREE.Mesh(
+            new THREE.BoxGeometry(3, 3, 3), 
+            new THREE.MeshBasicMaterial({ map: texture })
+          );
+          scene.add(jeff);
+          jeff.position.z = 15;
+          jeff.position.x = 8;
+        },
+        undefined,
+        (error) => {
+          console.error('An error happened while loading the texture:', error);
+        }
+      );
+
+      // Load 3D Model
+      gltfLoader.load(
+        model_path,
+        function (gltf) {
+        model = gltf.scene;
+          model.position.set(0, 0, 0);
+        model.scale.set(3, 3, 3);
+        scene.add(model);
+
+        // Setup animations
+        mixer = new THREE.AnimationMixer(model);
+
+        // Play each animation with specific settings
+        gltf.animations.forEach((clip) => {
+          const action = mixer.clipAction(clip);
+            action.setLoop(THREE.LoopRepeat);
+          action.clampWhenFinished = true;
+            action.timeScale = 1;
+          action.play();
+        });
+      },
+        function (xhr) {
+          console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+        },
+        function (error) {
+          console.error('An error happened:', error);
+        }
+      );
+
+      // Helper function to create section text
+      async function createSectionText(text, parentGroup) {
+        const geometry = new TextGeometry(text, {
+          font: await new Promise(resolve => fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', resolve)),
+          size: 0.5,
+          height: 0.1,
+          depth:1, 
+          curveSegments: 32,
+          bevelEnabled: true,
+          bevelThickness: 0.02,
+          bevelSize: 0.01,
+          bevelOffset: 0,
+          bevelSegments: 8
+        });
+
+        const material = new THREE.MeshPhysicalMaterial({
+          color: 0xffffff,
+          transparent: true,
+          opacity: 0,
+          metalness: 0.2,
+          roughness: 0.1,
+          emissive: 0xffffff,
+          emissiveIntensity: 1.0
+        });
+
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.userData.isDescriptionText = true;
+        parentGroup.add(mesh);
+        return mesh;
+      }
+
+      // Define animation functions
+      function animateText(time) {
+        textMeshes.forEach(group => {
+          if (group.userData) {
+            group.userData.orbitAngle += group.userData.orbitSpeed;
+            group.position.x = Math.cos(group.userData.orbitAngle) * group.userData.orbitRadius;
+            group.position.z = Math.sin(group.userData.orbitAngle) * group.userData.orbitRadius;
+            group.position.y = group.userData.heightOffset + Math.sin(group.userData.orbitAngle * 2) * 3;
+
+            const rotationY = -Math.atan2(group.position.z, group.position.x) - Math.PI / 2;
+            group.rotation.set(0, rotationY, 0);
+
+            // Update holographic shader time
+            group.children.forEach(child => {
+              if (child.material && child.material.uniforms && child.material.uniforms.time) {
+                child.material.uniforms.time.value = time;
+              }
+            });
+          }
+        });
+      }
+
+      function animateJeff(time) {
+        if (!isHovered) {
+          const pulseFactor = Math.sin(time * 0.003) * 0.1 + 1;
+          jeff.scale.set(originalScale.x * pulseFactor, originalScale.y * pulseFactor, originalScale.z * pulseFactor);
+        }
+      }
+
+      // Single animation loop
+      function animate(time) {
+        requestAnimationFrame(animate);
+        
+        // Update TWEEN
+        TWEEN.update();
+
+        // Update animations
+        if (mixer) {
+          const delta = clock.getDelta();
+          mixer.update(delta);
+        }
+
+        // Animate objects
+        if (moon) moon.rotation.x += 0.005;
+        if (typeof animateText === 'function') animateText(time);
+        if (!isHovered && jeff) animateJeff(time);
+
+        // Update controls
+        controls.update();
+
+        // Update NanoSwarm AI and bugs
+        if (window.nanoSwarm) {
+          window.nanoSwarm.tick(time);
+        }
+
+        // Render scene
+        composer.render();
+      }
+
+      // Window resize handler
+      function onWindowResize() {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        // Update camera
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+
+        // Update renderer and composer
+        renderer.setSize(width, height);
+        composer.setSize(width, height);
+
+        // Update pixel ratio for mobile
+        const pixelRatio = Math.min(window.devicePixelRatio, 2);
+        renderer.setPixelRatio(pixelRatio);
+      }
+
+      // Update OrbitControls settings for better cross-platform handling
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.rotateSpeed = 0.5;
+      controls.enableZoom = true;
+      controls.zoomSpeed = 0.5;
+      controls.enablePan = false;  // Disable panning for simpler interaction
+      controls.maxPolarAngle = Math.PI * 0.8;  // Limit vertical rotation
+      controls.minPolarAngle = Math.PI * 0.2;  // Limit vertical rotation
+      controls.touches = {
+        ONE: THREE.TOUCH.ROTATE,
+        TWO: THREE.TOUCH.DOLLY  // Only allow zoom with two fingers
+      };
+
+      // Enhanced WASD Movement System
+      function setupWASDMovement() {
+        const movementSpeed = 0.5;
+        const keys = {};
+
+        // Track key states
+        document.addEventListener('keydown', (event) => {
+          keys[event.code] = true;
+        });
+
+        document.addEventListener('keyup', (event) => {
+          keys[event.code] = false;
+        });
+
+        // Movement update function
+        function updateMovement() {
+          const moveVector = new THREE.Vector3();
+
+          // WASD Movement
+          if (keys['KeyW']) moveVector.z -= movementSpeed;
+          if (keys['KeyS']) moveVector.z += movementSpeed;
+          if (keys['KeyA']) moveVector.x -= movementSpeed;
+          if (keys['KeyD']) moveVector.x += movementSpeed;
+
+          // Apply movement relative to camera rotation
+          if (moveVector.length() > 0) {
+            moveVector.applyQuaternion(camera.quaternion);
+            camera.position.add(moveVector);
+            controls.target.add(moveVector);
+          }
+
+          // Special movement keys
+          if (keys['KeyQ']) camera.position.y += movementSpeed * 0.5;
+          if (keys['KeyE']) camera.position.y -= movementSpeed * 0.5;
+
+          requestAnimationFrame(updateMovement);
+        }
+
+        // Start movement update loop
+        updateMovement();
+
+        // Add movement keys to help system
+        return {
+          W: 'Move Forward',
+          S: 'Move Backward',
+          A: 'Move Left',
+          D: 'Move Right',
+          Q: 'Move Up',
+          E: 'Move Down'
+        };
+      }
+
+      // Initialize WASD movement
+      const wasdControls = setupWASDMovement();
+
+      // Unified pointer event handler for both touch and mouse
+      function onPointerEvent(event) {
+        // Prevent default behavior only for touch events
+        if (event.pointerType === 'touch') {
+          event.preventDefault();
+        }
+
+        // Update pointer coordinates
+        pointer.x = ((event.clientX || event.touches?.[0]?.clientX || 0) / window.innerWidth) * 2 - 1;
+        pointer.y = -((event.clientY || event.touches?.[0]?.clientY || 0) / window.innerHeight) * 2 + 1;
+
+        // Update the picking ray with the camera and pointer position
+        raycaster.setFromCamera(pointer, camera);
+
+        // Calculate objects intersecting the picking ray
+        const intersects = raycaster.intersectObjects(scene.children, true);
+
+        // Handle hover effects
+        const textIntersects = intersects.filter(intersect => 
+          textMeshes.some(mesh => intersect.object === mesh || mesh.children.includes(intersect.object))
+        );
+
+        if (textIntersects.length > 0) {
+          document.body.style.cursor = 'pointer';
+          isHovered = true;
+        } else {
+          document.body.style.cursor = 'default';
+          isHovered = false;
+        }
+
+        // If this is a click/touch event (pointerdown), handle the click
+        if (event.type === 'pointerdown') {
+          onPointerClick(event);
+        }
+      }
+
+      // Add unified event listeners
+      window.addEventListener('pointermove', onPointerEvent);
+      window.addEventListener('pointerdown', onPointerEvent);
+      window.addEventListener('resize', onWindowResize);
+
+      // Remove old event listeners
+      // window.removeEventListener('touchstart', onTouchStart);
+      // window.removeEventListener('touchmove', onTouchMove);
+
+      // Add meta viewport tag for proper mobile scaling
+      const metaViewport = document.querySelector('meta[name=viewport]');
+      if (!metaViewport) {
+        const meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+        document.head.appendChild(meta);
+      }
+
+      // Start animation loop
+      animate();
+
+      // Debug helper for raycasting
+      const debugSphere = new THREE.Mesh(
+        new THREE.SphereGeometry(0.1, 16, 16),
+        new THREE.MeshBasicMaterial({ color: 0xff0000 })
+      );
+      // scene.add(debugSphere);
+
+      // Modal setup
+      const modal = document.createElement('div');
+      modal.style.cssText = `
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.95);
+        padding: 30px;
+        border-radius: 15px;
+        z-index: 1000;
+        min-width: 300px;
+        max-width: 80%;
+        color: white;
+        border: 2px solid #ffffff55;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      `;
+      // document.body.appendChild(modal);
+
+      // Create 3D Text with optimized settings
+      fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', async function(font) {
+        // Add orbiting 3D text for each info entry
+        const textInfo = [
+          {
+            text: 'TECHSHAMAN',
+            description: 'A pioneer of a new era of human evolution. Believes that the current state of humanity is unsustainable, fragmented, and disconnected. We are living in a world of scarcity, inequality, and violence.',
+            size: 2,
+            orbitRadius: 35,
+            orbitSpeed: 0.0002,
+            heightOffset: 15
+          },
+          {
+            text: 'YE X ZU',
+            description: 'A vision of a different world, a world of abundance, harmony, and connection. A world where every human being is free, empowered, and valued.',
+            size: 1.5,
+            orbitRadius: 40,
+            orbitSpeed: 0.0003,
+            heightOffset: 9
+          },
+          {
+            text: '247420',
+            description: 'A decentralized platform that allows anyone to create, share, and watch content of any kind, without censorship, surveillance, or interference. Using p2p technology, blockchain encryption, and smart contracts.',
+            size: 1.8,
+            orbitRadius: 45,
+            orbitSpeed: 0.0004,
+            heightOffset: 3
+          },
+          {
+            text: 'SCHWEPE',
+            description: 'A skinless frog. The essence of schwepe speaks to the mind that drives ultimate realisation that jokes are funny. It creates a sense of peace that can be enjoyed during any activity.',
+            size: 1.5,
+            orbitRadius: 50,
+            orbitSpeed: 0.0005,
+            heightOffset: -3
+          },
+          {
+            text: 'BLADES OF GRASS',
+            description: 'An innovative project that aims to reconnect humanity with nature through technology.',
+            size: 1.5,
+            orbitRadius: 55,
+            orbitSpeed: 0.0006,
+            heightOffset: -9
+          },
+          {
+            text: 'ACCOLADES',
+            description: 'The McAfee Job: A groundbreaking cybersecurity initiative\nMonaJob: Revolutionizing the gig economy\nMoralisJob: Pushing the boundaries of blockchain technology\nMetaGame: Pioneering the future of decentralized gaming',
+            size: 1.5,
+            orbitRadius: 60,
+            orbitSpeed: 0.0007,
+            heightOffset: -15
+          }
+        ];
+        for (const info of textInfo) {
+          const geometry = new TextGeometry(info.text, {
+            font: font,
+            size: info.size,
+            height: 0.1, 
+            depth:1, // thin extrusion
+            curveSegments: 12,
+            bevelEnabled: true,
+            bevelThickness: 0.02,
+            bevelSize: 0.01,
+            bevelOffset: 0,
+            bevelSegments: 3
+          });
+          geometry.computeBoundingBox();
+          const textWidth = geometry.boundingBox.max.x - geometry.boundingBox.min.x;
+          const textHeight = geometry.boundingBox.max.y - geometry.boundingBox.min.y;
+          geometry.translate(-textWidth/2, -textHeight/2, 0);
+          const material = new THREE.MeshPhongMaterial({
+            color: getRandomColor(),
+            emissive: getRandomColor(),
+            shininess: 30,
+            transparent: true,
+            opacity: 0.9
+          });
+          const textMesh = new THREE.Mesh(geometry, material);
+          const textGroup = new THREE.Group();
+          textGroup.add(textMesh);
+          const lines = info.description.split('\n');
+          const wordsPerLine = 8;
+          const formattedLines = [];
+          lines.forEach(line => {
+            const words = line.split(' ');
+            for (let i = 0; i < words.length; i += wordsPerLine) {
+              formattedLines.push(words.slice(i, i + wordsPerLine).join(' '));
+            }
+          });
+          for (let i = 0; i < formattedLines.length; i++) {
+            const descGeometry = new TextGeometry(formattedLines[i], {
+              font: font,
+              size: 0.8,
+              height: 0.05,
+              depth:1,
+              curveSegments: 8,
+              bevelEnabled: false
+            });
+            descGeometry.computeBoundingBox();
+            const descWidth = descGeometry.boundingBox.max.x - descGeometry.boundingBox.min.x;
+            descGeometry.translate(-descWidth/2, -i * 2 - 6, 0);
+            const descMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 });
+            const descMesh = new THREE.Mesh(descGeometry, descMaterial);
+            descMesh.userData.isDescriptionText = true;
+            textGroup.add(descMesh);
+          }
+          const orbitAngle = (textInfo.indexOf(info) / textInfo.length) * Math.PI * 2;
+          textGroup.position.x = Math.cos(orbitAngle) * info.orbitRadius;
+          textGroup.position.z = Math.sin(orbitAngle) * info.orbitRadius;
+          textGroup.position.y = info.heightOffset;
+          textGroup.rotation.set(0, -orbitAngle - Math.PI / 2, 0);
+          textGroup.userData = {
+            description: info.description,
+            orbitRadius: info.orbitRadius,
+            orbitSpeed: info.orbitSpeed,
+            orbitAngle: orbitAngle,
+            heightOffset: info.heightOffset,
+            isClickable: true,
+            text: info.text
+          };
+          textMeshes.push(textGroup);
+          scene.add(textGroup);
+        }
+      });
+
+      // Update the click handler
+      async function onPointerClick(event) {
+        pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+        pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+        raycaster.setFromCamera(pointer, camera);
+        const intersects = raycaster.intersectObjects([jeff, model, ...textMeshes], true);
+
+        if (intersects.length > 0) {
+          const object = intersects[0].object;
+          const group = object.parent;
+          
+          if (object === jeff) {
+            // Play cyberpunk interaction sound
+            if (window.cyberAudio && window.cyberAudio.createReactionTone) {
+              window.cyberAudio.createReactionTone(0.7);
+            }
+            window.open('https://github.com/jb0gie', '_blank');
+          } else if (object.parent === model || object === model) {
+            console.log('techshaman.glb model clicked: resetting camera');
+            // Play subtle interaction sound
+            if (window.cyberAudio && window.cyberAudio.createReactionTone) {
+              window.cyberAudio.createReactionTone(0.5);
+            }
+            // Reset camera and controls to original position and target
+            new TWEEN.Tween(controls.target)
+              .to({ x: 0, y: 0, z: 0 }, 1000)
+              .easing(TWEEN.Easing.Cubic.InOut)
+              .onUpdate(() => controls.update())
+              .start();
+            new TWEEN.Tween(camera.position)
+              .to({ x: 0, y: 0, z: 50 }, 1000)
+              .easing(TWEEN.Easing.Cubic.InOut)
+              .onUpdate(() => controls.update())
+              .start();
+            return;
+          } else if (group.userData?.isClickable || object.userData?.isClickable) {
+            // Play text interaction sound
+            if (window.cyberAudio && window.cyberAudio.createReactionTone) {
+              window.cyberAudio.createReactionTone(0.8);
+            }
+
+            const targetGroup = group.userData?.isClickable ? group : object;
+
+            // Get the group position
+            const targetPos = new THREE.Vector3();
+            targetGroup.getWorldPosition(targetPos);
+
+            // Toggle description visibility
+            targetGroup.children.forEach(child => {
+              if (child.userData.isDescriptionText) {
+                new TWEEN.Tween(child.material)
+                  .to({ opacity: child.material.opacity === 0 ? 1 : 0 }, 500)
+                  .easing(TWEEN.Easing.Cubic.InOut)
+                  .start();
+              }
+            });
+
+            // Position camera behind techshaman model
+            const modelPos = new THREE.Vector3(0, 2, 0);  // Model's position plus slight height offset
+            const lookAtPos = targetPos.clone();  // Position of the clicked text
+            
+            // Calculate camera position behind model
+            const directionToText = new THREE.Vector3().subVectors(lookAtPos, modelPos).normalize();
+            const cameraOffset = new THREE.Vector3().copy(directionToText).multiplyScalar(-10);
+            const cameraTargetPos = modelPos.clone()
+              .add(cameraOffset)
+              .add(new THREE.Vector3(0, 8, 0));
+
+            // Calculate rotation for the model to face the text
+            const modelRotation = new THREE.Euler(0, Math.atan2(
+              lookAtPos.x - modelPos.x,
+              lookAtPos.z - modelPos.z
+            ), 0);
+
+            // Rotate the model to face the text
+            if (model) {
+              new TWEEN.Tween(model.rotation)
+                .to({ y: modelRotation.y }, 1000)
+                .easing(TWEEN.Easing.Cubic.InOut)
+                .start();
+            }
+
+            // Update controls target to the text position
+            new TWEEN.Tween(controls.target)
+              .to(lookAtPos, 1000)
+              .easing(TWEEN.Easing.Cubic.InOut)
+              .start();
+
+            // Move camera to position behind model
+            new TWEEN.Tween(camera.position)
+              .to(cameraTargetPos, 1000)
+              .easing(TWEEN.Easing.Cubic.InOut)
+              .start();
+          }
+        }
+      }
+
+      function getRandomColor() {
+        const colors = [
+          0xff0000, // red
+          0x00ff00, // green
+          0x0000ff, // blue
+          0xff00ff, // magenta
+          0x00ffff, // cyan
+          0xffff00, // yellow
+          0xff6347, // tomato
+          0x9400d3, // violet
+          0x00ff7f, // spring green
+          0xff1493, // deep pink
+          0x7fffd4, // aquamarine
+          0xffa500  // orange
+        ];
+        return colors[Math.floor(Math.random() * colors.length)];
+      }
+
+      // Restore AfterimagePass
+      afterimagePass = new AfterimagePass(0.8);
+      composer.addPass(afterimagePass);
+
+      // --- CRT SCANLINE EFFECT ---
+      const crtShader = {
+        uniforms: {
+          'tDiffuse': { value: null },
+          'time': { value: 0.0 }
+        },
+        vertexShader: `
+          varying vec2 vUv;
+          void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+          }
+        `,
+        fragmentShader: `
+          uniform sampler2D tDiffuse;
+          uniform float time;
+          varying vec2 vUv;
+
+          void main() {
+            vec4 texel = texture2D( tDiffuse, vUv );
+
+            // Scanlines
+            float scanline = sin( vUv.y * 800.0 ) * 0.04;
+
+            // Screen curvature distortion
+            vec2 center = vec2( 0.5, 0.5 );
+            vec2 dist = vUv - center;
+            float distortion = dot( dist, dist ) * 0.1;
+            vec2 uv = mix( vUv, center, distortion );
+
+            // RGB shift effect
+            float shift = 0.002;
+            vec4 texelR = texture2D( tDiffuse, uv + vec2( shift, 0.0 ) );
+            vec4 texelG = texture2D( tDiffuse, uv );
+            vec4 texelB = texture2D( tDiffuse, uv - vec2( shift, 0.0 ) );
+
+            vec4 color;
+            color.r = texelR.r;
+            color.g = texelG.g;
+            color.b = texelB.b;
+            color.a = (texelR.a + texelG.a + texelB.a) / 3.0;
+
+            // Adding scanline effect
+            color.rgb += scanline;
+
+            // Vignette effect
+            float vignette = 1.0 - dot( dist, dist ) * 1.5;
+            vignette = max( 0.0, vignette );
+            color.rgb *= vignette;
+
+            // TV static/noise
+            float noise = (fract( sin( dot( vUv, vec2( 12.9898, 78.233 ) ) * 43758.5453 ) ) - 0.5) * 0.02;
+            color.rgb += noise;
+
+            gl_FragColor = color;
+          }
+        `
+      };
+
+      const crtPass = new THREE.ShaderPass(crtShader);
+      composer.addPass(crtPass);
+
+      // --- ENHANCED NEON PARTICLE SYSTEM ---
+      function createNeonParticleSystem() {
+        const neonColors = [0x00ffff, 0xff0080, 0x00ff9d, 0xffd700, 0x4d00ff];
+
+        // Main neon particles
+        const particleCount = 400;
+        const particleGeometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+        const colors = new Float32Array(particleCount * 3);
+        const sizes = new Float32Array(particleCount);
+
+        for (let i = 0; i < particleCount; i++) {
+          // Position
+          positions[i * 3] = (Math.random() - 0.5) * 200;
+          positions[i * 3 + 1] = (Math.random() - 0.5) * 120;
+          positions[i * 3 + 2] = (Math.random() - 0.5) * 200;
+
+          // Color
+          const color = new THREE.Color(neonColors[Math.floor(Math.random() * neonColors.length)]);
+          colors[i * 3] = color.r;
+          colors[i * 3 + 1] = color.g;
+          colors[i * 3 + 2] = color.b;
+
+          // Size
+          sizes[i] = Math.random() * 2 + 1;
+        }
+
+        particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        particleGeometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+        // Custom shader material for glowing particles
+        const particleMaterial = new THREE.ShaderMaterial({
+          uniforms: {
+            time: { value: 0 }
+          },
+          vertexShader: `
+            attribute float size;
+            attribute vec3 color;
+            varying vec3 vColor;
+            uniform float time;
+
+            void main() {
+              vColor = color;
+              vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+              gl_PointSize = size * (300.0 / -mvPosition.z) * (1.0 + 0.3 * sin(time * 0.01 + position.x * 0.01));
+              gl_Position = projectionMatrix * mvPosition;
+            }
+          `,
+          fragmentShader: `
+            varying vec3 vColor;
+
+            void main() {
+              float dist = length(gl_PointCoord - vec2(0.5));
+              float alpha = 1.0 - smoothstep(0.0, 0.5, dist);
+
+              // Neon glow effect
+              vec3 glow = vColor * (1.0 + 2.0 * (1.0 - dist));
+              gl_FragColor = vec4(glow, alpha * 0.8);
+            }
+          `,
+          transparent: true,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false
+        });
+
+        const particles = new THREE.Points(particleGeometry, particleMaterial);
+        scene.add(particles);
+
+        return particles;
+      }
+
+      const particles = createNeonParticleSystem();
+
+      // --- NEON GRID FLOOR (80s Cyberspace Essential) ---
+      const gridSize = 200;
+      const divisions = 50;
+      const gridHelper = new THREE.GridHelper(gridSize, divisions, 0x00ffff, 0xff0080);
+      gridHelper.position.y = -30;
+      gridHelper.material.transparent = true;
+      gridHelper.material.opacity = 0.8;
+      scene.add(gridHelper);
+
+      // --- GLOWING HORIZONTAL GRID ---
+      const gridGeometry = new THREE.PlaneGeometry(gridSize, gridSize, divisions, divisions);
+      const gridMaterial = new THREE.MeshBasicMaterial({
+        color: 0x00ffff,
+        transparent: true,
+        opacity: 0.1,
+        side: THREE.DoubleSide
+      });
+      const glowGrid = new THREE.Mesh(gridGeometry, gridMaterial);
+      glowGrid.position.y = -29.9;
+      glowGrid.rotation.x = -Math.PI / 2;
+      scene.add(glowGrid);
+
+      // --- NEON TUNES UNDERGROUND ---
+      const tubeGeometry = new THREE.CylinderGeometry(0.2, 0.2, 8, 8);
+      const tubeMaterial = new THREE.MeshPhongMaterial({
+        color: 0xff0080,
+        emissive: 0xff0080,
+        emissiveIntensity: 2.0,
+        transparent: true,
+        opacity: 0.8
+      });
+
+      // Create neon tubes in a circle below the scene
+      const tubeCount = 8;
+      const tubeRadius = 20;
+      for (let i = 0; i < tubeCount; i++) {
+        const tube = new THREE.Mesh(tubeGeometry, tubeMaterial.clone());
+        const angle = (i / tubeCount) * Math.PI * 2;
+        tube.position.x = Math.cos(angle) * tubeRadius;
+        tube.position.z = Math.sin(angle) * tubeRadius;
+        tube.position.y = -35;
+        tube.rotation.z = Math.PI / 2;
+
+        // Stagger heights and colors for variety
+        tube.scale.y = 0.5 + Math.random() * 1.5;
+
+        // Alternate colors
+        if (i % 3 === 0) tube.material.color.setHex(0x00ffff);
+        if (i % 3 === 1) tube.material.color.setHex(0xffd700);
+
+        tube.material.emissive.copy(tube.material.color);
+        scene.add(tube);
+      }
+
+      // --- LASER SCANNING ANIMATION ---
+      const laserGeometry = new THREE.PlaneGeometry(100, 1);
+      const laserMaterial = new THREE.MeshBasicMaterial({
+        color: 0x00ffff,
+        transparent: true,
+        opacity: 0.6,
+        side: THREE.DoubleSide
+      });
+      const laserScan = new THREE.Mesh(laserGeometry, laserMaterial);
+      laserScan.position.set(0, 10, 0);
+      scene.add(laserScan);
+
+      // Create multiple laser beams for epic effect
+      const laserCount = 3;
+      const lasers = [];
+      for (let i = 0; i < laserCount; i++) {
+        const laser = new THREE.Mesh(
+          new THREE.PlaneGeometry(80, 0.5),
+          laserMaterial.clone()
+        );
+        laser.userData = {
+          initialY: -20 + i * 15,
+          speed: 0.001 + i * 0.0005,
+          direction: i % 2 === 0 ? 1 : -1
+        };
+        laser.position.y = laser.userData.initialY;
+        laser.rotation.z = (i * 0.2) * Math.PI;
+
+        // Different colors for variety
+        const laserColors = [0x00ffff, 0xff0080, 0xffd700];
+        laser.material.color.setHex(laserColors[i % laserColors.length]);
+
+        lasers.push(laser);
+        scene.add(laser);
+      }
+
+      // Animate particles with shader updates
+      function animateParticles(time) {
+        if (particles.material.uniforms) {
+          particles.material.uniforms.time.value = time;
+        }
+      }
+
+      // --- SYNTHWAVE STYLE MOUNTAINS ---
+      const mountainCount = 5;
+      const mountains = [];
+
+      function createSynthwaveMountains() {
+        const neonColors = [0xff0080, 0x00ffff, 0x4d00ff, 0xffd700, 0x00ff9d];
+
+        for (let i = 0; i < mountainCount; i++) {
+          // Create mountain silhouette
+          const mountainGeometry = new THREE.BufferGeometry();
+          const points = [];
+
+          // Generate mountain profile
+          const baseHeight = 20 + Math.random() * 40;
+          const peaks = 3 + Math.floor(Math.random() * 4);
+
+          for (let j = 0; j <= peaks; j++) {
+            const x = (j / peaks) * 100 - 50;
+            const height = baseHeight + Math.random() * 30;
+            points.push(x, height, 0);
+          }
+
+          // Create triangle strip
+          const vertices = [];
+          for (let j = 0; j < points.length - 3; j += 3) {
+            // Bottom left
+            vertices.push(points[j], 0, points[j + 2]);
+            // Top left
+            vertices.push(points[j], points[j + 1], points[j + 2]);
+            // Bottom right
+            vertices.push(points[j + 3], 0, points[j + 5]);
+
+            // Top right
+            vertices.push(points[j + 3], 0, points[j + 5]);
+            // Top left
+            vertices.push(points[j], points[j + 1], points[j + 2]);
+            // Peak point
+            vertices.push(points[j + 3], points[j + 4], points[j + 5]);
+          }
+
+          mountainGeometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+
+          const mountainMaterial = new THREE.MeshBasicMaterial({
+            color: neonColors[i % neonColors.length],
+            transparent: true,
+            opacity: 0.3,
+            side: THREE.DoubleSide
+          });
+
+          const mountain = new THREE.Mesh(mountainGeometry, mountainMaterial);
+          mountain.position.z = -80 - (i * 15);
+          mountain.position.y = -10;
+          mountain.position.x = (Math.random() - 0.5) * 50;
+
+          // Store animation data
+          mountain.userData = {
+            baseZ: mountain.position.z,
+            speed: 0.0005 + Math.random() * 0.001,
+            opacityPhase: Math.random() * Math.PI * 2
+          };
+
+          mountains.push(mountain);
+          scene.add(mountain);
+
+          // Add outline glow
+          const outlineGeometry = mountainGeometry.clone();
+          const outlineMaterial = new THREE.MeshBasicMaterial({
+            color: neonColors[i % neonColors.length],
+            transparent: true,
+            opacity: 0.6,
+            wireframe: true
+          });
+
+          const outline = new THREE.Mesh(outlineGeometry, outlineMaterial);
+          outline.position.copy(mountain.position);
+          outline.position.y += 0.1;
+          scene.add(outline);
+        }
+      }
+
+      createSynthwaveMountains();
+
+      // --- ASTEROIDS (VARIED) ---
+      const asteroidCount = 8;
+      const asteroids = [];
+      for (let i = 0; i < asteroidCount; i++) {
+        const geo = new THREE.IcosahedronGeometry(Math.random() * 2 + 1, 1);
+        const mat = new THREE.MeshStandardMaterial({ color: 0x888888, flatShading: true });
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.position.set(
+          (Math.random() - 0.5) * 120,
+          (Math.random() - 0.5) * 80,
+          (Math.random() - 0.5) * 120
+        );
+        mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
+        mesh.userData = {
+          rotSpeed: (Math.random() - 0.5) * 0.01,
+          drift: new THREE.Vector3(
+            (Math.random() - 0.5) * 0.01,
+            (Math.random() - 0.5) * 0.01,
+            (Math.random() - 0.5) * 0.01
+          )
+        };
+        asteroids.push(mesh);
+        scene.add(mesh);
+      }
+
+      function animateAsteroids() {
+        for (const mesh of asteroids) {
+          mesh.rotation.x += mesh.userData.rotSpeed;
+          mesh.rotation.y += mesh.userData.rotSpeed;
+          mesh.position.add(mesh.userData.drift);
+          // Wrap around
+          if (mesh.position.length() > 100) {
+            mesh.position.set(
+              (Math.random() - 0.5) * 120,
+              (Math.random() - 0.5) * 80,
+              (Math.random() - 0.5) * 120
+            );
+          }
+        }
+      }
+
+      // --- METEOR STREAKS ---
+      const meteorCount = 18;
+      const meteorGeometry = new THREE.BufferGeometry();
+      const meteorPositions = new Float32Array(meteorCount * 6); // 2 points per line
+      const meteorSpeeds = [];
+      for (let i = 0; i < meteorCount; i++) {
+        const x = (Math.random() - 0.5) * 200;
+        const y = (Math.random() - 0.5) * 120;
+        const z = (Math.random() - 0.5) * 200;
+        meteorPositions.set([x, y, z, x + Math.random() * 2, y + Math.random() * 2, z + Math.random() * 2], i * 6);
+        meteorSpeeds.push(new THREE.Vector3(
+          (Math.random() - 0.5) * 0.6 + 0.3,
+          (Math.random() - 0.5) * 0.6 + 0.3,
+          (Math.random() - 0.5) * 0.6 + 0.3
+        ));
+      }
+      meteorGeometry.setAttribute('position', new THREE.BufferAttribute(meteorPositions, 3));
+      const meteorMaterial = new THREE.LineBasicMaterial({ color: 0xffe066, transparent: true, opacity: 0.7 });
+      const meteors = new THREE.LineSegments(meteorGeometry, meteorMaterial);
+      scene.add(meteors);
+
+      function animateMeteors() {
+        const pos = meteorGeometry.attributes.position.array;
+        for (let i = 0; i < meteorCount; i++) {
+          for (let j = 0; j < 2; j++) {
+            pos[i * 6 + j * 3 + 0] += meteorSpeeds[i].x;
+            pos[i * 6 + j * 3 + 1] += meteorSpeeds[i].y;
+            pos[i * 6 + j * 3 + 2] += meteorSpeeds[i].z;
+          }
+          // Reset if out of bounds
+          if (Math.abs(pos[i * 6]) > 120 || Math.abs(pos[i * 6 + 1]) > 80 || Math.abs(pos[i * 6 + 2]) > 120) {
+            const x = (Math.random() - 0.5) * 200;
+            const y = (Math.random() - 0.5) * 120;
+            const z = (Math.random() - 0.5) * 200;
+            pos.set([x, y, z, x + Math.random() * 2, y + Math.random() * 2, z + Math.random() * 2], i * 6);
+          }
+        }
+        meteorGeometry.attributes.position.needsUpdate = true;
+      }
+
+      // --- PATCH ANIMATE ---
+      const prevAnimate = animate;
+      animate = function(time) {
+        prevAnimate(time);
+        animateParticles(time);
+        animateAsteroids();
+        animateMeteors();
+        animateMountains(time);
+        animateLasers(time);
+
+        // Update CRT scanline effect time
+        if (crtPass.uniforms) {
+          crtPass.uniforms.time.value = time * 0.001;
+        }
+
+        // Update bug swarm game
+        if (window.bugSwarmManager) {
+          window.bugSwarmManager.update(time);
+        }
+
+        // Update bug game HUD
+        if (window.updateBugHUD) {
+          window.updateBugHUD();
+        }
+      };
+
+      // Terminal UI functions
+      function updateTerminal() {
+        const now = new Date();
+        document.getElementById('clock').textContent = now.toLocaleTimeString('en-US', {
+          hour12: false,
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        });
+
+        // Update system status with random fluctuations
+        const neuralActivity = document.getElementById('neural-activity');
+        const randomState = Math.random();
+        neuralActivity.textContent = randomState > 0.8 ? 'PEAK' : randomState > 0.4 ? 'ACTIVE' : 'STANDBY';
+        neuralActivity.style.color =
+          randomState > 0.8 ? 'var(--neon-red)' :
+          randomState > 0.4 ? 'var(--neon-green)' : 'var(--neon-yellow)';
+
+        // Update particle count
+        document.getElementById('particle-count').textContent = particleCount;
+
+        // Update object count (rough estimate)
+        const objectCount = scene.children.filter(obj => obj.type === 'Mesh').length;
+        document.getElementById('object-count').textContent = objectCount;
+
+        // Memory usage simulation
+        const memoryUsage = Math.round((Math.sqrt(objectCount) * 8.3 + Math.random() * 5));
+        document.getElementById('memory-usage').textContent = memoryUsage + 'MB';
+
+        // Cursor blink animation
+        const cursor = document.getElementById('cursor');
+        if (cursor) {
+          cursor.style.animation = 'cursor-blink 1s infinite';
+        }
+
+        // Add occasional terminal messages
+        if (Math.random() < 0.05) {
+          addTerminalMessage();
+        }
+      }
+
+      function addTerminalMessage() {
+        const messages = [
+          '[SYS] Neural pathway activated.',
+          '[NET] Data stream synchronized.',
+          '[TECH] Interdimensional portal stable.',
+          '[NEURO] Synaptic connection established.',
+          '[ALERT] Unusual energy readings detected.',
+          '[INFO] Cyber realm expansion complete.',
+          '[DEBUG] Reality matrix recalibrated.'
+        ];
+
+        const messagesContainer = document.getElementById('terminal-messages');
+        const cursor = document.getElementById('cursor');
+        const newMessage = document.createElement('div');
+        newMessage.innerHTML = messages[Math.floor(Math.random() * messages.length)];
+        messagesContainer.insertBefore(newMessage, cursor);
+
+        // Scroll to bottom
+        const terminalLog = document.getElementById('terminal-log');
+        terminalLog.scrollTop = terminalLog.scrollHeight;
+
+        // Keep only last 10 messages
+        const messageElements = messagesContainer.children;
+        while (messageElements.length > 10) {
+          messagesContainer.removeChild(messageElements[0]);
+        }
+      }
+
+      // Set up terminal update interval
+      setInterval(updateTerminal, 1000);
+      updateTerminal(); // Initial call
+
+      // --- LASER SHOOTING BUG SQUASH MINI-GAME ---
+      initLaserBugGame();
+
+      // --- ATMOSPHERIC CYBERPUNK AUDIO SYSTEM ---
+      initCyberpunkAudio();
+
+      // Atmospheric Cyberpunk Audio System
+      function initCyberpunkAudio() {
+        // Web Audio Context setup
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioContext = new AudioContext();
+
+        // Audio components
+        let oscillators = [];
+        let gainNodes = [];
+        let filterNodes = [];
+        let masterGain;
+        let isMuted = false;
+
+        // Master audio controls
+        const masterVolume = 0.3; // Keep it subtle
+
+        // Create master gain node
+        masterGain = audioContext.createGain();
+        masterGain.gain.value = masterVolume;
+        masterGain.connect(audioContext.destination);
+
+        // --- SYNTHWAVE BASS DRONE ---
+        function createBassDrone() {
+          const droneOsc = audioContext.createOscillator();
+          const droneGain = audioContext.createGain();
+          const droneFilter = audioContext.createBiquadFilter();
+
+          // Deep synthwave bass drone at 55Hz (A1)
+          droneOsc.frequency.value = 55;
+          droneOsc.type = 'sawtooth';
+
+          // Smooth filter for bass
+          droneFilter.type = 'lowpass';
+          droneFilter.frequency.value = 200;
+          droneFilter.resonance.value = 3;
+
+          // Very soft, atmospheric level
+          droneGain.gain.value = 0.05;
+
+          droneOsc.connect(droneFilter);
+          droneFilter.connect(droneGain);
+          droneGain.connect(masterGain);
+
+          droneOsc.start();
+          oscillators.push(droneOsc);
+          gainNodes.push(droneGain);
+          filterNodes.push(droneFilter);
+        }
+
+        // --- CYBERPUNK ATMOSPHERIC PAD ---
+        function createAtmosphericPad() {
+          const padOsc1 = audioContext.createOscillator();
+          const padOsc2 = audioContext.createOscillator();
+          const padGain = audioContext.createGain();
+          const padFilter = audioContext.createBiquadFilter();
+
+          // Minor third chord for that melancholic cyberpunk feel
+          padOsc1.frequency.value = 220; // A3
+          padOsc2.frequency.value = 261.63; // C4
+          padOsc1.type = 'sine';
+          padOsc2.type = 'sine';
+
+          // Soft filter for atmospheric feel
+          padFilter.type = 'lowpass';
+          padFilter.frequency.value = 800;
+          padFilter.resonance.value = 1;
+
+          padGain.gain.value = 0.03;
+
+          padOsc1.connect(padFilter);
+          padOsc2.connect(padFilter);
+          padFilter.connect(padGain);
+          padGain.connect(masterGain);
+
+          padOsc1.start();
+          padOsc2.start();
+          oscillators.push(padOsc1, padOsc2);
+          gainNodes.push(padGain);
+          filterNodes.push(padFilter);
+        }
+
+        // --- FACTORY/INDUSTRIAL AMBIENCE ---
+        function createIndustrialAmbience() {
+          const noiseBuffer = audioContext.createBuffer(2, audioContext.sampleRate * 4, audioContext.sampleRate);
+
+          // Create brown noise for industrial ambience
+          for (let channel = 0; channel < 2; channel++) {
+            const channelData = noiseBuffer.getChannelData(channel);
+            let lastOut = 0.0;
+            for (let i = 0; i < noiseBuffer.length; i++) {
+              const white = Math.random() * 2 - 1;
+              channelData[i] = (lastOut + (0.02 * white)) / 1.02;
+              lastOut = channelData[i];
+              channelData[i] *= 3.5; // Boost for stronger industrial feel
+            }
+          }
+
+          const brownNoise = audioContext.createBufferSource();
+          const brownGain = audioContext.createGain();
+          const brownFilter = audioContext.createBiquadFilter();
+
+          brownNoise.buffer = noiseBuffer;
+          brownNoise.loop = true;
+
+          // Filter for machine-like ambience
+          brownFilter.type = 'bandpass';
+          brownFilter.frequency.value = 400;
+          brownFilter.Q.value = 0.5;
+
+          brownGain.gain.value = 0.02;
+
+          brownNoise.connect(brownFilter);
+          brownFilter.connect(brownGain);
+          brownGain.connect(masterGain);
+
+          brownNoise.start();
+          oscillators.push(brownNoise);
+          gainNodes.push(brownGain);
+          filterNodes.push(brownFilter);
+        }
+
+        // --- SUBTLE RHYTHMIC ELEMENTS ---
+        function createRhythmicElements() {
+          function playPulse() {
+            if (isMuted) return;
+
+            const pulseOsc = audioContext.createOscillator();
+            const pulseGain = audioContext.createGain();
+            const now = audioContext.currentTime;
+
+            // Random syncopation for cyberpunk feel
+            const pitch = 80 + Math.random() * 40; // 80-120Hz for underground feel
+            pulseOsc.frequency.value = pitch;
+            pulseOsc.type = 'square';
+
+            pulseGain.gain.setValueAtTime(0, now);
+            pulseGain.gain.exponentialRampToValueAtTime(0.02, now + 0.01);
+            pulseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+
+            pulseOsc.connect(pulseGain);
+            pulseGain.connect(masterGain);
+
+            pulseOsc.start(now);
+            pulseOsc.stop(now + 0.3);
+          }
+
+          // Random pulse pattern
+          function schedulePulse() {
+            if (!isMuted) {
+              const delay = 3000 + Math.random() * 4000; // 3-7 second intervals
+              setTimeout(() => {
+                playPulse();
+                schedulePulse();
+              }, delay);
+            }
+          }
+
+          schedulePulse();
+        }
+
+        // --- EVOLVING HIGH-FREQUENCY DETAILS ---
+        function createEvolvingTextures() {
+          function playTexture() {
+            if (isMuted) return;
+
+            const textureOsc = audioContext.createOscillator();
+            const textureGain = audioContext.createGain();
+            const textureFilter = audioContext.createBiquadFilter();
+            const now = audioContext.currentTime;
+
+            // High-frequency texture sounds
+            const freq = 2000 + Math.random() * 1000;
+            textureOsc.frequency.setValueAtTime(freq, now);
+            textureOsc.frequency.exponentialRampToValueAtTime(freq * 1.5, now + 1);
+            textureOsc.type = 'triangle';
+
+            textureFilter.type = 'highpass';
+            textureFilter.frequency.value = 1000;
+
+            textureGain.gain.setValueAtTime(0, now);
+            textureGain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+            textureGain.gain.exponentialRampToValueAtTime(0.001, now + 2);
+
+            textureOsc.connect(textureFilter);
+            textureFilter.connect(textureGain);
+            textureGain.connect(masterGain);
+
+            textureOsc.start(now);
+            textureOsc.stop(now + 2);
+          }
+
+          function scheduleTexture() {
+            if (!isMuted) {
+              const delay = 8000 + Math.random() * 12000; // 8-20 second intervals
+              setTimeout(() => {
+                playTexture();
+                scheduleTexture();
+              }, delay);
+            }
+          }
+
+          scheduleTexture();
+        }
+
+        // --- AUDIO CONTROLS ---
+        function createAudioControls() {
+          const audioControls = document.createElement('div');
+          audioControls.innerHTML = `
+            <div id="audio-controls" style="
+              position: fixed;
+              top: 20px;
+              right: 20px;
+              width: 60px;
+              height: 60px;
+              background: rgba(0, 0, 0, 0.8);
+              border: 1px solid var(--neon-magenta);
+              border-radius: 50%;
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              z-index: 200;
+              transition: all 0.3s ease;
+              box-shadow: 0 0 15px var(--neon-magenta);
+            " title="Click to toggle ambient audio">
+              <div id="audio-icon" style="
+                color: var(--neon-magenta);
+                font-size: 24px;
+                text-shadow: 0 0 10px var(--neon-magenta);
+                font-family: 'VT323', monospace;
+              ">♪</div>
+            </div>
+          `;
+          document.body.appendChild(audioControls);
+
+          const audioButton = document.getElementById('audio-controls');
+          const audioIcon = document.getElementById('audio-icon');
+
+          audioButton.addEventListener('click', () => {
+            isMuted = !isMuted;
+            masterGain.gain.value = isMuted ? 0 : masterVolume;
+
+            audioIcon.textContent = isMuted ? '♪×' : '♪';
+            audioButton.style.borderColor = isMuted ? 'var(--neon-green)' : 'var(--neon-magenta)';
+            audioButton.style.boxShadow = isMuted ?
+              '0 0 15px var(--neon-green)' :
+              '0 0 15px var(--neon-magenta)';
+            audioIcon.style.color = isMuted ? 'var(--neon-green)' : 'var(--neon-magenta)';
+            audioIcon.style.textShadow = isMuted ?
+              '0 0 10px var(--neon-green)' :
+              '0 0 10px var(--neon-magenta)';
+          });
+        }
+
+        // --- AUDIO VISUALIZER (Optional Enhancement) ---
+        function initAudioVisualizer() {
+          const analyser = audioContext.createAnalyser();
+          analyser.fftSize = 256;
+          const bufferLength = analyser.frequencyBinCount;
+          const dataArray = new Uint8Array(bufferLength);
+
+          // Connect to master gain for analysis
+          masterGain.connect(analyser);
+
+          let visualizerCanvas = document.createElement('canvas');
+          visualizerCanvas.width = 200;
+          visualizerCanvas.height = 100;
+          visualizerCanvas.style.cssText = `
+            position: fixed;
+            bottom: 240px;
+            right: 20px;
+            width: 200px;
+            height: 100px;
+            background: rgba(0,0,0,0.7);
+            border: 1px solid var(--neon-purple);
+            border-radius: 4px;
+            z-index: 150;
+            pointer-events: none;
+          `;
+          document.body.appendChild(visualizerCanvas);
+
+          const visualizerCtx = visualizerCanvas.getContext('2d');
+
+          function drawVisualizer() {
+            if (isMuted) {
+              requestAnimationFrame(drawVisualizer);
+              return;
+            }
+
+            requestAnimationFrame(drawVisualizer);
+
+            analyser.getByteFrequencyData(dataArray);
+
+            visualizerCtx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+            visualizerCtx.fillRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
+
+            const barWidth = (visualizerCanvas.width / bufferLength) * 2.5;
+            let barHeight;
+            let x = 0;
+
+            for (let i = 0; i < bufferLength; i++) {
+              barHeight = dataArray[i] / 3;
+
+              // Neon bar colors
+              const intensity = dataArray[i] / 255;
+              visualizerCtx.fillStyle = `hsl(${180 + intensity * 120}, 100%, ${50 + intensity * 50}%)`;
+              visualizerCtx.fillRect(x, visualizerCanvas.height - barHeight, barWidth, barHeight);
+
+              x += barWidth + 1;
+            }
+          }
+
+          drawVisualizer();
+        }
+
+        // Initialize all audio components
+        function startAudioSystem() {
+          createBassDrone();
+          createAtmosphericPad();
+          createIndustrialAmbience();
+          createRhythmicElements();
+          createEvolvingTextures();
+          createAudioControls();
+          initAudioVisualizer();
+        }
+
+        // Start the audio system
+        startAudioSystem();
+
+        // Store for global control with enhanced features
+        window.cyberAudio = {
+          toggleMute: () => {
+            isMuted = !isMuted;
+            masterGain.gain.value = isMuted ? 0 : masterVolume;
+          },
+          createReactionTone: (intensity = 0.5) => {
+            if (isMuted || !masterGain) return;
+
+            const reactOsc = audioContext.createOscillator();
+            const reactGain = audioContext.createGain();
+            const reactFilter = audioContext.createBiquadFilter();
+            const now = audioContext.currentTime;
+
+            // Higher intensity = higher pitch and more presence
+            const baseFreq = 300 + (intensity * 1200); // 300Hz to 1500Hz
+            reactOsc.frequency.setValueAtTime(baseFreq, now);
+            reactOsc.type = 'triangle';
+
+            reactFilter.type = 'bandpass';
+            reactFilter.frequency.value = baseFreq;
+            reactFilter.Q.value = 5;
+
+            reactGain.gain.setValueAtTime(0, now);
+            reactGain.gain.exponentialRampToValueAtTime(0.05 * intensity, now + 0.05);
+            reactGain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+
+            reactOsc.connect(reactFilter);
+            reactFilter.connect(reactGain);
+            reactGain.connect(masterGain);
+
+            reactOsc.start(now);
+            reactOsc.stop(now + 0.3);
+          }
+        };
+
+        // --- CYBERPUNK LASER BUG MINI-GAME IMPLEMENTATION ---
+        function initLaserBugGame() {
+          // Laser system variables
+          let currentLaser = null;
+          let laserTarget = null;
+          let laserChargeTime = 0;
+          const LASER_CHARGE_DURATION = 800; // ms
+          const LASER_COOLDOWN = 2000; // ms
+          let lastLaserTime = 0;
+
+          // Bug swarm system
+          let bugSwarmManager;
+          let bugSwarm = {
+            bugs: [],
+            maxBugs: 12,
+            spawnRing: 45,
+            bugTypes: [
+              { speed: 0.18, scale: 1, col: 0x00ff00, name: 'basic' },
+              { speed: 0.32, scale: 0.75, col: 0xffff00, name: 'fast' },
+              { speed: 0.09, scale: 1.6, col: 0xff0040, name: 'tank' }
+            ],
+            containmentThreshold: 3, // bugs before containment
+            capturedBugs: [],
+            escapeTimer: null,
+            wave: 1
+          };
+
+          // Laser visual setup
+          const bugLaserGeometry = new THREE.CylinderGeometry(0.05, 0.05, 100, 8);
+          const bugLaserMaterial = new THREE.MeshBasicMaterial({
+            color: 0x00ffff,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending
+          });
+
+          // Enhanced click sound effects
+          function playLaserSound(type = 'charge') {
+            if (!audioContext) return;
+
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            const filter = audioContext.createBiquadFilter();
+
+            oscillator.connect(filter);
+            filter.connect(gainNode);
+            gainNode.connect(masterGain);
+
+            const now = audioContext.currentTime;
+
+            switch(type) {
+              case 'charge':
+                // Rising charge sound
+                oscillator.frequency.setValueAtTime(200, now);
+                oscillator.frequency.exponentialRampToValueAtTime(800, now + 0.3);
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(1000, now);
+                filter.frequency.exponentialRampToValueAtTime(4000, now + 0.3);
+                gainNode.gain.setValueAtTime(0.01, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.1, now + 0.2);
+                break;
+              case 'fire':
+                // Laser discharge
+                oscillator.frequency.setValueAtTime(1200, now);
+                oscillator.frequency.exponentialRampToValueAtTime(200, now + 0.1);
+                filter.type = 'bandpass';
+                filter.frequency.value = 1500;
+                filter.Q.value = 10;
+                gainNode.gain.setValueAtTime(0.05, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+                break;
+              case 'hit':
+                // Bug containment sound
+                oscillator.frequency.setValueAtTime(600, now);
+                oscillator.frequency.exponentialRampToValueAtTime(100, now + 0.2);
+                oscillator.type = 'square';
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(2000, now);
+                filter.frequency.exponentialRampToValueAtTime(200, now + 0.2);
+                gainNode.gain.setValueAtTime(0.08, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+                break;
+              case 'escape':
+                // Bug escapes containment
+                oscillator.frequency.setValueAtTime(150, now);
+                oscillator.frequency.exponentialRampToValueAtTime(400, now + 0.5);
+                filter.type = 'highpass';
+                filter.frequency.value = 300;
+                gainNode.gain.setValueAtTime(0.03, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+                break;
+            }
+
+            oscillator.start(now);
+            oscillator.stop(now + 0.5);
+          }
+
+          // Laser beam visual
+          function createLaserBeam(startPos, endPos) {
+            const laser = new THREE.Mesh(bugLaserGeometry.clone(), bugLaserMaterial.clone());
+
+            // Position and orient laser beam
+            const direction = new THREE.Vector3().subVectors(endPos, startPos);
+            const distance = direction.length();
+            laser.scale.y = distance / 100;
+            laser.position.copy(startPos.clone().add(direction.multiplyScalar(0.5)));
+            laser.lookAt(endPos);
+            laser.rotateX(Math.PI / 2);
+
+            scene.add(laser);
+            return laser;
+          }
+
+          // Enhanced particle emission for laser effects
+          function createLaserParticles(position, color = 0x00ffff, count = 30) {
+            const particleGeometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(count * 3);
+            const colors = new Float32Array(count * 3);
+
+            for (let i = 0; i < count; i++) {
+              positions[i * 3] = position.x + (Math.random() - 0.5) * 2;
+              positions[i * 3 + 1] = position.y + (Math.random() - 0.5) * 2;
+              positions[i * 3 + 2] = position.z + (Math.random() - 0.5) * 2;
+
+              // Electric blue to cyan colors
+              colors[i * 3] = 0.0;     // R
+              colors[i * 3 + 1] = 0.8 + Math.random() * 0.2; // G
+              colors[i * 3 + 2] = 1.0; // B
+            }
+
+            particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            const particleMaterial = new THREE.PointsMaterial({
+              size: 0.3,
+              vertexColors: true,
+              transparent: true,
+              opacity: 0.9,
+              blending: THREE.AdditiveBlending
+            });
+
+            const particles = new THREE.Points(particleGeometry, particleMaterial);
+            scene.add(particles);
+
+            // Animate particles dissipating
+            new TWEEN.Tween(particleMaterial)
+              .to({ opacity: 0, size: 0.1 }, 1000)
+              .easing(TWEEN.Easing.Cubic.Out)
+              .onComplete(() => {
+                if (scene.children.includes(particles)) {
+                  scene.remove(particles);
+                }
+              })
+              .start();
+
+            return particles;
+          }
+
+          // Bug Entity Class with enhanced AI
+          class Bug3D {
+            constructor(scene, camera, stats, spawnRing) {
+              this.scene = scene;
+              this.camera = camera;
+              this.stats = stats;
+              this.spawnRing = spawnRing;
+              this.group = new THREE.Group();
+              this.alive = true;
+              this.contained = false;
+              this.containmentTimer = null;
+              this.escapeTime = 8000 + Math.random() * 12000; // 8-20 seconds
+
+              // Enhanced bug model with glow
+              this.createBody();
+              this.createEyes();
+              this.createGlow();
+
+              // Physics
+              this.initializePhysics();
+              this.scene.add(this.group);
+            }
+
+            createBody() {
+              const bodyMat = new THREE.MeshPhongMaterial({
+                color: this.stats.col,
+                emissive: this.stats.col,
+                emissiveIntensity: 0.4,
+                shininess: 100
+              });
+
+              const body = new THREE.Mesh(
+                new THREE.SphereGeometry(0.5, 12, 8),
+                bodyMat
+              );
+              body.scale.set(1.2, 0.8, 1);
+              this.group.add(body);
+            }
+
+            createEyes() {
+              const eyeMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+              for (let i = 0; i < 3; i++) {
+                const eye = new THREE.Mesh(
+                  new THREE.SphereGeometry(0.08, 6, 6),
+                  eyeMat
+                );
+                eye.position.set(0.45, Math.sin(i * 2.1) * 0.18, Math.cos(i * 2.1) * 0.18);
+                this.group.add(eye);
+              }
+            }
+
+            createGlow() {
+              const glowMat = new THREE.MeshBasicMaterial({
+                color: this.stats.col,
+                transparent: true,
+                opacity: 0.2
+              });
+
+              this.glow = new THREE.Mesh(
+                new THREE.SphereGeometry(0.8, 8, 8),
+                glowMat
+              );
+              this.group.add(this.glow);
+            }
+
+            initializePhysics() {
+              const angle = Math.random() * Math.PI * 2;
+              this.position = new THREE.Vector3(
+                Math.cos(angle) * this.spawnRing,
+                Math.random() * 8 - 4,
+                Math.sin(angle) * this.spawnRing
+              );
+
+              this.velocity = new THREE.Vector3()
+                .randomDirection()
+                .multiplyScalar(this.stats.speed);
+
+              this.group.position.copy(this.position);
+              this.group.userData = { bug: this };
+            }
+
+            update(time) {
+              if (!this.alive) {
+                return this.animateDeath();
+              }
+
+              this.applyForces();
+              this.updatePosition();
+              this.updateAnimations(time);
+              this.containmentCheck();
+
+              return true;
+            }
+
+            applyForces() {
+              // Random orbital drift
+              this.velocity.add(
+                new THREE.Vector3().randomDirection().multiplyScalar(0.008)
+              );
+
+              // Camera avoidance
+              const avoidance = this.camera.position
+                .clone()
+                .sub(this.position)
+                .normalize()
+                .multiplyScalar(-0.002);
+              this.velocity.add(avoidance);
+
+              // Containment effect - bugs move slower when contained count is high
+              const containmentPenalty = Math.min(0.5, bugSwarm.capturedBugs.length * 0.1);
+              this.velocity.clampLength(0, this.stats.speed * (1 - containmentPenalty));
+            }
+
+            updatePosition() {
+              this.position.add(this.velocity);
+              this.group.position.copy(this.position);
+              this.group.lookAt(this.position.clone().add(this.velocity));
+            }
+
+            updateAnimations(time) {
+              // Wing flapping
+              this.group.children[0].rotation.z = Math.sin(time * 0.008) * 0.4;
+
+              // Glow pulsing
+              if (this.glow) {
+                this.glow.scale.setScalar(1 + Math.sin(time * 0.005) * 0.1);
+              }
+
+              // Boundaries
+              this.enforceBoundaries();
+            }
+
+            enforceBoundaries() {
+              const boundary = 50;
+              if (Math.abs(this.position.x) > boundary) {
+                this.velocity.x *= -1;
+                this.position.x = Math.sign(this.position.x) * boundary;
+              }
+              if (Math.abs(this.position.z) > boundary) {
+                this.velocity.z *= -1;
+                this.position.z = Math.sign(this.position.z) * boundary;
+              }
+            }
+
+            animateDeath() {
+              // Containment animation instead of death
+              this.group.scale.lerp(new THREE.Vector3(0.2, 0.2, 0.2), 0.1);
+              this.group.children.forEach(child => {
+                if (child.material && child.material.opacity !== undefined) {
+                  child.material.opacity -= 0.05;
+                }
+              });
+
+              if (this.group.children[0].material.opacity < 0.1) {
+                this.group.visible = false;
+                return false;
+              }
+              return true;
+            }
+
+            die() {
+              this.alive = false;
+            }
+
+            contain() {
+              if (this.contained) return;
+
+              this.contained = true;
+              bugSwarm.capturedBugs.push(this);
+
+              playLaserSound('hit');
+              createLaserParticles(this.position, this.stats.col);
+
+              // Show reticle hit effect
+              if (typeof createReticleHit === 'function') {
+                createReticleHit();
+              }
+
+              // Start escape timer
+              this.containmentTimer = setTimeout(() => {
+                this.escape();
+              }, this.escapeTime);
+            }
+
+            escape() {
+              this.contained = false;
+              this.containmentTimer = null;
+
+              // Remove from contained list
+              const index = bugSwarm.capturedBugs.indexOf(this);
+              if (index > -1) {
+                bugSwarm.capturedBugs.splice(index, 1);
+              }
+
+              // Reset bug state
+              this.alive = true;
+              this.contained = false;
+              this.group.visible = true;
+
+              // Rejuvenate at new position
+              const angle = Math.random() * Math.PI * 2;
+              this.position.set(
+                Math.cos(angle) * this.spawnRing,
+                Math.random() * 8 - 4,
+                Math.sin(angle) * this.spawnRing
+              );
+
+              this.velocity = new THREE.Vector3()
+                .randomDirection()
+                .multiplyScalar(this.stats.speed);
+
+              // Flash effect when escaping
+              this.group.children.forEach(child => {
+                if (child.material) {
+                  child.material.opacity = 1;
+                  new TWEEN.Tween(child.material)
+                    .to({ opacity: 1 }, 200)
+                    .repeat(3)
+                    .yoyo(true)
+                    .start();
+                }
+              });
+
+              playLaserSound('escape');
+            }
+          }
+
+          // Swarm Manager
+          class BugSwarmManager {
+            constructor() {
+              this.bugs = [];
+              this.maxBugs = 12;
+              this.respawnTime = 2800;
+              this.spawnRing = 45;
+              this.capturedBugs = [];
+              this.containmentThreshold = 3;
+              this.wave = 1;
+              this.spawnTimer = null;
+              this.clock = new THREE.Clock();
+            }
+
+            init() {
+              this.spawnInitialBugs();
+              this.startSpawning();
+            }
+
+            spawnInitialBugs() {
+              for (let i = 0; i < this.maxBugs; i++) {
+                setTimeout(() => this.spawnBug(), i * 420);
+              }
+            }
+
+            startSpawning() {
+              this.spawnTimer = setInterval(() => {
+                if (this.bugs.length < this.maxBugs) {
+                  this.spawnBug();
+                }
+              }, this.respawnTime);
+            }
+
+            spawnBug() {
+              const bugType = this.getRandomBugType();
+              const bug = new Bug3D(scene, camera, bugType, this.spawnRing);
+              this.bugs.push(bug);
+              scene.add(bug.group);
+            }
+
+            getRandomBugType() {
+              return bugSwarm.bugTypes[
+                Math.floor(Math.random() * bugSwarm.bugTypes.length)
+              ];
+            }
+
+            update(time) {
+              this.bugs = this.bugs.filter(bug => bug.update(time));
+
+              // Handle wave completion
+              if (this.bugs.length === 0 && this.capturedBugs.length === 0) {
+                this.nextWave();
+              }
+
+              // Update HUD
+              if (window.updateBugHUD) {
+                window.updateBugHUD();
+              }
+            }
+
+            nextWave() {
+              this.wave++;
+              setTimeout(() => {
+                // Spawn increased difficulty wave
+                const newBugCount = this.maxBugs + Math.floor(this.wave / 3);
+                for (let i = 0; i < newBugCount; i++) {
+                  this.spawnBug();
+                }
+              }, 1200);
+            }
+
+            squashBug(bug) {
+              if (!bug.contained) {
+                bug.contain();
+              } else {
+                bug.die();
+              }
+            }
+
+            dispose() {
+              if (this.spawnTimer) {
+                clearInterval(this.spawnTimer);
+              }
+              this.bugs.forEach(bug => {
+                if (bug.containmentTimer) {
+                  clearTimeout(bug.containmentTimer);
+                }
+                if (bug.group) {
+                  scene.remove(bug.group);
+                }
+              });
+              this.capturedBugs.forEach(bug => {
+                if (bug.containmentTimer) {
+                  clearTimeout(bug.containmentTimer);
+                }
+              });
+              this.bugs = [];
+              this.capturedBugs = [];
+            }
+          }
+
+          // ===== SIGMA-EDGE NANO-SWARM SYSTEM =====
+          class NanoSwarm {
+            constructor(scene, camera, bm) {
+              this.scene = scene;
+              this.camera = camera;
+              this.bm = bm;
+              this.bugs = [];
+              this.contained = 0; // Track contained bugs
+              this.max = 8;
+              this.respawn = 2800;
+              this.wave = 1;
+              this.types = [
+                { speed: 0.18, scale: 1, col: 0x00ff00 },   // basic
+                { speed: 0.32, scale: 0.75, col: 0xffff00 },  // fast
+                { speed: 0.09, scale: 1.6, col: 0xff0040 }   // tank
+              ];
+              this.clock = new THREE.Clock();
+              this.spawnRing = 35;                       // toroidal spawn zone
+              this.init();
+            }
+
+            init() {
+              for (let i = 0; i < this.max; i++) setTimeout(() => this.birth(), i * 420);
+              setInterval(() => { if (this.bugs.length < this.max) this.birth() }, this.respawn);
+            }
+
+            birth() {
+              console.log('Creating new bug...');
+              const t = this.types[Math.floor(Math.random() * this.types.length)];
+              const b = new EnhancedBug3D(this.scene, this.camera, t, this.spawnRing);
+              this.bugs.push(b);
+              console.log('Bug created! Total bugs:', this.bugs.length);
+
+              // Force HUD update
+              if (window.updateBugHUD) {
+                window.updateBugHUD();
+              }
+            }
+
+            squash(b) {                                // called from ray-handler
+              const idx = this.bugs.indexOf(b);
+              if (idx === -1) return;
+              b.die();
+              this.bugs.splice(idx, 1);
+              this.contained++; // Increment contained counter
+
+              // Update global counter for HUD
+              window.containedBugs = this.contained;
+
+              if (this.bugs.length === 0) {               // wave complete
+                this.wave++;
+                setTimeout(() => {
+                  for (let i = 0; i < this.max + this.wave; i++) this.birth()
+                }, 1200);
+              }
+            }
+
+            tick(time) {
+              this.bugs = this.bugs.filter(b => b.live(time));
+            }
+          }
+
+          // Enhanced Bug3D with improved AI from concept
+          class EnhancedBug3D {
+            constructor(scene, cam, stats, ring) {
+              console.log('Creating EnhancedBug3D with stats:', stats, 'ring:', ring);
+              this.scene = scene;
+              this.cam = cam;
+              this.s = stats;
+              this.ring = ring;
+              this.g = new THREE.Group();
+              this.alive = true;
+              this.hp = this.s.scale * 100;
+
+              // Enhanced bug model
+              this.createEnhancedBody();
+              this.createEnhancedEyes();
+              this.createEnhancedGlow();
+
+              // Physics
+              const ang = Math.random() * Math.PI * 2;
+              this.pos = new THREE.Vector3(Math.cos(ang) * ring, Math.random() * 8 - 4, Math.sin(ang) * ring);
+              this.vel = new THREE.Vector3().randomDirection().multiplyScalar(this.s.speed);
+              this.g.position.copy(this.pos);
+              this.g.userData = { bug: this };
+              this.scene.add(this.g);
+            }
+
+            createEnhancedBody() {
+              const body = new THREE.Mesh(
+                new THREE.SphereGeometry(0.5, 12, 8),
+                new THREE.MeshPhongMaterial({
+                  color: this.s.col,
+                  emissive: this.s.col,
+                  emissiveIntensity: 0.4
+                })
+              );
+              body.scale.set(1.2, 0.8, 1);
+              this.g.add(body);
+            }
+
+            createEnhancedEyes() {
+              const eyeMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+              for (let i = 0; i < 3; i++) {
+                const eye = new THREE.Mesh(new THREE.SphereGeometry(0.08, 6, 6), eyeMat);
+                eye.position.set(0.45, Math.sin(i * 2.1) * 0.18, Math.cos(i * 2.1) * 0.18);
+                this.g.add(eye);
+              }
+            }
+
+            createEnhancedGlow() {
+              // Add neon glow effect
+              const glowGeo = new THREE.SphereGeometry(0.7, 8, 6);
+              const glowMat = new THREE.MeshBasicMaterial({
+                color: this.s.col,
+                transparent: true,
+                opacity: 0.3,
+                blending: THREE.AdditiveBlending
+              });
+              const glow = new THREE.Mesh(glowGeo, glowMat);
+              this.g.add(glow);
+            }
+
+            live(time) {
+              if (!this.alive) {
+                this.g.scale.lerp(new THREE.Vector3(1, 0.05, 1), 0.12);
+                this.g.rotation.y += 0.08;
+                this.g.children.forEach(c => { if (c.material) c.material.opacity -= 0.03 });
+                if (this.g.scale.y < 0.06) {
+                  this.scene.remove(this.g);
+                  return false;
+                }
+                return true;
+              }
+
+              // Orbital drift + obstacle avoidance (improved AI)
+              this.vel.add(new THREE.Vector3().randomDirection().multiplyScalar(0.008));
+              const avoidance = this.cam.position.clone().sub(this.pos).normalize().multiplyScalar(-0.002);
+              this.vel.add(avoidance);
+              this.vel.clampLength(0, this.s.speed);
+              this.pos.add(this.vel);
+              this.g.position.copy(this.pos);
+              this.g.lookAt(this.pos.clone().add(this.vel));
+
+              // Wing flap animation
+              if (this.g.children[0]) {
+                this.g.children[0].rotation.z = Math.sin(time * 0.008) * 0.4;
+              }
+              return true;
+            }
+
+            die() {
+              this.alive = false;
+              // Create enhanced particle burst on death
+              createCyberpunkParticles(this.g.position, this.s.col, 25);
+            }
+          }
+
+          // Enhanced particle system for cyberpunk effects
+          function createCyberpunkParticles(position, color, count = 30) {
+            const particleGeometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(count * 3);
+            const colors = new Float32Array(count * 3);
+            const sizes = new Float32Array(count);
+
+            for (let i = 0; i < count; i++) {
+              positions[i * 3] = position.x + (Math.random() - 0.5) * 4;
+              positions[i * 3 + 1] = position.y + (Math.random() - 0.5) * 4;
+              positions[i * 3 + 2] = position.z + (Math.random() - 0.5) * 4;
+
+              // Enhanced cyberpunk colors
+              colors[i * 3] = ((color >> 16) & 0xff) / 255;
+              colors[i * 3 + 1] = ((color >> 8) & 0xff) / 255;
+              colors[i * 3 + 2] = (color & 0xff) / 255;
+
+              sizes[i] = Math.random() * 0.5 + 0.2;
+            }
+
+            particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            particleGeometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+            const particleMaterial = new THREE.PointsMaterial({
+              size: 0.4,
+              vertexColors: true,
+              transparent: true,
+              opacity: 1.0,
+              blending: THREE.AdditiveBlending,
+              sizeAttenuation: true
+            });
+
+            const particles = new THREE.Points(particleGeometry, particleMaterial);
+            window.scene.add(particles);
+
+            // More dramatic particle animation
+            new TWEEN.Tween(particleMaterial)
+              .to({ opacity: 0, size: 0.05 }, 1500)
+              .easing(TWEEN.Easing.Cubic.Out)
+              .onComplete(() => {
+                if (window.scene && window.scene.children.includes(particles)) {
+                  window.scene.remove(particles);
+                }
+              })
+              .start();
+
+            return particles;
+          }
+
+          // Laser hit particles - electric discharge
+          function createLaserHitParticles(position) {
+            const particleCount = 60;
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+            const velocities = new Float32Array(particleCount * 3);
+
+            for (let i = 0; i < particleCount; i++) {
+              positions[i * 3] = position.x;
+              positions[i * 3 + 1] = position.y;
+              positions[i * 3 + 2] = position.z;
+
+              // Electric blue color
+              colors[i * 3] = 0.1 + Math.random() * 0.3;     // R
+              colors[i * 3 + 1] = 0.8 + Math.random() * 0.2; // G
+              colors[i * 3 + 2] = 1.0;                       // B
+
+              // Random outward velocity
+              const angle = Math.random() * Math.PI * 2;
+              const speed = Math.random() * 0.2 + 0.1;
+              velocities[i * 3] = Math.cos(angle) * speed;
+              velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.3;
+              velocities[i * 3 + 2] = Math.sin(angle) * speed;
+            }
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            geometry.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3));
+
+            const material = new THREE.PointsMaterial({
+              size: 0.6,
+              vertexColors: true,
+              transparent: true,
+              opacity: 1.0,
+              blending: THREE.AdditiveBlending
+            });
+
+            const particles = new THREE.Points(geometry, material);
+            window.scene.add(particles);
+
+            // Animate particles outward
+            const animateParticles = () => {
+              const positions = geometry.attributes.position.array;
+              const velocities = geometry.attributes.velocity.array;
+
+              for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] += velocities[i * 3];
+                positions[i * 3 + 1] += velocities[i * 3 + 1];
+                positions[i * 3 + 2] += velocities[i * 3 + 2];
+              }
+
+              geometry.attributes.position.needsUpdate = true;
+            };
+
+            // Animation tween
+            new TWEEN.Tween({ t: 0 })
+              .to({ t: 1 }, 1000)
+              .onUpdate(() => animateParticles())
+              .onComplete(() => {
+                if (window.scene && window.scene.children.includes(particles)) {
+                  window.scene.remove(particles);
+                }
+              })
+              .start();
+
+            return particles;
+          }
+
+          // Screen flash effect for eliminations
+          function createEliminationFlash() {
+            const flash = document.createElement('div');
+            flash.style.cssText = `
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background: radial-gradient(circle at center, rgba(0, 255, 255, 0.8) 0%, transparent 70%);
+              pointer-events: none;
+              z-index: 300;
+              opacity: 1;
+            `;
+            document.body.appendChild(flash);
+
+            // Fade out animation
+            new TWEEN.Tween({ opacity: 1 })
+              .to({ opacity: 0 }, 200)
+              .onUpdate((obj) => {
+                flash.style.opacity = obj.opacity;
+              })
+              .onComplete(() => flash.remove())
+              .start();
+          }
+
+          // Initialize NanoSwarm system with debugging
+          console.log('Initializing NanoSwarm with scene:', window.scene);
+          window.nanoSwarm = new NanoSwarm(window.scene, window.camera, window.bugManager);
+
+          // Ensure NanoSwarm starts with some initial bugs
+          console.log('NanoSwarm initialized with', window.nanoSwarm.bugs.length, 'bugs');
+
+          // Force creation of initial bugs
+          setTimeout(() => {
+            console.log('Forcing initial bug creation...');
+            for (let i = 0; i < 3; i++) {
+              if (window.nanoSwarm.bugs.length < window.nanoSwarm.max) {
+                window.nanoSwarm.birth();
+              }
+            }
+            console.log('Current bug count:', window.nanoSwarm.bugs.length);
+
+            // Update HUD
+            if (window.updateBugHUD) {
+              window.updateBugHUD();
+            }
+          }, 2000); // Wait 2 seconds for scene to be ready
+
+          // Enhanced Keyboard Controls
+          function setupEnhancedKeyboardControls() {
+            const keyStates = {};
+
+            document.addEventListener('keydown', (event) => {
+              if (keyStates[event.code]) return; // Prevent repeat keys
+              keyStates[event.code] = true;
+
+              switch(event.code) {
+                case 'Space':
+                  event.preventDefault();
+                  // Fire laser instantly (no charge time)
+                  handleLaserFire(pointer);
+                  break;
+                case 'KeyR':
+                  // Rapid fire mode toggle
+                  window.rapidFireMode = !window.rapidFireMode;
+                  if (window.rapidFireMode) {
+                    startRapidFire();
+                  } else {
+                    stopRapidFire();
+                  }
+                  break;
+                case 'KeyF':
+                  // Force wave spawn
+                  if (window.nanoSwarm) {
+                    for (let i = 0; i < 3; i++) {
+                      window.nanoSwarm.birth();
+                    }
+                  }
+                  break;
+                case 'KeyC':
+                  // Clear all contained bugs counter
+                  if (window.nanoSwarm) {
+                    window.nanoSwarm.contained = 0;
+                    window.containedBugs = 0;
+                    window.updateBugHUD();
+                  }
+                  break;
+                case 'KeyX':
+                  // Super charge laser
+                  handleSuperChargeLaser();
+                  break;
+              }
+            });
+
+            document.addEventListener('keyup', (event) => {
+              keyStates[event.code] = false;
+            });
+          }
+
+          function startRapidFire() {
+            window.rapidFireInterval = setInterval(() => {
+              if (Date.now() - lastLaserTime >= LASER_COOLDOWN / 2) {
+                handleLaserFire(pointer);
+              }
+            }, 300);
+          }
+
+          function stopRapidFire() {
+            if (window.rapidFireInterval) {
+              clearInterval(window.rapidFireInterval);
+              window.rapidFireInterval = null;
+            }
+          }
+
+          function handleSuperChargeLaser() {
+            // Enhanced laser with multiple shots
+            for (let i = 0; i < 3; i++) {
+              setTimeout(() => {
+                handleLaserFire(pointer);
+              }, i * 150);
+            }
+          }
+
+          // Initialize keyboard controls
+          setupEnhancedKeyboardControls();
+
+          // Enhanced Cyberpunk Help System
+          function createCyberpunkHelpOverlay() {
+            const helpOverlay = document.createElement('div');
+            helpOverlay.id = 'cyberpunk-help';
+            helpOverlay.style.cssText = `
+              position: fixed;
+              bottom: 20px;
+              left: 20px;
+              background: rgba(0, 0, 0, 0.9);
+              color: #00ffff;
+              font-family: 'VT323', monospace;
+              font-size: 12px;
+              padding: 10px;
+              border: 2px solid #00ffff;
+              border-radius: 5px;
+              z-index: 200;
+              box-shadow: 0 0 10px #00ffff;
+              transition: all 0.3s ease;
+              max-width: 250px;
+            `;
+
+            helpOverlay.innerHTML = `
+              <div style="text-align: center; border-bottom: 1px solid #00ffff; margin-bottom: 8px; padding-bottom: 4px; font-size: 14px;">
+                CONTROL COMMANDS
+                <span style="color: #00ff00;"> [Press H to toggle]</span>
+              </div>
+              <div style="display: grid; gap: 4px;">
+                <div><span style="color: #ff00ff;">WASD</span> - Move Camera</div>
+                <div><span style="color: #ff00ff;">QE</span> - Move Up/Down</div>
+                <div><span style="color: #ffff00;">SPACE</span> - Instant Laser Fire</div>
+                <div><span style="color: #ffff00;">R</span> - Toggle Rapid Fire Mode</div>
+                <div><span style="color: #ffff00;">F</span> - Force Spawn Wave</div>
+                <div><span style="color: #ffff00;">C</span> - Reset Contained Counter</div>
+                <div><span style="color: #ffff00;">X</span> - Super Charge Multi-Laser</div>
+                <div><span style="color: #ffff00;">H</span> - Toggle Help Overlay</div>
+              </div>
+              <div style="margin-top: 8px; font-size: 10px; opacity: 0.7; border-top: 1px solid #00ffff; padding-top: 4px;">
+                Hold MOUSE to charge laser • Click to fire
+              </div>
+            `;
+
+            document.body.appendChild(helpOverlay);
+
+            // Toggle help with H key
+            document.addEventListener('keydown', (event) => {
+              if (event.code === 'KeyH') {
+                const currentOpacity = helpOverlay.style.opacity;
+                helpOverlay.style.opacity = currentOpacity === '0' ? '1' : '0';
+                helpOverlay.style.pointerEvents = currentOpacity === '0' ? 'auto' : 'none';
+              }
+            });
+          }
+
+          // Enhanced Performance Monitor
+          function createPerformanceMonitor() {
+            const perfMonitor = document.createElement('div');
+            perfMonitor.id = 'performance-monitor';
+            perfMonitor.style.cssText = `
+              position: fixed;
+              bottom: 20px;
+              right: 20px;
+              background: rgba(0, 0, 0, 0.8);
+              color: #00ff00;
+              font-family: 'VT323', monospace;
+              font-size: 11px;
+              padding: 8px;
+              border: 1px solid #00ff00;
+              border-radius: 4px;
+              z-index: 180;
+              box-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
+              font-family: monospace;
+            `;
+
+            document.body.appendChild(perfMonitor);
+
+            let frameCount = 0;
+            let lastTime = performance.now();
+            let fps = 60;
+
+            function updatePerformance() {
+              const now = performance.now();
+              frameCount++;
+
+              if (now >= lastTime + 1000) {
+                fps = Math.round((frameCount * 1000) / (now - lastTime));
+                frameCount = 0;
+                lastTime = now;
+
+                // Get memory usage if available
+                const memoryInfo = performance.memory ?
+                  `${(performance.memory.usedJSHeapSize / 1048576).toFixed(1)}MB` : 'N/A';
+
+                // Get bug counts
+                const activeBugs = window.nanoSwarm ? window.nanoSwarm.bugs.length : 0;
+                const containedCount = window.containedBugs || 0;
+
+                perfMonitor.innerHTML = `
+                  FPS: ${fps} | MEM: ${memoryInfo}
+                  <div>Bugs: ${activeBugs} | Contained: ${containedCount}</div>
+                `;
+              }
+
+              requestAnimationFrame(updatePerformance);
+            }
+
+            updatePerformance();
+          }
+
+          // Initialize help overlay and performance monitor
+          createCyberpunkHelpOverlay();
+          createPerformanceMonitor();
+
+          // Enhanced Mobile Optimization
+          function setupEnhancedMobileSupport() {
+            // Detect mobile device
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+            if (isMobile) {
+              // Adjust control sensitivity for mobile
+              LASER_CHARGE_DURATION = 600; // Shorter charge time
+              LASER_COOLDOWN = 1500; // Shorter cooldown
+
+              // Add mobile-specific UI
+              createMobileControls();
+              setupTouchGestures();
+              setupDeviceOrientation();
+            }
+          }
+
+          function createMobileControls() {
+            const mobileControls = document.createElement('div');
+            mobileControls.id = 'mobile-controls';
+            mobileControls.style.cssText = `
+              position: fixed;
+              bottom: 20px;
+              right: 20px;
+              display: flex;
+              flex-direction: column;
+              gap: 10px;
+              z-index: 190;
+            `;
+
+            // Create control buttons
+            const controls = [
+              { label: 'FIRE', action: 'fire', color: '#00ffff' },
+              { label: 'RAPID', action: 'rapid', color: '#ff00ff' },
+              { label: 'SPAWN', action: 'spawn', color: '#ffff00' }
+            ];
+
+            controls.forEach(control => {
+              const button = document.createElement('button');
+              button.textContent = control.label;
+              button.style.cssText = `
+                background: rgba(0, 0, 0, 0.8);
+                color: ${control.color};
+                border: 2px solid ${control.color};
+                border-radius: 50%;
+                width: 60px;
+                height: 60px;
+                font-family: 'VT323', monospace;
+                font-size: 12px;
+                font-weight: bold;
+                touch-action: manipulation;
+                transition: all 0.2s ease;
+                box-shadow: 0 0 10px ${control.color};
+              `;
+
+              button.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                handleMobileControl(control.action);
+                button.style.transform = 'scale(0.9)';
+                button.style.boxShadow = `0 0 20px ${control.color}`;
+              });
+
+              button.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                button.style.transform = 'scale(1)';
+                button.style.boxShadow = `0 0 10px ${control.color}`;
+              });
+
+              mobileControls.appendChild(button);
+            });
+
+            document.body.appendChild(mobileControls);
+          }
+
+          function handleMobileControl(action) {
+            switch(action) {
+              case 'fire':
+                handleLaserFire({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
+                break;
+              case 'rapid':
+                window.rapidFireMode = !window.rapidFireMode;
+                if (window.rapidFireMode) {
+                  startRapidFire();
+                } else {
+                  stopRapidFire();
+                }
+                break;
+              case 'spawn':
+                if (window.nanoSwarm) {
+                  window.nanoSwarm.birth();
+                }
+                break;
+            }
+          }
+
+          function setupTouchGestures() {
+            let touchStartTime = 0;
+            let touchStartPos = { x: 0, y: 0 };
+
+            document.addEventListener('touchstart', (e) => {
+              touchStartTime = Date.now();
+              touchStartPos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+
+              // Start laser charging for touch
+              handleLaserCharging({
+                x: (e.touches[0].clientX / window.innerWidth) * 2 - 1,
+                y: -(e.touches[0].clientY / window.innerHeight) * 2 + 1
+              });
+            });
+
+            document.addEventListener('touchmove', (e) => {
+              e.preventDefault(); // Prevent scrolling
+
+              // Update charge position
+              handleLaserCharging({
+                x: (e.touches[0].clientX / window.innerWidth) * 2 - 1,
+                y: -(e.touches[0].clientY / window.innerHeight) * 2 + 1
+              });
+            });
+
+            document.addEventListener('touchend', (e) => {
+              e.preventDefault();
+              const touchDuration = Date.now() - touchStartTime;
+              const touchEndPos = { x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY };
+
+              // Calculate swipe distance
+              const deltaX = touchEndPos.x - touchStartPos.x;
+              const deltaY = touchEndPos.y - touchStartPos.y;
+              const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+              if (distance > 50 && touchDuration < 500) {
+                // Swipe detected - activate rapid fire
+                window.rapidFireMode = !window.rapidFireMode;
+                if (window.rapidFireMode) startRapidFire();
+                else stopRapidFire();
+              } else if (touchDuration > 200) {
+                // Long press - fire laser
+                handleLaserFire(pointer);
+              }
+            });
+          }
+
+          function setupDeviceOrientation() {
+            if (window.DeviceOrientationEvent) {
+              window.addEventListener('deviceorientation', (e) => {
+                // Use device tilt for aiming assistance
+                const tiltLR = e.gamma; // Left to right tilt
+                const tiltFB = e.beta;  // Front to back tilt
+
+                // Slight camera movement based on tilt (optional)
+                if (camera && Math.abs(tiltLR) < 30 && Math.abs(tiltFB) < 30) {
+                  const sensitivity = 0.002;
+                  camera.rotation.y += tiltLR * sensitivity;
+                  camera.rotation.x += tiltFB * sensitivity;
+                }
+              });
+            }
+          }
+
+          // Initialize enhanced mobile support
+          setupEnhancedMobileSupport();
+
+          // Comprehensive Resource Management System
+          class ResourceManager {
+            constructor() {
+              this.particlePool = [];
+              this.soundPool = [];
+              this.maxParticles = 100;
+              this.maxSounds = 20;
+              this.activeResources = new Set();
+              this.resourceStats = {
+                particlesCreated: 0,
+                particlesDestroyed: 0,
+                soundsCreated: 0,
+                soundsDestroyed: 0,
+                resourcesCleaned: 0
+              };
+
+              this.init();
+            }
+
+            init() {
+              // Initialize particle pool
+              for (let i = 0; i < 20; i++) {
+                this.particlePool.push(this.createParticlePrototype());
+              }
+
+              // Initialize sound pool
+              for (let i = 0; i < 5; i++) {
+                this.soundPool.push(this.createSoundPrototype());
+              }
+
+              // Start cleanup cycle
+              this.startCleanupCycle();
+              this.startResourceMonitoring();
+            }
+
+            createParticlePrototype() {
+              const geometry = new THREE.BufferGeometry();
+              const material = new THREE.PointsMaterial({
+                size: 0.5,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0,
+                blending: THREE.AdditiveBlending
+              });
+              return new THREE.Points(geometry, material);
+            }
+
+            createSoundPrototype() {
+              return {
+                oscillator: null,
+                gainNode: null,
+                filter: null,
+                active: false
+              };
+            }
+
+            getPooledParticle() {
+              let particle = this.particlePool.pop() || this.createParticlePrototype();
+
+              if (this.activeResources.size < this.maxParticles) {
+                this.activeResources.add(particle);
+                this.resourceStats.particlesCreated++;
+                particle.material.opacity = 1;
+                return particle;
+              }
+
+              // Return null if at limit - caller should handle gracefully
+              this.particlePool.push(particle);
+              return null;
+            }
+
+            returnPooledParticle(particle) {
+              if (particle && this.activeResources.has(particle)) {
+                this.activeResources.delete(particle);
+                particle.material.opacity = 0;
+                if (window.scene && window.scene.children.includes(particle)) {
+                  window.scene.remove(particle);
+                }
+
+                if (this.particlePool.length < this.maxParticles / 2) {
+                  this.particlePool.push(particle);
+                } else {
+                  // Dispose of excess particles
+                  particle.geometry.dispose();
+                  particle.material.dispose();
+                }
+
+                this.resourceStats.particlesDestroyed++;
+              }
+            }
+
+            cleanupScene() {
+              let cleanedCount = 0;
+
+              // Clean up old particles beyond max limit
+              if (window.scene) {
+                const toRemove = [];
+                window.scene.children.forEach(child => {
+                  if (child.isPoints && child.material.opacity <= 0.01) {
+                    toRemove.push(child);
+                  }
+                });
+
+                toRemove.forEach(particle => {
+                  if (this.activeResources.has(particle)) {
+                    this.returnPooledParticle(particle);
+                  } else {
+                    window.scene.remove(particle);
+                    particle.geometry?.dispose();
+                    particle.material?.dispose();
+                    cleanedCount++;
+                  }
+                });
+              }
+
+              this.resourceStats.resourcesCleaned += cleanedCount;
+              return cleanedCount;
+            }
+
+            startCleanupCycle() {
+              // Cleanup every 5 seconds
+              setInterval(() => {
+                this.cleanupScene();
+              }, 5000);
+            }
+
+            startResourceMonitoring() {
+              // Monitor resource usage every 30 seconds
+              setInterval(() => {
+                this.reportResourceStats();
+              }, 30000);
+            }
+
+            reportResourceStats() {
+              const stats = Object.assign({}, this.resourceStats);
+              console.log('🐛 Resource Manager Stats:', {
+                activeParticles: this.activeResources.size,
+                particlePool: this.particlePool.length,
+                soundPool: this.soundPool.length,
+                particleEfficiency: ((stats.particlesDestroyed / stats.particlesCreated) * 100).toFixed(2) + '%',
+                stats: stats
+              });
+            }
+
+            dispose() {
+              // Clean up all resources
+              const allResources = Array.from(this.activeResources);
+              allResources.forEach(resource => {
+                this.returnPooledParticle(resource);
+              });
+
+              // Clean up pool
+              this.particlePool.forEach(particle => {
+                particle.geometry?.dispose();
+                particle.material?.dispose();
+              });
+
+              this.particlePool = [];
+              this.soundPool = [];
+              this.activeResources.clear();
+            }
+          }
+
+          // Initialize resource manager
+          window.resourceManager = new ResourceManager();
+
+          // System testing function
+          window.testLaserBugSystem = function() {
+            console.log('🧪 Testing laser bug system...');
+
+            // Test if NanoSwarm exists
+            console.log('NanoSwarm exists:', !!window.nanoSwarm);
+            if (window.nanoSwarm) {
+              console.log('NanoSwarm bugs:', window.nanoSwarm.bugs.length);
+              console.log('Max bugs:', window.nanoSwarm.max);
+            }
+
+            // Test if we can create a laser
+            console.log('Testing laser creation...');
+            try {
+              const testPos = { x: 0, y: 0 };
+              handleLaserFire(testPos);
+            } catch (error) {
+              console.error('Laser test failed:', error);
+            }
+
+            // Test bug creation
+            console.log('Testing bug creation...');
+            if (window.nanoSwarm) {
+              window.nanoSwarm.birth();
+            }
+          };
+
+          // Enhanced resource-aware particle function
+          function createResourceAwareLaserHitParticles(position) {
+            // Use pooled particles if available
+            const particles = window.resourceManager.getPooledParticle();
+            if (!particles) return null; // Resource limit reached
+
+            const particleCount = 30; // Reduced for mobile
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            for (let i = 0; i < particleCount; i++) {
+              positions[i * 3] = position.x + (Math.random() - 0.5) * 2;
+              positions[i * 3 + 1] = position.y + (Math.random() - 0.5) * 2;
+              positions[i * 3 + 2] = position.z + (Math.random() - 0.5) * 2;
+
+              colors[i * 3] = 0.1 + Math.random() * 0.3;
+              colors[i * 3 + 1] = 0.8 + Math.random() * 0.2;
+              colors[i * 3 + 2] = 1.0;
+            }
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            // Update particle geometry
+            if (particles.geometry) {
+              particles.geometry.dispose();
+              particles.geometry = geometry;
+            }
+
+            particles.material.vertexColors = true;
+            particles.material.size = 0.4;
+            particles.material.opacity = 1;
+
+            window.scene.add(particles);
+
+            // Animate and return to pool
+            new TWEEN.Tween({ opacity: 1 })
+              .to({ opacity: 0 }, 800)
+              .onUpdate((obj) => { particles.material.opacity = obj.opacity; })
+              .onComplete(() => {
+                window.resourceManager.returnPooledParticle(particles);
+              })
+              .start();
+
+            return particles;
+          }
+
+          // Replace existing particle function with resource-aware version
+          window.createLaserHitParticles = createResourceAwareLaserHitParticles;
+
+          // Laser Charging System with enhanced interaction
+          function handleLaserCharging(mousePos) {
+            // Start charging
+            laserChargeTime = Date.now();
+            laserTarget = mousePos;
+
+            playLaserSound('charge');
+            createLaserParticles(mousePos, 0x00ffff, 15);
+          }
+
+          function handleLaserFire(targetPos) {
+            if (Date.now() - lastLaserTime < LASER_COOLDOWN) {
+              return; // Still cooling down
+            }
+
+            // Show reticle hit effect
+            if (typeof createReticleHit === 'function') {
+              createReticleHit();
+            }
+
+            // Create laser beam
+            const startPos = camera.position.clone();
+            const ray = new THREE.Raycaster();
+
+            // Use proper coordinate system for raycasting
+            let raycastPoint;
+            if (targetPos && targetPos.x !== undefined && targetPos.y !== undefined) {
+              // If targetPos has screen coordinates, convert to normalized device coordinates
+              if (Math.abs(targetPos.x) <= 1 && Math.abs(targetPos.y) <= 1) {
+                // Already normalized device coordinates
+                raycastPoint = targetPos;
+              } else {
+                // Convert screen coordinates to normalized device coordinates
+                raycastPoint = {
+                  x: (targetPos.x / window.innerWidth) * 2 - 1,
+                  y: -(targetPos.y / window.innerHeight) * 2 + 1
+                };
+              }
+            } else {
+              // Fallback to current pointer position
+              raycastPoint = pointer;
+            }
+
+            ray.setFromCamera(raycastPoint, camera);
+
+            // Extend ray forward
+            const endPos = startPos.clone().add(ray.ray.direction.multiplyScalar(200));
+
+            // Visual laser beam
+            const laserBeam = createLaserBeam(startPos, endPos);
+
+            // Play fire sound
+            playLaserSound('fire');
+
+            // Check for bug hits using enhanced NanoSwarm
+            const bugIntersects = [];
+            if (window.nanoSwarm) {
+              window.nanoSwarm.bugs.forEach(bug => {
+                if (bug.alive) {
+                  const bugPos = bug.g.position;
+                  const distance = ray.ray.distanceToPoint(bugPos);
+                  if (distance < 1.5) { // Hit radius - smaller for enhanced system
+                    bugIntersects.push({ bug: bug, distance: distance });
+                  }
+                }
+              });
+            }
+
+            // Enhanced hit detection with concept-style targeting
+            if (bugIntersects.length > 0) {
+              bugIntersects.sort((a, b) => a.distance - b.distance);
+              const targetBug = bugIntersects[0].bug;
+
+              // Squash the bug using NanoSwarm system
+              window.nanoSwarm.squash(targetBug);
+
+              // Enhanced particle effect on hit
+              createCyberpunkParticles(targetBug.pos, targetBug.s.col, 40);
+
+              // Enhanced containment effect
+              playLaserSound('fire');
+              playLaserSound('hit');
+
+              // Create enhanced laser hit particles
+              createResourceAwareLaserHitParticles(targetBug.pos);
+
+              // Screen flash effect for elimination
+              createEliminationFlash();
+            }
+
+            // Remove laser beam after effect
+            setTimeout(() => {
+              scene.remove(laserBeam);
+            }, 300);
+
+            lastLaserTime = Date.now();
+            laserChargeTime = 0;
+            laserTarget = null;
+          }
+
+          // Enhanced click handler for laser system
+          const originalClickHandler = onPointerClick;
+          onPointerClick = async function(event) {
+            // Run original logic first
+            await originalClickHandler(event);
+
+            // Laser charging based on click duration
+            const chargeTime = Date.now() - laserChargeTime;
+
+            if (chargeTime > 100 && chargeTime < 1000) {
+              handleLaserFire(pointer);
+            }
+
+            // Start charging for next shot
+            handleLaserCharging(pointer);
+          };
+
+          // HUD for laser game status
+          function createBugGameHUD() {
+            const hud = document.createElement('div');
+            hud.id = 'bug-game-hud';
+            hud.style.cssText = `
+              position: fixed;
+              top: 20px;
+              right: 20px;
+              background: rgba(0, 0, 0, 0.9);
+              color: #00ffff;
+              font-family: 'VT323', monospace;
+              font-size: 14px;
+              padding: 15px;
+              border: 2px solid #00ffff;
+              border-radius: 5px;
+              z-index: 150;
+              box-shadow: 0 0 15px #00ffff;
+              min-width: 200px;
+            `;
+
+            hud.innerHTML = `
+              <div style="text-align: center; border-bottom: 1px solid #00ffff; margin-bottom: 10px; padding-bottom: 5px;">
+                NEURAL PEST CONTROL
+              </div>
+              <div>Contained: <span id="contained-count" style="color: #00ff00;">0</span></div>
+              <div>Active: <span id="active-count" style="color: #ffff00;">0</span></div>
+              <div>Wave: <span id="current-wave" style="color: #ff00ff;">1</span></div>
+              <div style="margin-top: 10px; font-size: 11px; opacity: 0.8;">
+                Hold click to charge laser • Release to fire
+              </div>
+            `;
+
+            document.body.appendChild(hud);
+
+            // Update HUD function
+            window.updateBugHUD = function() {
+              // Support for both old bugManager and new NanoSwarm
+              let activeBugs = 0;
+              let currentWave = 1;
+
+              if (window.nanoSwarm) {
+                activeBugs = window.nanoSwarm.bugs.length;
+                currentWave = window.nanoSwarm.wave;
+              } else if (window.bugSwarmManager) {
+                activeBugs = bugSwarmManager.bugs.length;
+                currentWave = bugSwarm.wave;
+              }
+
+              const contained = document.getElementById('contained-count');
+              const active = document.getElementById('active-count');
+              const wave = document.getElementById('current-wave');
+
+              if (contained) contained.textContent = window.containedBugs || 0;
+              if (active) active.textContent = activeBugs;
+              if (wave) wave.textContent = currentWave;
+            };
+
+            // Add flashing effect for containment - enhanced version
+            setInterval(() => {
+              const hasActiveSwarm = window.nanoSwarm && window.nanoSwarm.bugs.length > 0;
+              const threshold = 6; // Warning threshold for bug swarm
+
+              if (hasActiveSwarm && window.nanoSwarm.bugs.length >= threshold) {
+                hud.style.borderColor = '#ff00ff';
+                hud.style.boxShadow = '0 0 20px #ff00ff';
+              } else {
+                hud.style.borderColor = '#00ffff';
+                hud.style.boxShadow = '0 0 15px #00ffff';
+              }
+            }, 500);
+          }
+
+          // Initialize the system
+          bugSwarmManager = new BugSwarmManager();
+          bugSwarmManager.init();
+          createBugGameHUD();
+
+          console.log('🎮 Complete CYBERPUNK LASER BUG SYSTEM initialized!');
+          console.log('⚡ System features: WASD movement, laser charging, bug swarms, mobile controls');
+          console.log('🔧 Test system with: testLaserBugSystem() in console');
+          console.log('📱 Open help: Press H');
+
+          // Add cyberpunk mouse cursor effects for laser charging
+          document.addEventListener('mousedown', (e) => {
+            if (e.button === 0) { // Left click
+              document.body.style.cursor = 'crosshair';
+              // Visual charging effect
+              const cursorEffect = document.createElement('div');
+              cursorEffect.style.cssText = `
+                position: fixed;
+                width: 20px;
+                height: 20px;
+                border: 2px solid #00ffff;
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 300;
+                transform: translate(-50%, -50%);
+                box-shadow: 0 0 10px #00ffff;
+                animation: chargeExpand 0.8s ease-out;
+              `;
+
+              document.body.appendChild(cursorEffect);
+              cursorEffect.style.left = e.clientX + 'px';
+              cursorEffect.style.top = e.clientY + 'px';
+
+              // Expand animation
+              setTimeout(() => {
+                cursorEffect.style.transform = 'translate(-50%, -50%) scale(3)';
+                cursorEffect.style.opacity = '0';
+                setTimeout(() => cursorEffect.remove(), 500);
+              }, 100);
+            }
+          });
+
+          document.addEventListener('mouseup', () => {
+            document.body.style.cursor = 'default';
+          });
+
+          // Add CSS for charging animation
+          const chargeStyle = document.createElement('style');
+          chargeStyle.textContent = `
+            @keyframes chargeExpand {
+              0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+              100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+            }
+
+            @keyframes laserHit {
+              0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+              50% { transform: translate(-50%, -50%) scale(2); opacity: 0.8; }
+              100% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            }
+          `;
+          document.head.appendChild(chargeStyle);
+
+          // Cyberpunk targeting reticle system
+          const reticle = document.createElement('div');
+          reticle.id = 'cyber-reticle';
+          reticle.style.cssText = `
+            position: fixed;
+            width: 32px;
+            height: 32px;
+            border: 2px solid #00ffff;
+            border-radius: 8px;
+            pointer-events: none;
+            z-index: 250;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            box-shadow:
+              inset 0 0 5px #00ffff,
+              0 0 15px #00ffff;
+          `;
+          document.body.appendChild(reticle);
+
+          // Enhanced targeting system
+          let isTargeting = false;
+          let targetDuration = 0;
+
+          document.addEventListener('mousemove', (e) => {
+            // Always follow mouse for reticle
+            reticle.style.left = e.clientX + 'px';
+            reticle.style.top = e.clientY + 'px';
+
+            // Targeting mode when charging laser
+            if (laserChargeTime > 0) {
+              const chargeDuration = Date.now() - laserChargeTime;
+              if (chargeDuration > 200) {
+                isTargeting = true;
+                targetDuration = chargeDuration;
+              }
+            } else {
+              isTargeting = false;
+              targetDuration = 0;
+            }
+
+            // Update reticle appearance
+            if (isTargeting) {
+              reticle.style.opacity = '1';
+              const intensity = Math.min(1, targetDuration / 500);
+              const scale = 1 + intensity * 0.5;
+              const size = 32 + intensity * 8;
+
+              reticle.style.width = size + 'px';
+              reticle.style.height = size + 'px';
+              reticle.style.borderColor = targetDuration > 800 ? '#ffff00' : '#00ffff';
+              reticle.style.boxShadow = `
+                inset 0 0 ${5 + intensity * 10}px ${targetDuration > 800 ? '#ffff00' : '#00ffff'},
+                0 0 ${15 + intensity * 20}px ${targetDuration > 800 ? '#ffff00' : '#00ffff'}
+              `;
+            } else {
+              reticle.style.opacity = '0.3';
+              reticle.style.width = '32px';
+              reticle.style.height = '32px';
+              reticle.style.borderColor = '#00ffff';
+              reticle.style.boxShadow = 'inset 0 0 5px #00ffff, 0 0 15px #00ffff';
+            }
+          });
+
+          // Charge completion flash
+          function createReticleHit() {
+            const hit = document.createElement('div');
+            hit.style.cssText = `
+              position: fixed;
+              width: 80px;
+              height: 80px;
+              border: 3px solid #ffff00;
+              border-radius: 50%;
+              pointer-events: none;
+              z-index: 350;
+              transform: translate(-50%, -50%);
+              animation: laserHit 0.5s ease-out forwards;
+              box-shadow: 0 0 25px #ffff00, inset 0 0 15px #ffff00;
+            `;
+            hit.style.left = reticle.style.left;
+            hit.style.top = reticle.style.top;
+
+            document.body.appendChild(hit);
+            setTimeout(() => hit.remove(), 500);
+          }
+
+          // Add to global namespace for access
+          window.bugSwarmManager = bugSwarmManager;
+          window.laserSystem = {
+            charge: handleLaserCharging,
+            fire: handleLaserFire,
+            createContainment: createLaserParticles
+          };
+        }
+      }
+
+      // Animate mountains with pulsing opacity
+      function animateMountains(time) {
+        mountains.forEach((mountain) => {
+          const userData = mountain.userData;
+          const pulse = Math.sin(time * userData.speed + userData.opacityPhase);
+          mountain.material.opacity = 0.2 + (pulse * 0.1);
+        });
+      }
+
+      // Animate laser scanning animation
+      function animateLasers(time) {
+        lasers.forEach((laser) => {
+          const userData = laser.userData;
+          const offset = Math.sin(time * userData.speed) * 40;
+          laser.position.y = userData.initialY + (offset * userData.direction);
+
+          // Pulsing opacity for laser
+          const pulse = Math.sin(time * 0.003 + userData.initialY) * 0.3 + 0.7;
+          laser.material.opacity = pulse * 0.6;
+        });
+      }
+
+    })();
+  </script>
+</head>
+
+<body>
+  <!-- CYBER TERMINAL UI -->
+  <div id="cyber-terminal" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 100;">
+    <!-- Screen corner glitches -->
+    <div style="position: absolute; top: 0; left: 0; width: 3px; height: 3px; background: var(--neon-cyan); opacity: 0.6; animation: glitch 2s infinite;"></div>
+    <div style="position: absolute; top: 0; right: 0; width: 5px; height: 2px; background: var(--neon-magenta); opacity: 0.8; animation: glitch 1.5s infinite reverse;"></div>
+    <div style="position: absolute; bottom: 0; left: 0; width: 4px; height: 4px; background: var(--neon-yellow); opacity: 0.7; animation: glitch 3s infinite;"></div>
+    <div style="position: absolute; bottom: 0; right: 0; width: 2px; height: 5px; background: var(--neon-green); opacity: 0.9; animation: glitch 2.5s infinite reverse;"></div>
+
+    <!-- Status bar -->
+    <div id="status-bar" style="
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      right: 20px;
+      height: 40px;
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid var(--neon-cyan);
+      border-radius: 2px;
+      font-family: 'VT323', monospace;
+      color: var(--neon-green);
+      padding: 10px;
+      overflow: hidden;
+      box-shadow:
+        0 0 10px var(--neon-cyan),
+        inset 0 0 5px var(--neon-cyan);
+    ">
+      <div style="float: left;">SYSTEM STATUS: <span style="color: var(--neon-cyan);">ONLINE</span></div>
+      <div style="float: right;" id="clock">00:00:00</div>
+      <div style="clear: both;"></div>
+    </div>
+
+    <!-- Terminal messages -->
+    <div id="terminal-log" style="
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      width: 400px;
+      height: 200px;
+      background: rgba(0, 0, 0, 0.7);
+      border: 1px solid var(--neon-purple);
+      padding: 10px;
+      font-family: 'VT323', monospace;
+      font-size: 12px;
+      color: var(--neon-magenta);
+      overflow-y: auto;
+      box-shadow: 0 0 15px var(--neon-purple);
+      border-radius: 2px;
+    ">
+      <div id="terminal-messages">
+        [SYS] Initiating cyber neural network...<br>
+        [NET] Establishing interdimensional connection...<br>
+        [TECH] Synchronization complete.<br>
+        <span id="cursor">█</span>
+      </div>
+    </div>
+
+    <!-- Control panel -->
+    <div id="control-panel" style="
+      position: fixed;
+      top: 70px;
+      right: 20px;
+      width: 250px;
+      height: 150px;
+      background: rgba(0, 0, 0, 0.7);
+      border: 1px solid var(--neon-yellow);
+      padding: 15px;
+      font-family: 'VT323', monospace;
+      color: var(--neon-yellow);
+      box-shadow: 0 0 15px var(--neon-yellow);
+      border-radius: 2px;
+    ">
+      <div style="text-align: center; margin-bottom: 10px; color: var(--neon-cyan); border-bottom: 1px solid var(--neon-cyan);">NEURAL CONTROLS</div>
+      <div>Neural Activity: <span id="neural-activity">ACTIVE</span></div>
+      <div>Particles: <span id="particle-count">0</span></div>
+      <div>3D Objects: <span id="object-count">0</span></div>
+      <div>Memory Usage: <span id="memory-usage">0MB</span></div>
+    </div>
+
+    <!-- Visual artifacts -->
+    <div id="visual-artifacts"></div>
+  </div>
+
+  <!-- DATA STREAMS -->
+  <div id="data-streams" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 50; overflow: hidden; font-family: 'VT323', monospace; color: var(--neon-cyan); opacity: 0.2;">
+    <div id="stream-1" class="data-stream" style="position: absolute; top: 10%; left: 80%; font-size: 14px; animation: data-fall 15s infinite linear;">0101110101<br>0011101001<br>1110010101</div>
+    <div id="stream-2" class="data-stream" style="position: absolute; top: 20%; left: 20%; font-size: 12px; animation: data-fall 20s infinite linear; color: var(--neon-green);">1010<br>1100<br>0011<br>1010</div>
+    <div id="stream-3" class="data-stream" style="position: absolute; top: 5%; left: 50%; font-size: 16px; animation: data-fall 25s infinite linear; color: var(--neon-magenta);">X7F2<br>A9B4<br>C3E8</div>
+    <div id="stream-4" class="data-stream" style="position: absolute; top: 15%; left: 65%; font-size: 10px; animation: data-fall 18s infinite linear; color: var(--neon-yellow);">hex_414d50<br>hex_4f57<br>hex_474f</div>
+  </div>
+  <div id="loader-container">
+    <div id="loader">
+      <div class="loader-face"></div>
+      <div class="loader-face" style="transform: rotateX(90deg)"></div>
+      <div class="loader-face" style="transform: rotateY(90deg)"></div>
+      <div class="loader-text">loading techshaman...</div>
+    </div>
+  </div>
+  <!-- <div id="navigation-overlay" style="position: fixed; top: 20px; right: 20px; background-color: rgba(0, 0, 0, 0.7); color: #fff; padding: 15px; border-radius: 8px; font-family: Arial, sans-serif; font-size: 14px; z-index: 1000;">
+    <strong>Navigation Instructions:</strong>
+    <ul style="margin: 10px 0 0 20px; padding: 0; list-style: disc;">
+      <li>Use the mouse to rotate the view.</li>
+      <li>Scroll to zoom in and out.</li>
+      <li>Click and drag to pan the camera.</li>
+    </ul>
+  </div> -->
+  <canvas id="bg"></canvas>
+</body>
+
+</html>

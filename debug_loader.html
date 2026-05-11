@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Loading</title>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Debug Loading Test</h1>
+    <div id="debug"></div>
+
+    <script type="module">
+        const debug = document.getElementById('debug');
+
+        function log(msg) {
+            console.log(msg);
+            debug.innerHTML += msg + '<br>';
+        }
+
+        log('Starting debug test...');
+
+        try {
+            log('Importing THREE...');
+            import * as THREE from 'three';
+
+            log('THREE imported successfully');
+            log('THREE version: ' + THREE.REVISION);
+
+            log('Testing scene creation...');
+            const scene = new THREE.Scene();
+            log('Scene created');
+
+            log('Testing renderer...');
+            const renderer = new THREE.WebGLRenderer();
+            log('Renderer created');
+
+            log('Testing loading manager...');
+            const loadingManager = new THREE.LoadingManager();
+            log('Loading manager created');
+
+            log('Testing GLTFLoader...');
+            import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+            const loader = new GLTFLoader(loadingManager);
+            log('GLTFLoader created');
+
+            log('All THREE.js components working!');
+
+        } catch (error) {
+            log('ERROR: ' + error.message);
+            log('Stack: ' + error.stack);
+        }
+    </script>
+</body>
+</html>
