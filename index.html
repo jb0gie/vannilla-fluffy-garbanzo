@@ -487,31 +487,7 @@
             </div>
         </div>
 
-        <!-- Debug Console Overlay -->
-        <div
-            id="debug-console"
-            style="
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: rgba(255, 0, 0, 0.8);
-                color: white;
-                padding: 10px;
-                border-radius: 8px;
-                font-family: monospace;
-                font-size: 10px;
-                z-index: 1001;
-                border: 1px solid rgba(255, 0, 0, 0.5);
-                backdrop-filter: blur(5px);
-                max-width: 300px;
-                max-height: 200px;
-                overflow-y: auto;
-                display: block;
-                pointer-events: auto;
-            "
-        ></div>
-
-        <!-- Enhanced Cyberpunk Stats HUD -->
+        <!-- Enhanced Cyberpunk Stats HUD (top-left) -->
         <div
             id="stats-hud"
             style="
@@ -535,6 +511,7 @@
                 animation: cyberpunk-flicker 2s infinite;
                 clip-path: polygon(0 0, 100% 0, 95% 100%, 0 100%);
                 transform: skewX(-2deg);
+                max-width: 350px;
             "
         >
             <div style="color: var(--tron-orange); margin-bottom: 15px; font-size: 18px;">
@@ -559,6 +536,15 @@
                 <span style="color: var(--neon-pink);">[CLICKS]:</span>
                 <span id="click-count" style="color: #00ff00;">0</span>
 
+                <span style="color: var(--neon-pink);">[SCORE]:</span>
+                <span id="score-count" style="color: #ff1493;">0</span>
+
+                <span style="color: var(--neon-pink);">[CRYSTALS]:</span>
+                <span id="crystal-count" style="color: #00ffff;">0/15</span>
+
+                <span style="color: var(--neon-pink);">[DECKS]:</span>
+                <span id="deck-count" style="color: #9d00ff;">0/6</span>
+
                 <span style="color: var(--neon-pink);">[SYSTEM]:</span>
                 <span style="color: #00ff00;">ONLINE</span>
             </div>
@@ -569,12 +555,12 @@
                 <div style="color: var(--tron-orange); margin-bottom: 8px;">◈ CONTROLS MATRIX ◈</div>
                 <div style="margin: 3px 0;">• SCROLL • ZOOM CAMERA</div>
                 <div style="margin: 3px 0;">• R-CLICK • PAN VIEW</div>
-                <div style="margin: 3px 0;">• SHIFT-CLICK • PAN GRID</div>
                 <div style="margin: 3px 0;">• WASD • MOVE + ROTATE</div>
                 <div style="margin: 3px 0;">• Q/E • UP/DOWN</div>
                 <div style="margin: 3px 0;">• SPACE • PARTICLE BURST</div>
-                <div style="margin: 3px 0;">• R • RESET CAMERA</div>
-                <div style="margin: 3px 0;">• CLICK • INTERACT</div>
+                <div style="margin: 3px 0;">• R • RESET CAM</div>
+                <div style="margin: 3px 0;">• CLICK • FOCUS</div>
+                <div style="margin: 3px 0;">• DBL-CLICK • TELEPORT</div>
             </div>
 
             <div style="margin-top: 15px; padding-top: 10px; border-top: 1px dashed var(--neon-purple);">
@@ -583,116 +569,36 @@
             </div>
         </div>
 
-        <!-- Flexbox Layout Container -->
-        <div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; z-index: 1;">
+        <!-- Top Instruction Panel -->
+        <div id="top-panel" style="
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 450px;
+            background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(255,255,0,0.1));
+            border: 2px solid var(--tron-yellow);
+            padding: 15px;
+            border-radius: 8px;
+            color: var(--tron-yellow);
+            font-family: 'Courier New', monospace;
+            box-shadow: 0 0 30px rgba(255,255,0,0.5);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+            display: none;
+            text-align: center;
+        ">
+            <h2 style="font-size: 1.4rem; margin-bottom: 10px; text-shadow: 0 0 15px currentColor; color: var(--tron-yellow);">
+                ◈ TECHSHAMAN PORTAL ◈
+            </h2>
+            <p style="font-size: 0.8rem; color: var(--neon-cyan); margin: 0; text-transform: uppercase;">
+                Start at center → Fly outward through 6 decks → Collect 15 crystals along the spiral
+            </p>
+        </div>
 
-            <!-- Left Panel - HTML Text Content -->
-            <div id="left-panel" style="
-                position: absolute;
-                left: 20px;
-                top: 50%;
-                transform: translateY(-50%);
-                width: 250px;
-                background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(0,255,255,0.1));
-                border: 2px solid var(--neon-cyan);
-                padding: 20px;
-                border-radius: 8px;
-                color: var(--neon-cyan);
-                font-family: 'Courier New', monospace;
-                box-shadow: 0 0 30px rgba(0,255,255,0.5);
-                backdrop-filter: blur(10px);
-                z-index: 10;
-                display: none;
-            ">
-                <h3 style="font-size: 1.2rem; margin-bottom: 15px; text-shadow: 0 0 10px currentColor; color: var(--neon-cyan);">
-                    ◈ CYBERPUNK DECKS ◈
-                </h3>
-                <div style="font-size: 0.8rem; line-height: 1.6; color: var(--tron-orange);">
-                    <div style="margin: 8px 0;">• YE X ZU &gt;&gt; SYNCHRONIZED</div>
-                    <div style="margin: 8px 0;">• 247420 &gt;&gt; DECENTRALIZED</div>
-                    <div style="margin: 8px 0;">• SCHWEPE &gt;&gt; CONSCIOUSNESS</div>
-                    <div style="margin: 8px 0;">• BLADES &gt;&gt; NATURE TECH</div>
-                    <div style="margin: 8px 0;">• ACCOLADES &gt;&gt; BLOCKCHAIN</div>
-                </div>
-                <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--neon-cyan); opacity: 0.7;">
-                    <div style="font-size: 0.7rem; color: var(--neon-purple); text-transform: uppercase;">
-                        System Status: <span style="color: #00ff00;">ONLINE</span>
-                    </div>
-                    <div style="font-size: 0.7rem; color: var(--neon-purple); text-transform: uppercase;">
-                        Protocol: <span style="color: #ffff00;">ACTIVE</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right Panel - Technical Info -->
-            <div id="right-panel" style="
-                position: absolute;
-                right: 20px;
-                top: 50%;
-                transform: translateY(-50%);
-                width: 250px;
-                background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(255,0,255,0.1));
-                border: 2px solid var(--neon-purple);
-                padding: 20px;
-                border-radius: 8px;
-                color: var(--neon-purple);
-                font-family: 'Courier New', monospace;
-                box-shadow: 0 0 30px rgba(255,0,255,0.5);
-                backdrop-filter: blur(10px);
-                z-index: 10;
-                display: none;
-            ">
-                <h3 style="font-size: 1.2rem; margin-bottom: 15px; text-shadow: 0 0 10px currentColor; color: var(--neon-purple);">
-                    ◈ NEURAL MATRIX ◈
-                </h3>
-                <div style="font-size: 0.8rem; line-height: 1.6;">
-                    <div style="margin: 6px 0;">STATUS: <span style="color: #00ff00;">▓ ONLINE</span></div>
-                    <div style="margin: 6px 0;">CONNECTION: <span style="color: #00ffff;">▓ ESTABLISHED</span></div>
-                    <div style="margin: 6px 0;">DIMENSION: <span style="color: #ff00ff;">▓ CYBERPUNK</span></div>
-                    <div style="margin: 6px 0;">PROTOCOL: <span style="color: #ffff00;">▓ ACTIVE</span></div>
-                </div>
-                <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--neon-purple); opacity: 0.7;">
-                    <div style="font-size: 0.7rem; color: var(--tron-orange); text-transform: uppercase;">
-                        Controls: <span style="color: #00ff00;">WASD + Q/E</span>
-                    </div>
-                    <div style="font-size: 0.7rem; color: var(--tron-orange); text-transform: uppercase;">
-                        Camera: <span style="color: #00ffff;">MOUSE</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Top Center Panel -->
-            <div id="top-panel" style="
-                position: absolute;
-                top: 20px;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 400px;
-                background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(255,255,0,0.1));
-                border: 2px solid var(--tron-yellow);
-                padding: 15px;
-                border-radius: 8px;
-                color: var(--tron-yellow);
-                font-family: 'Courier New', monospace;
-                box-shadow: 0 0 30px rgba(255,255,0,0.5);
-                backdrop-filter: blur(10px);
-                z-index: 10;
-                display: none;
-                text-align: center;
-            ">
-                <h2 style="font-size: 1.4rem; margin-bottom: 10px; text-shadow: 0 0 15px currentColor; color: var(--tron-yellow);">
-                    ◈ TECHSHAMAN PORTAL ◈
-                </h2>
-                <p style="font-size: 0.8rem; color: var(--neon-cyan); margin: 0; text-transform: uppercase;">
-                    Fly Over 3D Text Sections to Activate Cyberpunk Panels
-                </p>
-            </div>
-
-            <!-- Three.js Canvas Container -->
-            <div id="canvas-container" style="position: relative; z-index: 2;">
-                <canvas id="bg" style="display: none; border-radius: 8px; box-shadow: 0 0 50px rgba(0,255,255,0.3);"></canvas>
-            </div>
-
+        <!-- Three.js Canvas Container -->
+        <div id="canvas-container" style="position: relative; z-index: 2;">
+            <canvas id="bg" style="display: none; border-radius: 8px; box-shadow: 0 0 50px rgba(0,255,255,0.3);"></canvas>
         </div>
 
     </body>

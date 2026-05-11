@@ -91,10 +91,11 @@ function initThreeJS() {
     config.camera.far
   );
   camera.position.set(
-    config.camera.initialPosition.x,
-    config.camera.initialPosition.y,
-    config.camera.initialPosition.z
+    0, // Start at origin X
+    0, // Eye level at ground — looking up
+    45 // Pull back enough to see the TECHSHAMAN text above
   );
+  camera.lookAt(0, 10, 0); // Look up at center space where TECHSHAMAN floats
 
   renderer = new THREE.WebGLRenderer({
     canvas,

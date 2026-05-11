@@ -2,8 +2,8 @@ import * as THREE from 'three';
 
 let camera, renderer;
 let cameraController = {
-  target: new THREE.Vector3(0, 0, 0),
-  distance: 30,
+  target: new THREE.Vector3(0, 8, 0), // Look up at TECHSHAMAN text above
+  distance: 45,
   azimuth: Math.PI / 3,
   elevation: Math.PI / 6,
   minDistance: 15,
@@ -12,7 +12,7 @@ let cameraController = {
   lastMousePos: { x: 0, y: 0 },
   movementSpeed: 0.7,
   keys: {},
-  boundary: 120
+  boundary: 280
 };
 
 let onUpdateCallback = null;
@@ -107,6 +107,7 @@ function onKeyDown(event) {
     case 'KeyR':
       event.preventDefault();
       resetCamera();
+      if (onUpdateCallback) onUpdateCallback('reset');
       break;
   }
 }
@@ -155,7 +156,7 @@ function applyBoundaryConstraints(target) {
   target.y = Math.max(-20, Math.min(20, target.y));
 }
 
-function updateCameraPosition() {
+export function updateCameraPosition() {
   if (!camera) return;
   
   const x = cameraController.target.x + cameraController.distance * Math.cos(cameraController.elevation) * Math.cos(cameraController.azimuth);
@@ -167,8 +168,8 @@ function updateCameraPosition() {
 }
 
 function resetCamera() {
-  cameraController.target.set(0, 0, 0);
-  cameraController.distance = 30;
+  cameraController.target.set(0, 8, 0); // Look at TECHSHAMAN text above
+  cameraController.distance = 45;
   cameraController.azimuth = Math.PI / 3;
   updateCameraPosition();
   if (onUpdateCallback) onUpdateCallback('reset');

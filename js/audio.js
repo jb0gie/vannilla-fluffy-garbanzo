@@ -32,85 +32,132 @@ export function playSound(type = 'click') {
   oscillator.type = 'sawtooth';
   oscillator2.type = 'square';
 
-  switch(type) {
-    case 'click':
-      // TRON-style electronic click
-      oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
-      oscillator.frequency.exponentialRampToValueAtTime(150, audioContext.currentTime + 0.2);
-      oscillator2.frequency.setValueAtTime(2000, audioContext.currentTime);
-      oscillator2.frequency.exponentialRampToValueAtTime(300, audioContext.currentTime + 0.15);
-      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+   switch(type) {
+     case 'click':
+       // TRON-style electronic click
+       oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
+       oscillator.frequency.exponentialRampToValueAtTime(150, audioContext.currentTime + 0.2);
+       oscillator2.frequency.setValueAtTime(2000, audioContext.currentTime);
+       oscillator2.frequency.exponentialRampToValueAtTime(300, audioContext.currentTime + 0.15);
+       gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+       gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
 
-      // Filter sweep for that futuristic sound
-      filter.frequency.exponentialRampToValueAtTime(8000, audioContext.currentTime + 0.05);
-      filter.frequency.exponentialRampToValueAtTime(1000, audioContext.currentTime + 0.15);
-      break;
+       // Filter sweep for that futuristic sound
+       filter.frequency.exponentialRampToValueAtTime(8000, audioContext.currentTime + 0.05);
+       filter.frequency.exponentialRampToValueAtTime(1000, audioContext.currentTime + 0.15);
+       break;
 
-    case 'hover':
-      // Soft cyberpunk ambiance
-      oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
-      oscillator.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.1);
-      oscillator2.frequency.setValueAtTime(1200, audioContext.currentTime);
-      oscillator2.frequency.exponentialRampToValueAtTime(1600, audioContext.currentTime + 0.08);
-      gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+     case 'hover':
+       // Soft cyberpunk ambiance
+       oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+       oscillator.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.1);
+       oscillator2.frequency.setValueAtTime(1200, audioContext.currentTime);
+       oscillator2.frequency.exponentialRampToValueAtTime(1600, audioContext.currentTime + 0.08);
+       gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+       gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
 
-      // Gentle filter movement
-      filter.frequency.setValueAtTime(2000, audioContext.currentTime);
-      filter.frequency.exponentialRampToValueAtTime(3500, audioContext.currentTime + 0.05);
-      break;
+       // Gentle filter movement
+       filter.frequency.setValueAtTime(2000, audioContext.currentTime);
+       filter.frequency.exponentialRampToValueAtTime(3500, audioContext.currentTime + 0.05);
+       break;
 
-    case 'reset':
-      // System reboot sound sequence
-      oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
-      oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.1);
-      oscillator.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.2);
-      oscillator2.frequency.setValueAtTime(400, audioContext.currentTime);
-      oscillator2.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.1);
-      oscillator2.frequency.exponentialRampToValueAtTime(1600, audioContext.currentTime + 0.2);
-      gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-      break;
+     case 'discover':
+       // Deck discovery - triumphant chime
+       oscillator.type = 'sine';
+       oscillator2.type = 'sine';
+       oscillator.frequency.setValueAtTime(523, audioContext.currentTime); // C5
+       oscillator.frequency.exponentialRampToValueAtTime(659, audioContext.currentTime + 0.1); // E5
+       oscillator2.frequency.setValueAtTime(784, audioContext.currentTime); // G5
+       oscillator2.frequency.exponentialRampToValueAtTime(1047, audioContext.currentTime + 0.15); // C6
+       gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+       gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+       
+       filter.type = 'lowpass';
+       filter.frequency.setValueAtTime(3000, audioContext.currentTime);
+       filter.frequency.exponentialRampToValueAtTime(1000, audioContext.currentTime + 0.3);
+       break;
 
-    case 'toggle':
-      // Matrix-style activation sound
-      oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
-      oscillator.frequency.exponentialRampToValueAtTime(2400, audioContext.currentTime + 0.2);
-      oscillator2.frequency.setValueAtTime(1600, audioContext.currentTime);
-      oscillator2.frequency.exponentialRampToValueAtTime(4800, audioContext.currentTime + 0.15);
-      gainNode.gain.setValueAtTime(0.25, audioContext.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.25);
+     case 'collect':
+       // Crystal collection - sparkling sound
+       oscillator.type = 'sine';
+       oscillator2.type = 'triangle';
+       oscillator.frequency.setValueAtTime(1200, audioContext.currentTime);
+       oscillator.frequency.exponentialRampToValueAtTime(2000, audioContext.currentTime + 0.15);
+       oscillator2.frequency.setValueAtTime(1800, audioContext.currentTime);
+       oscillator2.frequency.exponentialRampToValueAtTime(2400, audioContext.currentTime + 0.1);
+       gainNode.gain.setValueAtTime(0.25, audioContext.currentTime);
+       gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+       
+       filter.frequency.setValueAtTime(5000, audioContext.currentTime);
+       filter.frequency.exponentialRampToValueAtTime(2000, audioContext.currentTime + 0.1);
+       break;
 
-      // Aggressive filter resonance
-      filter.Q.setValueAtTime(20, audioContext.currentTime);
-      filter.frequency.exponentialRampToValueAtTime(8000, audioContext.currentTime + 0.1);
-      break;
+     case 'success':
+       // Teleport success - power-up sound
+       oscillator.type = 'sawtooth';
+       oscillator2.type = 'square';
+       oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
+       oscillator.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.2);
+       oscillator2.frequency.setValueAtTime(800, audioContext.currentTime);
+       oscillator2.frequency.exponentialRampToValueAtTime(1600, audioContext.currentTime + 0.15);
+       gainNode.gain.setValueAtTime(0.4, audioContext.currentTime);
+       gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+       
+       filter.type = 'lowpass';
+       filter.frequency.setValueAtTime(2000, audioContext.currentTime);
+       filter.frequency.exponentialRampToValueAtTime(6000, audioContext.currentTime + 0.2);
+       break;
 
-    case 'data':
-      // Data stream processing sound
-      oscillator.type = 'triangle';
-      oscillator2.type = 'sine';
-      oscillator.frequency.setValueAtTime(1200, audioContext.currentTime);
-      oscillator2.frequency.setValueAtTime(2400, audioContext.currentTime);
-      gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.05);
-      break;
+     case 'reset':
+       // System reboot sound sequence
+       oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+       oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.1);
+       oscillator.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.2);
+       oscillator2.frequency.setValueAtTime(400, audioContext.currentTime);
+       oscillator2.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.1);
+       oscillator2.frequency.exponentialRampToValueAtTime(1600, audioContext.currentTime + 0.2);
+       gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+       gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+       break;
 
-    case 'glitch':
-      // Digital glitch effect
-      oscillator.type = 'sawtooth';
-      oscillator2.type = 'square';
-      const now = audioContext.currentTime;
-      oscillator.frequency.setValueAtTime(Math.random() * 2000 + 500, now);
-      oscillator.frequency.setValueAtTime(Math.random() * 2000 + 500, now + 0.01);
-      oscillator.frequency.setValueAtTime(Math.random() * 2000 + 500, now + 0.02);
-      gainNode.gain.setValueAtTime(0.2, now);
-      gainNode.gain.setValueAtTime(0, now + 0.03);
-      gainNode.gain.setValueAtTime(0.1, now + 0.04);
-      gainNode.gain.setValueAtTime(0, now + 0.05);
-      break;
-  }
+     case 'toggle':
+       // Matrix-style activation sound
+       oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+       oscillator.frequency.exponentialRampToValueAtTime(2400, audioContext.currentTime + 0.2);
+       oscillator2.frequency.setValueAtTime(1600, audioContext.currentTime);
+       oscillator2.frequency.exponentialRampToValueAtTime(4800, audioContext.currentTime + 0.15);
+       gainNode.gain.setValueAtTime(0.25, audioContext.currentTime);
+       gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.25);
+
+       // Aggressive filter resonance
+       filter.Q.setValueAtTime(20, audioContext.currentTime);
+       filter.frequency.exponentialRampToValueAtTime(8000, audioContext.currentTime + 0.1);
+       break;
+
+     case 'data':
+       // Data stream processing sound
+       oscillator.type = 'triangle';
+       oscillator2.type = 'sine';
+       oscillator.frequency.setValueAtTime(1200, audioContext.currentTime);
+       oscillator2.frequency.setValueAtTime(2400, audioContext.currentTime);
+       gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+       gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.05);
+       break;
+
+     case 'glitch':
+       // Digital glitch effect
+       oscillator.type = 'sawtooth';
+       oscillator2.type = 'square';
+       const now = audioContext.currentTime;
+       oscillator.frequency.setValueAtTime(Math.random() * 2000 + 500, now);
+       oscillator.frequency.setValueAtTime(Math.random() * 2000 + 500, now + 0.01);
+       oscillator.frequency.setValueAtTime(Math.random() * 2000 + 500, now + 0.02);
+       gainNode.gain.setValueAtTime(0.2, now);
+       gainNode.gain.setValueAtTime(0, now + 0.03);
+       gainNode.gain.setValueAtTime(0.1, now + 0.04);
+       gainNode.gain.setValueAtTime(0, now + 0.05);
+       break;
+   }
 
   oscillator.start(audioContext.currentTime);
   oscillator2.start(audioContext.currentTime);

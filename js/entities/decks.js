@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+import { playSound } from '../audio.js';
 
 let scene, font;
 let deckAreas = [];
@@ -10,49 +11,49 @@ const deckData = [
     id: 'techshaman',
     title: 'TECHSHAMAN',
     description: 'A pioneer of a new era of human evolution. Believes that the current state of humanity is unsustainable, fragmented, and disconnected.',
-    position: { x: 0, y: 0, z: 0 },
+    position: { x: 0, y: 0, z: 0 }, // CENTER — your home base
     color: 0x00ffff,
-    size: { width: 15, height: 10 }
+    size: { width: 20, height: 14 }
   },
   {
     id: 'yexzu',
     title: 'YE X ZU',
     description: 'A vision of a different world, a world of abundance, harmony, and connection. A world where every human being is free, empowered, and valued.',
-    position: { x: 200, y: 0, z: 150 },
+    position: { x: 50, y: 0, z: 50 }, // NE — first outward step
     color: 0xff0080,
-    size: { width: 12, height: 7 }
+    size: { width: 15, height: 10 }
   },
   {
     id: '247420',
     title: '247420',
     description: 'A decentralized platform that allows anyone to create, share, and watch content of any kind, without censorship, surveillance, or interference.',
-    position: { x: -180, y: 0, z: 200 },
+    position: { x: -60, y: 0, z: 40 }, // NW — second step
     color: 0x00ff9d,
-    size: { width: 14, height: 9 }
+    size: { width: 15, height: 10 }
   },
   {
     id: 'schwepe',
     title: 'SCHWEPE',
     description: 'A skinless frog. The essence of schwepe speaks to the mind that drives ultimate realisation that jokes are funny.',
-    position: { x: 160, y: 0, z: -170 },
+    position: { x: -50, y: 0, z: -60 }, // SW — third step
     color: 0xffd700,
-    size: { width: 11, height: 8 }
+    size: { width: 14, height: 9 }
   },
   {
     id: 'blades',
     title: 'BLADES OF GRASS',
     description: 'An innovative project that aims to reconnect humanity with nature through technology.',
-    position: { x: -190, y: 0, z: -160 },
+    position: { x: 55, y: 0, z: -50 }, // SE — fourth step
     color: 0x4d00ff,
-    size: { width: 13, height: 8 }
+    size: { width: 14, height: 9 }
   },
   {
     id: 'accolades',
     title: 'ACCOLADES',
     description: 'The McAfee Job, MonaJob, MoralisJob, MetaGame - groundbreaking cybersecurity and blockchain initiatives',
-    position: { x: 250, y: 0, z: 220 },
+    position: { x: 0, y: 0, z: -100 }, // FAR SOUTH — final destination of the spiral
     color: 0xff6b6b,
-    size: { width: 16, height: 9 }
+    size: { width: 18, height: 11 }
   }
 ];
 
@@ -89,7 +90,8 @@ function createDeckArea(deck) {
     title: deck.title,
     description: deck.description,
     originalPosition: { ...deck.position },
-    color: deck.color
+    color: deck.color,
+    isNear: false
   };
 
   deckAreas.push(group);
@@ -180,9 +182,13 @@ function createTitleText(group, deck) {
   const titleGeometry = new TextGeometry(deck.title, {
     font: font,
     size: 1.2,
-    height: 0.05,
-    curveSegments: 6,
-    bevelEnabled: false
+    height: 0.2,
+    depth: 1, // Full 3D depth matching concept version
+    curveSegments: 12,
+    bevelEnabled: true,
+    bevelThickness: 0.05,
+    bevelSize: 0.03,
+    bevelSegments: 5
   });
 
   titleGeometry.computeBoundingBox();
@@ -350,6 +356,35 @@ export function animateDecks(time) {
 
 export function getDeckAreas() {
   return deckAreas;
+}
+
+// Called from main.js to check deck proximity
+export function checkDeckProximity(cameraPosition) {
+  deckAreas.forEach(deck => {
+    const distance = cameraPosition.distanceTo(deck.position);
+    const wasNear = deck.userData.isNear;
+    deck.userData.isNear = distance < 40;
+    
+    // Play ambient sound when first getting near
+    if (deck.userData.isNear && !wasNear) {
+      if (typeof playSound === 'function') {
+        playSound('hover');
+      }
+      // Speed up scanners briefly
+      deck.children.forEach(child => {
+        if (child.userData && child.userData.isScanner) {
+          child.userData.scanSpeed = 0.002; // Faster scan
+        }
+      });
+    } else if (!deck.userData.isNear && wasNear) {
+      // Reset scanner speed
+      deck.children.forEach(child => {
+        if (child.userData && child.userData.isScanner) {
+          child.userData.scanSpeed = 0.0005 + Math.random() * 0.0005;
+        }
+      });
+    }
+  });
 }
 
 function getRandomColor() {

@@ -9,38 +9,38 @@ let currentActiveText = null;
 const textData = [
   {
     text: 'TECHSHAMAN',
-    position: { x: -60, y: 5, z: -60 },
+    position: { x: 0, y: 8, z: 0 }, // Directly above spawn — first thing you see looking up
     color: 0x00ffff,
-    size: 1.0,
-    content: 'Pioneer of digital consciousness evolution. Believes humanity needs cyberpunk enhancement.'
+    size: 1.5,
+    content: 'You are the TechShaman.\nAwaken in the center of your digital realm.\nFly outward to explore your creations.'
   },
   {
     text: 'NEURAL MATRIX',
-    position: { x: 60, y: 5, z: -60 },
+    position: { x: -35, y: 6, z: -35 }, // NE middle ring
     color: 0xff00ff,
-    size: 0.8,
-    content: 'Status: ONLINE - Protocol: ACTIVE - Connection: ESTABLISHED - Dimension: CYBERPUNK'
+    size: 1.0,
+    content: 'The network is alive.\nSYSTEM: ONLINE\nPROTOCOL: ACTIVE\nCONNECTION: ESTABLISHED'
   },
   {
     text: 'DATA STREAMS',
-    position: { x: 0, y: 5, z: 80 },
+    position: { x: 35, y: 6, z: -35 }, // SE middle ring
     color: 0xff8800,
-    size: 0.8,
-    content: 'YE X ZU >> SYNCHRONIZED\n247420 >> DECENTRALIZED\nSCHWEPE >> CONSCIOUSNESS\nBLADES >> NATURE TECH\nACCOLADES >> BLOCKCHAIN'
+    size: 0.95,
+    content: 'Project data streams:\nYE X ZU — Synchronized\n247420 — Decentralized\nSCHWEPE — Consciousness\nBLADES — Nature Tech\nACCOLADES — Blockchain'
   },
   {
     text: 'CONTROLS',
-    position: { x: -80, y: 5, z: 40 },
+    position: { x: -55, y: 5, z: 20 }, // Far SW — only after exploring
     color: 0x00ff00,
-    size: 0.7,
-    content: 'WASD - Move Techshaman\nQ/E - Up/Down Movement\nMouse - Camera Control\nScroll - Zoom In/Out\nR-Click - Pan View'
+    size: 0.75,
+    content: 'WASD — Move\nQ/E — Up/Down\nMouse — Look\nScroll — Zoom\nR-Click — Pan\nCLICK — Focus\nDBL-CLICK — Teleport'
   },
   {
-    text: 'CYBERPUNK DECKS',
-    position: { x: 80, y: 5, z: 40 },
+    text: 'DECKS',
+    position: { x: 55, y: 5, z: 20 }, // Far SE
     color: 0xffff00,
-    size: 0.6,
-    content: 'YE X ZU - Synchronized Systems\n247420 - Decentralized Network\nSCHWEPE - Consciousness Interface\nBLADES OF GRASS - Nature Tech\nACCOLADES - Blockchain Integration'
+    size: 0.7,
+    content: '6 decks orbit the grid.\nVisit each to learn more.\nCollect 15 DATA CRYSTALS along the way.'
   }
 ];
 
@@ -66,9 +66,13 @@ function createInteractiveText(textData, index) {
   const textGeometry = new TextGeometry(textData.text, {
     font: font,
     size: textData.size,
-    height: 0.15,
-    curveSegments: 8,
-    bevelEnabled: false
+    depth: 1, // Full 3D depth like concept version
+    curveSegments: 12,
+    bevelEnabled: true,
+    bevelThickness: 0.1,
+    bevelSize: 0.05,
+    bevelOffset: 0,
+    bevelSegments: 5
   });
 
   textGeometry.computeBoundingBox();

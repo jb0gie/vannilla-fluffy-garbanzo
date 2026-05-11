@@ -25,8 +25,6 @@ const config = {
 export function initGrid(threeScene) {
   scene = threeScene;
   createMainGrid();
-  createSecondaryGrid();
-  createVerticalGrids();
   createBoundaryWalls();
   createLightCycleTrails();
   
@@ -54,19 +52,7 @@ function createMainGrid() {
 }
 
 function createSecondaryGrid() {
-  const secondaryGrid = new THREE.GridHelper(
-    config.gridSize * 1.1,
-    config.gridDivisions + 20,
-    config.colors.secondary,
-    0x662200
-  );
-  
-  secondaryGrid.material.transparent = true;
-  secondaryGrid.material.opacity = 0.3;
-  secondaryGrid.position.y = -0.5;
-  
-  scene.add(secondaryGrid);
-  gridSystem.secondaryGrid = secondaryGrid;
+  // Removed - duplicate grid causing visual overlap
 }
 
 function createVerticalGrids() {

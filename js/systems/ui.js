@@ -1,3 +1,5 @@
+import { getGameState } from './gameState.js';
+
 let stats = {
   fps: 60,
   frameCount: 0,
@@ -34,6 +36,9 @@ function setupStatsHUD() {
   uiElements.objectCount = document.getElementById('object-count');
   uiElements.interactionTime = document.getElementById('interaction-time');
   uiElements.clickCount = document.getElementById('click-count');
+  uiElements.scoreCount = document.getElementById('score-count');
+  uiElements.crystalCount = document.getElementById('crystal-count');
+  uiElements.deckCount = document.getElementById('deck-count');
 }
 
 function setupInfoPanels() {
@@ -84,10 +89,31 @@ export function updateStats(cameraController, scene) {
   if (uiElements.clickCount) {
     uiElements.clickCount.textContent = stats.clickCount;
   }
+  
+  // Update game state stats
+  const gameState = getGameState();
+  if (gameState) {
+    const gameStats = gameState.getStats();
+    if (uiElements.scoreCount) {
+      uiElements.scoreCount.textContent = gameStats.score;
+    }
+    if (uiElements.crystalCount) {
+      uiElements.crystalCount.textContent = `${gameStats.itemsCollected}/15`;
+    }
+    if (uiElements.deckCount) {
+      uiElements.deckCount.textContent = `${gameStats.decksDiscovered}/6`;
+    }
+  }
 }
 
 export function incrementClickCount() {
   stats.clickCount++;
+  
+  // Also update game state
+  const gameState = getGameState();
+  if (gameState) {
+    gameState.incrementClicks();
+  }
 }
 
 export function showDeckInfo(deckData) {

@@ -8,8 +8,8 @@ function createControlHintsOverlay() {
   hintsContainer.id = 'control-hints';
   hintsContainer.style.cssText = `
     position: fixed;
-    bottom: 20px;
-    left: 20px;
+    bottom: 70px; /* above the button */
+    right: 20px; /* align to right side */
     background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(0,255,255,0.1));
     border: 2px solid var(--neon-cyan);
     border-radius: 8px;
@@ -22,6 +22,8 @@ function createControlHintsOverlay() {
     box-shadow: 0 0 20px rgba(0,255,255,0.3);
     max-width: 300px;
     transition: all 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
   `;
 
   hintsContainer.innerHTML = `
@@ -78,30 +80,30 @@ function createControlHintsOverlay() {
 
   document.body.appendChild(hintsContainer);
   
-  let isVisible = true;
-  const toggleButton = createToggleButton();
-  
-  function createToggleButton() {
-    const button = document.createElement('button');
-    button.id = 'toggle-hints';
-    button.innerHTML = '◈';
-    button.style.cssText = `
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink));
-      border: none;
-      color: black;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      z-index: 1001;
-      box-shadow: 0 0 15px rgba(0,255,255,0.5);
-      transition: all 0.3s ease;
-    `;
+   let isVisible = false; // hidden by default
+   const toggleButton = createToggleButton();
+   
+   function createToggleButton() {
+     const button = document.createElement('button');
+     button.id = 'toggle-hints';
+     button.innerHTML = '◈ CONTROLS';
+     button.style.cssText = `
+       position: fixed;
+       bottom: 20px;
+       right: 20px;
+       background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink));
+       border: none;
+       color: black;
+       padding: 12px 16px;
+       border-radius: 25px;
+       font-family: 'Courier New', monospace;
+       font-size: 12px;
+       font-weight: bold;
+       cursor: pointer;
+       z-index: 1001;
+       box-shadow: 0 0 15px rgba(0,255,255,0.5);
+       transition: all 0.3s ease;
+     `;
     
     button.addEventListener('click', () => {
       isVisible = !isVisible;
