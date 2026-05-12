@@ -143,6 +143,13 @@ function showUIElements() {
   const canvas = document.querySelector('#bg');
   if (canvas) canvas.style.display = 'block';
 
+  // Check localStorage for UI visibility preference
+  const uiVisible = localStorage.getItem('techshaman-ui-visible');
+  if (uiVisible === 'false') {
+    // User has hidden the interface; keep panels hidden
+    return;
+  }
+
   const elements = ['#stats-hud', '#left-panel', '#right-panel', '#top-panel'];
   elements.forEach(selector => {
     const element = document.querySelector(selector);

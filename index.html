@@ -514,8 +514,27 @@
                 max-width: 350px;
             "
         >
-            <div style="color: var(--tron-orange); margin-bottom: 15px; font-size: 18px;">
-                ◈ CYBERPUNK INTERFACE v2.0 ◈
+            <div style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 15px;
+            ">
+                <div style="color: var(--tron-orange); font-size: 18px;">
+                    ◈ CYBERPUNK INTERFACE v2.0 ◈
+                </div>
+                <button id="toggle-ui-btn" onclick="toggleUI()" style="
+                    background: transparent;
+                    border: 1px solid var(--neon-cyan);
+                    color: var(--neon-cyan);
+                    cursor: pointer;
+                    padding: 5px 12px;
+                    font-family: 'Courier New', monospace;
+                    font-size: 12px;
+                    transition: all 0.2s;
+                " onmouseover="this.style.background='rgba(0,255,255,0.2)'" onmouseout="this.style.background='transparent'">
+                    [H]IDE
+                </button>
             </div>
 
             <div style="background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent); height: 1px; margin: 10px 0;"></div>

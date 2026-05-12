@@ -74,8 +74,9 @@ async function initializeCore() {
 
 async function initializeSystems() {
   debugLog('🔧 Initializing systems...');
-   
+  
   initUI();
+  restoreUIVisibility(); // Restore UI visibility from localStorage
   initCamera(camera, renderer, handleCameraUpdate);
   cameraController = getCameraController();
    
@@ -157,6 +158,9 @@ function handleCameraUpdate(action, data) {
         cameraController.originalTarget = null;
       }
       break;
+    case 'toggle-ui':
+      toggleUI();
+      break;
     case 'move':
       if (assets.meshes.techshaman) {
         assets.meshes.techshaman.position.copy(data);
@@ -165,6 +169,74 @@ function handleCameraUpdate(action, data) {
       break;
   }
 }
+
+// UI visibility state with persistence
+let isInterfaceVisible = true;
+
+function toggleUI() {
+  isInterfaceVisible = !isInterfaceVisible;
+
+  // Stats HUD
+  const statsHud = document.getElementById('stats-hud');
+  if (statsHud) statsHud.style.display = isInterfaceVisible ? 'block' : 'none';
+
+  // Top panel
+  const topPanel = document.getElementById('top-panel');
+  if (topPanel) topPanel.style.display = isInterfaceVisible ? 'block' : 'none';
+
+  // Control hints (also set opacity for visibility)
+  const controlHints = document.getElementById('control-hints');
+  if (controlHints) {
+    controlHints.style.display = isInterfaceVisible ? 'block' : 'none';
+    controlHints.style.opacity = isInterfaceVisible ? '1' : '0';
+    controlHints.style.pointerEvents = isInterfaceVisible ? 'auto' : 'none';
+  }
+
+  // Cyberpunk info panels (text hover panels)
+  const panelsContainer = document.getElementById('cyberpunk-panels');
+  if (panelsContainer) panelsContainer.style.display = isInterfaceVisible ? 'block' : 'none';
+
+  // Update button text
+  const toggleBtn = document.getElementById('toggle-ui-btn');
+  if (toggleBtn) {
+    toggleBtn.textContent = isInterfaceVisible ? '[H]IDE' : '[H]SHOW';
+  }
+
+  // Save preference
+  localStorage.setItem('techshaman-ui-visible', isInterfaceVisible);
+
+  console.log(`🎛️ Interface ${isInterfaceVisible ? 'shown' : 'hidden'} (H to toggle)`);
+}
+
+// Restore UI visibility from localStorage
+function restoreUIVisibility() {
+  const saved = localStorage.getItem('techshaman-ui-visible');
+  if (saved !== null) {
+    isInterfaceVisible = saved === 'true';
+    if (!isInterfaceVisible) {
+      const statsHud = document.getElementById('stats-hud');
+      const topPanel = document.getElementById('top-panel');
+      const controlHints = document.getElementById('control-hints');
+      const panelsContainer = document.getElementById('cyberpunk-panels');
+      if (statsHud) statsHud.style.display = 'none';
+      if (topPanel) topPanel.style.display = 'none';
+      if (controlHints) {
+        controlHints.style.display = 'none';
+        controlHints.style.opacity = '0';
+        controlHints.style.pointerEvents = 'none';
+      }
+      if (panelsContainer) panelsContainer.style.display = 'none';
+    }
+    // Update button text to match state
+    const toggleBtn = document.getElementById('toggle-ui-btn');
+    if (toggleBtn) {
+      toggleBtn.textContent = isInterfaceVisible ? '[H]IDE' : '[H]SHOW';
+    }
+  }
+}
+
+// Expose globally for button click
+window.toggleUI = toggleUI;
 
 function setupEventListeners() {
   window.addEventListener('resize', onWindowResize, false);
@@ -191,42 +263,42 @@ function onPointerMove(event) {
     raycaster.setFromCamera(pointer, camera);
     const intersects = raycaster.intersectObjects(scene.children, true);
     
-     scene.traverse((child) => {
-       if (child.isMesh && child.material && !child.material.isSpriteMaterial) {
-         if (Array.isArray(child.material)) {
-           child.material.forEach(mat => {
-             if (mat.emissive) {
-               mat.emissive = new Color(0x000000);
-               mat.emissiveIntensity = 0;
-             }
-           });
-         } else {
-           if (child.material.emissive) {
-             child.material.emissive = new Color(0x000000);
-             child.material.emissiveIntensity = 0;
-           }
-         }
-       }
-     });
+    scene.traverse((child) => {
+      if (child.isMesh && child.material && !child.material.isSpriteMaterial) {
+        if (Array.isArray(child.material)) {
+          child.material.forEach(mat => {
+            if (mat.emissive) {
+              mat.emissive = new Color(0x000000);
+              mat.emissiveIntensity = 0;
+            }
+          });
+        } else {
+          if (child.material.emissive) {
+            child.material.emissive = new Color(0x000000);
+            child.material.emissiveIntensity = 0;
+          }
+        }
+      }
+    });
     
-     if (intersects.length > 0) {
-       const intersection = intersects[0];
-       if (intersection.object.material && !intersection.object.material.isSpriteMaterial) {
-         if (Array.isArray(intersection.object.material)) {
-           intersection.object.material.forEach(mat => {
-             if (mat.emissive) {
-               mat.emissive = new Color(0xff00ff);
-               mat.emissiveIntensity = 0.5;
-             }
-           });
-         } else {
-           if (intersection.object.material.emissive) {
-             intersection.object.material.emissive = new Color(0xff00ff);
-             intersection.object.material.emissiveIntensity = 0.5;
-           }
-         }
-       }
-     }
+    if (intersects.length > 0) {
+      const intersection = intersects[0];
+      if (intersection.object.material && !intersection.object.material.isSpriteMaterial) {
+        if (Array.isArray(intersection.object.material)) {
+          intersection.object.material.forEach(mat => {
+            if (mat.emissive) {
+              mat.emissive = new Color(0x00ffff);
+              mat.emissiveIntensity = 0.5;
+            }
+          });
+        } else {
+          if (intersection.object.material.emissive) {
+            intersection.object.material.emissive = new Color(0x00ffff);
+            intersection.object.material.emissiveIntensity = 0.5;
+          }
+        }
+      }
+    }
   } catch (error) {
     console.error('Pointer move error:', error);
   }
@@ -294,7 +366,7 @@ function onClick(event) {
       }
       
       if (clickedText) {
-        console.log('📝 Text clicked:', clickedText.userData.title);
+        console.log('📝 Text clicked:', clickedText.userData.title, 'at position:', clickedText.position.x.toFixed(1), clickedText.position.y.toFixed(1), clickedText.position.z.toFixed(1));
         focusCameraOnText(clickedText);
         playSound('data');
         return;
@@ -345,87 +417,80 @@ function onClick(event) {
 function focusCameraOnDeck(deck) {
   const deckPos = deck.position;
   const focusDistance = config.deckFocusDistance;
-  
+
   const targetPos = new Vector3(deckPos.x, deckPos.y + 2, deckPos.z);
-  
+
   if (!cameraController.originalTarget) {
     cameraController.originalTarget = cameraController.target.clone();
     cameraController.originalDistance = cameraController.distance;
   }
-  
+
   if (typeof TWEEN !== 'undefined') {
     TWEEN.removeAll();
   }
-  
+
+  // Compute azimuth from deck position for consistent framing
+  const azimuth = Math.atan2(deckPos.z, deckPos.x) + Math.PI;
+  const elevation = Math.PI / 6;
+
   if (typeof TWEEN !== 'undefined') {
     new TWEEN.Tween(cameraController.target)
       .to({ x: targetPos.x, y: targetPos.y, z: targetPos.z }, config.focusTransitionDuration)
       .easing(TWEEN.Easing.Cubic.InOut)
-      .onUpdate(() => {
-        updateCameraPosition();
-      })
+      .onUpdate(updateCameraPosition)
       .start();
-    
+
     new TWEEN.Tween(cameraController)
-      .to({ distance: focusDistance }, config.focusTransitionDuration)
+      .to({ distance: focusDistance, azimuth: azimuth, elevation: elevation }, config.focusTransitionDuration)
       .easing(TWEEN.Easing.Cubic.InOut)
-      .onUpdate(() => {
-        updateCameraPosition();
+      .onUpdate(updateCameraPosition)
+      .onComplete(() => {
+        camera.lookAt(targetPos);
       })
       .start();
-    
-    new TWEEN.Tween(cameraController)
-      .to({ azimuth: Math.PI / 4 }, config.focusTransitionDuration)
-      .easing(TWEEN.Easing.Cubic.InOut)
-      .onUpdate(() => {
-        updateCameraPosition();
-      })
-      .start();
-    
+
     triggerGlitchEffect();
   }
 }
 
 function focusCameraOnText(textSection) {
   const textPos = textSection.position;
-  const focusDistance = config.deckFocusDistance * 0.8; // Slightly closer for text
-  
-  const targetPos = new Vector3(textPos.x, textPos.y, textPos.z);
-  
+  const focusDistance = config.deckFocusDistance * 0.75;
+
+  const targetPos = new Vector3(textPos.x, textPos.y + 2, textPos.z);
+
   if (!cameraController.originalTarget) {
     cameraController.originalTarget = cameraController.target.clone();
     cameraController.originalDistance = cameraController.distance;
   }
-  
+
   if (typeof TWEEN !== 'undefined') {
     TWEEN.removeAll();
   }
-  
+
+  // Compute azimuth so camera faces the text from outside (away from origin)
+  // Direction from origin to text → camera approaches from that direction
+  const dx = textPos.x;
+  const dz = textPos.z;
+  const azimuth = Math.atan2(dz, dx) + Math.PI;
+  const elevation = Math.PI / 6;
+
   if (typeof TWEEN !== 'undefined') {
     new TWEEN.Tween(cameraController.target)
-      .to({ x: targetPos.x, y: targetPos.y + 2, z: targetPos.z }, config.focusTransitionDuration)
+      .to({ x: targetPos.x, y: targetPos.y, z: targetPos.z }, config.focusTransitionDuration)
       .easing(TWEEN.Easing.Cubic.InOut)
-      .onUpdate(() => {
-        updateCameraPosition();
-      })
+      .onUpdate(updateCameraPosition)
       .start();
-    
+
     new TWEEN.Tween(cameraController)
-      .to({ distance: focusDistance }, config.focusTransitionDuration)
+      .to({ distance: focusDistance, azimuth: azimuth, elevation: elevation }, config.focusTransitionDuration)
       .easing(TWEEN.Easing.Cubic.InOut)
-      .onUpdate(() => {
-        updateCameraPosition();
+      .onUpdate(updateCameraPosition)
+      .onComplete(() => {
+        camera.lookAt(targetPos);
       })
       .start();
-    
-    new TWEEN.Tween(cameraController)
-      .to({ azimuth: Math.PI / 4 }, config.focusTransitionDuration)
-      .easing(TWEEN.Easing.Cubic.InOut)
-      .onUpdate(() => {
-        updateCameraPosition();
-      })
-      .start();
-    
+
     triggerGlitchEffect();
   }
 }

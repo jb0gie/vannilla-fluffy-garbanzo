@@ -4,7 +4,6 @@ import { playSound } from '../audio.js';
 
 let scene, font;
 let deckAreas = [];
-let holoFields = [];
 
 const deckData = [
   {
@@ -76,14 +75,11 @@ export function initDecks(threeScene, loadedFont) {
 
 function createDeckArea(deck) {
   const group = new THREE.Group();
+  group.position.set(deck.position.x, deck.position.y, deck.position.z);
 
-  createPlatform(group, deck);
-  createDataColumns(group, deck);
-  createHolographicBorder(group, deck);
-  createScannerLines(group, deck);
-  createTitleText(group, deck);
+  createMonolith(group, deck);
+  createDeckTitle(group, deck);
   createDeckParticles(deck.position, deck.color, deck.size);
-  createHoloFields(deck.position, deck.color);
 
   group.userData = {
     id: deck.id,
@@ -98,97 +94,56 @@ function createDeckArea(deck) {
   scene.add(group);
 }
 
-function createPlatform(group, deck) {
+function createMonolith(group, deck) {
+  // Simple monolithic platform — clean cuboid
   const platformGeometry = new THREE.BoxGeometry(deck.size.width, 0.5, deck.size.height);
   const platformMaterial = new THREE.MeshPhongMaterial({
-    color: deck.color,
+    color: 0x111111,
     emissive: deck.color,
-    emissiveIntensity: 0.4,
+    emissiveIntensity: 0.2,
+    shininess: 80,
     transparent: true,
-    opacity: 0.8,
-    shininess: 100
+    opacity: 0.9
   });
-  
+
   const platform = new THREE.Mesh(platformGeometry, platformMaterial);
-  platform.position.set(deck.position.x, 0.25, deck.position.z);
+  platform.position.set(0, 0.25, 0);
+  platform.receiveShadow = true;
+  platform.userData.isPlatform = true;
   group.add(platform);
-}
 
-function createDataColumns(group, deck) {
-  const columnCount = 8;
-  const columnRadius = deck.size.width / 2 + 5;
-
-  for (let i = 0; i < columnCount; i++) {
-    const angle = (i / columnCount) * Math.PI * 2;
-    const columnX = deck.position.x + Math.cos(angle) * columnRadius;
-    const columnZ = deck.position.z + Math.sin(angle) * columnRadius;
-
-    const columnGeometry = new THREE.CylinderGeometry(0.15, 0.15, 3, 6, 1, true);
-    const columnMaterial = new THREE.MeshBasicMaterial({
-      color: deck.color,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.4
-    });
-    
-    const column = new THREE.Mesh(columnGeometry, columnMaterial);
-    column.position.set(columnX, 1.5, columnZ);
-    column.userData.isDataStream = true;
-     column.userData.dataSpeed = 0.0005 + Math.random() * 0.0005;
-    
-    group.add(column);
-  }
-}
-
-function createHolographicBorder(group, deck) {
-  const borderGeometry = new THREE.BoxGeometry(deck.size.width + 2, 1, deck.size.height + 2);
-  const borderMaterial = new THREE.MeshBasicMaterial({
+  // Subtle neon edge outline
+  const edgeGeometry = new THREE.BoxGeometry(deck.size.width + 0.2, 0.6, deck.size.height + 0.2);
+  const edgeMaterial = new THREE.MeshBasicMaterial({
     color: deck.color,
     wireframe: true,
     transparent: true,
-    opacity: 0.6
+    opacity: 0.2
   });
-  
-  const border = new THREE.Mesh(borderGeometry, borderMaterial);
-  border.position.set(deck.position.x, 0.5, deck.position.z);
-  border.userData.isHolographicBorder = true;
-  group.add(border);
+
+  const edges = new THREE.Mesh(edgeGeometry, edgeMaterial);
+  edges.position.set(0, 0.3, 0);
+  group.add(edges);
+
+  // Minimal ambient glow
+  const glowLight = new THREE.PointLight(deck.color, 0.3, 20);
+  glowLight.position.set(0, 5, 0);
+  group.add(glowLight);
 }
 
-function createScannerLines(group, deck) {
-  for (let i = 0; i < 3; i++) {
-    const scannerGeometry = new THREE.RingGeometry(deck.size.width / 2 - 2, deck.size.width / 2 + 2, 32);
-    const scannerMaterial = new THREE.MeshBasicMaterial({
-      color: deck.color,
-      transparent: true,
-      opacity: 0.8,
-      side: THREE.DoubleSide
-    });
-    
-    const scanner = new THREE.Mesh(scannerGeometry, scannerMaterial);
-    scanner.position.set(deck.position.x, 1 + i * 0.5, deck.position.z);
-    scanner.rotation.x = Math.PI / 2;
-     scanner.userData.isScanner = true;
-     scanner.userData.scanSpeed = 0.0005 + i * 0.0002;
-     scanner.userData.scanDirection = i % 2 === 0 ? 1 : -1;
-    
-    group.add(scanner);
-  }
-}
-
-function createTitleText(group, deck) {
+function createDeckTitle(group, deck) {
   if (!font) return;
 
   const titleGeometry = new TextGeometry(deck.title, {
     font: font,
-    size: 1.2,
+    size: 1.0,
     height: 0.2,
-    depth: 1, // Full 3D depth matching concept version
-    curveSegments: 12,
+    depth: 0.5,
+    curveSegments: 8,
     bevelEnabled: true,
-    bevelThickness: 0.05,
-    bevelSize: 0.03,
-    bevelSegments: 5
+    bevelThickness: 0.03,
+    bevelSize: 0.02,
+    bevelSegments: 3
   });
 
   titleGeometry.computeBoundingBox();
@@ -198,59 +153,36 @@ function createTitleText(group, deck) {
   const titleMaterial = new THREE.MeshPhongMaterial({
     color: deck.color,
     emissive: deck.color,
-    emissiveIntensity: 0.5,
-    specular: 0xffffff,
-    shininess: 100
+    emissiveIntensity: 0.3,
+    shininess: 80
   });
-  
+
   const titleMesh = new THREE.Mesh(titleGeometry, titleMaterial);
-  titleMesh.position.set(deck.position.x, 3, deck.position.z);
+  titleMesh.position.set(0, 4, 0);
   titleMesh.userData.isTitle = true;
   group.add(titleMesh);
-
-  const outlineMaterial = new THREE.MeshBasicMaterial({
-    color: 0xffffff,
-    transparent: true,
-    opacity: 0.3,
-    side: THREE.BackSide
-  });
-  
-  const outlineMesh = new THREE.Mesh(titleGeometry.clone(), outlineMaterial);
-  outlineMesh.position.copy(titleMesh.position);
-  outlineMesh.scale.setScalar(1.1);
-  group.add(outlineMesh);
 }
 
 function createDeckParticles(position, color, size) {
-  const particleCount = 12;
+  const particleCount = 4; // Reduced from 8 for less busy
   const particleGeometry = new THREE.BufferGeometry();
   const positions = new Float32Array(particleCount * 3);
   const colors = new Float32Array(particleCount * 3);
   const sizes = new Float32Array(particleCount);
-  const velocities = [];
 
-  const neonColor = new THREE.Color(color);
+  const radius = (size.width / 2) + 1.5;
 
   for (let i = 0; i < particleCount; i++) {
-    const angle = (i / particleCount) * Math.PI * 6 + Math.random() * Math.PI;
-    const radius = 5 + Math.random() * size.width / 2;
-
+    const angle = (i / particleCount) * Math.PI * 2;
     positions[i * 3] = position.x + Math.cos(angle) * radius;
-    positions[i * 3 + 1] = Math.random() * 8 + 2;
+    positions[i * 3 + 1] = 2.5;
     positions[i * 3 + 2] = position.z + Math.sin(angle) * radius;
 
-    const colorVariant = i % 3 === 0 ? neonColor : new THREE.Color(getRandomColor());
-    colors[i * 3] = colorVariant.r;
-    colors[i * 3 + 1] = colorVariant.g;
-    colors[i * 3 + 2] = colorVariant.b;
+    colors[i * 3] = color.r / 255;
+    colors[i * 3 + 1] = color.g / 255;
+    colors[i * 3 + 2] = color.b / 255;
 
-    sizes[i] = Math.random() * 0.5 + 0.2;
-
-     velocities.push({
-       x: (Math.random() - 0.5) * 0.005,
-       y: (Math.random() - 0.5) * 0.005,
-       z: (Math.random() - 0.5) * 0.005
-     });
+    sizes[i] = 0.1; // Reduced from 0.15
   }
 
   particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
@@ -259,98 +191,39 @@ function createDeckParticles(position, color, size) {
 
   const particleMaterial = new THREE.PointsMaterial({
     vertexColors: true,
-    size: 0.3,
+    size: 0.1,
     transparent: true,
-    opacity: 0.8,
+    opacity: 0.4, // Reduced from 0.7
     blending: THREE.AdditiveBlending,
     sizeAttenuation: true
   });
 
   const particles = new THREE.Points(particleGeometry, particleMaterial);
   particles.userData.isDeckParticle = true;
-  particles.userData.originPosition = new THREE.Vector3(position.x, position.y, position.z);
-  particles.userData.velocities = velocities;
+  particles.userData.originPosition = new THREE.Vector3(position.x, 2.5, position.z);
+  particles.userData.orbitAngle = 0;
   scene.add(particles);
-}
-
-function createHoloFields(position, color) {
-  const fieldCount = 4;
-
-  for (let i = 0; i < fieldCount; i++) {
-    const angle = (i / fieldCount) * Math.PI * 2;
-    const fieldX = position.x + Math.cos(angle) * 8;
-    const fieldZ = position.z + Math.sin(angle) * 8;
-
-    const fieldGeometry = new THREE.PlaneGeometry(6, 8);
-    const fieldMaterial = new THREE.MeshBasicMaterial({
-      color: color,
-      transparent: true,
-      opacity: 0.3,
-      side: THREE.DoubleSide,
-      wireframe: true
-    });
-    
-    const field = new THREE.Mesh(fieldGeometry, fieldMaterial);
-    field.position.set(fieldX, 4, fieldZ);
-    field.userData.isHoloField = true;
-    field.userData.oscillationSpeed = 0.001 + Math.random() * 0.002;
-    field.userData.phase = Math.random() * Math.PI * 2;
-    field.userData.originalPosition = { x: fieldX, y: 4, z: fieldZ };
-    
-    scene.add(field);
-    holoFields.push(field);
-  }
 }
 
 export function animateDecks(time) {
   deckAreas.forEach((deck, index) => {
-    deck.children.forEach((child, childIndex) => {
-      if (child.userData.isDataStream) {
-        child.rotation.y = time * child.userData.dataSpeed;
-        const pulse = Math.sin(time * 0.003 + childIndex) * 0.3 + 0.7;
-        child.material.opacity = pulse * 0.8;
-
-        const offset = (time * child.userData.dataSpeed * 100) % 1;
-        child.material.opacity = pulse * (1 - Math.abs(offset - 0.5) * 2);
-      }
-
-      if (child.userData.isHolographicBorder) {
-        child.rotation.y = Math.sin(time * 0.0005 + index) * 0.05;
-        child.scale.setScalar(1 + Math.sin(time * 0.002 + index) * 0.05);
-        const glow = Math.sin(time * 0.003 + index) * 0.3 + 0.7;
-        child.material.opacity = glow * 0.8;
-      }
-
-       if (child.userData.isScanner) {
-         const scanPhase = time * child.userData.scanSpeed * 0.2;
-         const scanPosition = Math.abs(Math.sin(scanPhase)) * 4;
-         child.position.y = 1 + scanPosition;
-         child.material.opacity = 0.4 + Math.sin(scanPhase) * 0.2;
-       }
-
+    deck.children.forEach((child) => {
       if (child.userData.isTitle) {
-        const titleFloat = Math.sin(time * 0.001 + index * 2) * 0.3;
-        const titleGlow = Math.sin(time * 0.003 + index * 3) * 0.2 + 0.8;
-        child.position.y = deck.userData.originalPosition.y + 3 + titleFloat;
-        child.material.emissiveIntensity = titleGlow;
+        // Gentle vertical float only
+        const floatOffset = Math.sin(time * 0.001 + index * 2) * 0.2;
+        child.position.y = 4 + floatOffset;
+
+        // Restore original deck color and glow pulse
+        child.material.emissive.set(deck.userData.color);
+        const glow = 0.25 + Math.sin(time * 0.002 + index) * 0.08;
+        child.material.emissiveIntensity = glow;
+      }
+      // Restore platform emissive to prevent blackout from pointer move
+      if (child.userData.isPlatform) {
+        child.material.emissive.set(deck.userData.color);
+        child.material.emissiveIntensity = 0.2;
       }
     });
-  });
-
-  holoFields.forEach((field) => {
-    if (field.userData.isHoloField) {
-      const oscillate = Math.sin(time * field.userData.oscillationSpeed + field.userData.phase) * 0.5 + 0.5;
-       field.position.y = field.userData.originalPosition.y + oscillate * 0.5;
-      field.rotation.y = time * 0.0005 + field.userData.phase;
-      field.material.opacity = 0.2 + oscillate * 0.3;
-
-      if (Math.random() > 0.98) {
-        field.material.opacity = 0.8;
-        setTimeout(() => {
-          if (field.material) field.material.opacity = 0.2 + oscillate * 0.3;
-        }, 50);
-      }
-    }
   });
 }
 

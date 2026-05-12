@@ -57,15 +57,15 @@ function createCollectibles() {
 function createCrystalAtPosition(index, pos) {
   const color = crystalColors[index % crystalColors.length];
   const size = crystalSizes[index % crystalSizes.length];
-  
+
   const group = new THREE.Group();
 
-  // Inner crystal
+  // Inner crystal — simplified material
   const crystalGeometry = new THREE.OctahedronGeometry(size, 0);
   const crystalMaterial = new THREE.MeshPhongMaterial({
     color: color,
     emissive: color,
-    emissiveIntensity: 0.6,
+    emissiveIntensity: 0.4, // Reduced from 0.6
     transparent: true,
     opacity: 0.9,
     shininess: 100
@@ -74,32 +74,32 @@ function createCrystalAtPosition(index, pos) {
   const crystal = new THREE.Mesh(crystalGeometry, crystalMaterial);
   group.add(crystal);
 
-  // Outer wireframe shell
+  // Outer wireframe shell — more subtle
   const shellGeometry = new THREE.DodecahedronGeometry(size * 1.5, 0);
   const shellMaterial = new THREE.MeshBasicMaterial({
     color: color,
     wireframe: true,
     transparent: true,
-    opacity: 0.4
+    opacity: 0.2 // Reduced from 0.4
   });
 
   const shell = new THREE.Mesh(shellGeometry, shellMaterial);
   group.add(shell);
 
-  // Orbiting ring
-  const ringGeometry = new THREE.TorusGeometry(size * 2, 0.02, 8, 32);
+  // Orbiting ring — fewer segments for cleaner look
+  const ringGeometry = new THREE.TorusGeometry(size * 2, 0.02, 6, 16); // Reduced from (8, 32)
   const ringMaterial = new THREE.MeshBasicMaterial({
     color: color,
     transparent: true,
-    opacity: 0.6
+    opacity: 0.5
   });
 
   const ring = new THREE.Mesh(ringGeometry, ringMaterial);
   ring.rotation.x = Math.PI / 2;
   group.add(ring);
 
-  // Glow light
-  const glowLight = new THREE.PointLight(color, 0.5, 15);
+  // Glow light — dimmer
+  const glowLight = new THREE.PointLight(color, 0.3, 10); // Reduced intensity and range
   glowLight.position.y = 2;
   group.add(glowLight);
 
@@ -142,27 +142,23 @@ export function animateCollectibles(time, cameraPosition) {
     // Proximity glow effect
     if (cameraPosition) {
       const distance = cameraPosition.distanceTo(crystal.position);
-      const proximity = Math.max(0, 1 - distance / 30); // 0-1 based on 30 unit range
-      
-      // Increase emissive intensity when player is near
+      const proximity = Math.max(0, 1 - distance / 30);
+
       if (crystal.children[0] && crystal.children[0].material) {
-        const baseIntensity = 0.6;
-        const boostedIntensity = baseIntensity + proximity * 0.8;
-        const pulse = 0.5 + Math.sin(time * 0.003 + data.floatOffset) * 0.3;
-        crystal.children[0].material.emissiveIntensity = baseIntensity + pulse * 0.3 + proximity * 0.5;
+        const baseIntensity = 0.4;
+        const pulse = 0.3 + Math.sin(time * 0.003 + data.floatOffset) * 0.2;
+        crystal.children[0].material.emissiveIntensity = baseIntensity + pulse * 0.3 + proximity * 0.3; // Reduced boost
       }
-      
-      // Play subtle hum when very close
+
       if (proximity > 0.8 && Math.random() < 0.001) {
         if (typeof playSound === 'function') {
           playSound('hover');
         }
       }
     } else {
-      // Default pulse
-      const pulse = 0.5 + Math.sin(time * 0.003 + data.floatOffset) * 0.3;
+      const pulse = 0.3 + Math.sin(time * 0.003 + data.floatOffset) * 0.2;
       if (crystal.children[0] && crystal.children[0].material) {
-        crystal.children[0].material.emissiveIntensity = 0.6 + pulse * 0.3;
+        crystal.children[0].material.emissiveIntensity = 0.4 + pulse * 0.3; // Reduced base
       }
     }
   });
@@ -214,27 +210,27 @@ export function collectCrystal(crystal) {
 
 function createCollectionExplosion(position, color) {
   // Create burst of sparkle particles
-  const particleCount = 30;
+  const particleCount = 15; // Reduced from 30
   const positions = new Float32Array(particleCount * 3);
   const colors = new Float32Array(particleCount * 3);
   const sizes = new Float32Array(particleCount);
   const velocities = [];
-  
+
   for (let i = 0; i < particleCount; i++) {
     positions[i * 3] = position.x;
     positions[i * 3 + 1] = position.y;
     positions[i * 3 + 2] = position.z;
-    
+
     const speed = Math.random() * 0.15 + 0.05;
     const theta = Math.random() * Math.PI * 2;
     const phi = Math.random() * Math.PI;
-    
+
     velocities.push(new THREE.Vector3(
       speed * Math.sin(phi) * Math.cos(theta),
       speed * Math.sin(phi) * Math.sin(theta),
       speed * Math.cos(phi)
     ));
-    
+
     colors[i * 3] = color.r;
     colors[i * 3 + 1] = color.g;
     colors[i * 3 + 2] = color.b;

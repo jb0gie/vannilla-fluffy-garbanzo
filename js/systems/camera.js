@@ -98,7 +98,7 @@ function onMouseMove(event) {
 
 function onKeyDown(event) {
   cameraController.keys[event.code] = true;
-  
+
   switch (event.code) {
     case 'Space':
       event.preventDefault();
@@ -108,6 +108,10 @@ function onKeyDown(event) {
       event.preventDefault();
       resetCamera();
       if (onUpdateCallback) onUpdateCallback('reset');
+      break;
+    case 'KeyH':
+      event.preventDefault();
+      if (onUpdateCallback) onUpdateCallback('toggle-ui');
       break;
   }
 }

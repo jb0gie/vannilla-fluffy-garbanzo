@@ -66,13 +66,13 @@ function createInteractiveText(textData, index) {
   const textGeometry = new TextGeometry(textData.text, {
     font: font,
     size: textData.size,
-    depth: 1, // Full 3D depth like concept version
-    curveSegments: 12,
+    depth: 1,
+    curveSegments: 8, // Reduced from 12 for cleaner geometry
     bevelEnabled: true,
     bevelThickness: 0.1,
     bevelSize: 0.05,
     bevelOffset: 0,
-    bevelSegments: 5
+    bevelSegments: 3 // Reduced from 5 for simpler bevel
   });
 
   textGeometry.computeBoundingBox();
@@ -82,7 +82,7 @@ function createInteractiveText(textData, index) {
   const textMaterial = new THREE.MeshPhongMaterial({
     color: textData.color,
     emissive: textData.color,
-    emissiveIntensity: 0.5,
+    emissiveIntensity: 0.3, // Reduced from 0.5 for less glow
     shininess: 100,
     transparent: true,
     opacity: 0.9
@@ -109,7 +109,7 @@ function createInteractiveText(textData, index) {
     floatSpeed: 0.001 + Math.random() * 0.001
   };
 
-  const pulseLight = new THREE.PointLight(textData.color, 0.5, 50);
+  const pulseLight = new THREE.PointLight(textData.color, 0.2, 40); // Reduced intensity and range
   pulseLight.position.set(0, 10, 0);
   textGroup.add(pulseLight);
 
@@ -118,15 +118,8 @@ function createInteractiveText(textData, index) {
 }
 
 function createFallbackTextSections() {
-  const fallbackData = [
-    { text: 'TECHSHAMAN', position: { x: -60, y: 5, z: -60 }, color: 0x00ffff },
-    { text: 'NEURAL MATRIX', position: { x: 60, y: 5, z: -60 }, color: 0xff00ff },
-    { text: 'DATA STREAMS', position: { x: 0, y: 5, z: 80 }, color: 0xff8800 },
-    { text: 'CONTROLS', position: { x: -80, y: 5, z: 40 }, color: 0x00ff00 },
-    { text: 'CYBERPUNK DECKS', position: { x: 80, y: 5, z: 40 }, color: 0xffff00 }
-  ];
-
-  fallbackData.forEach(data => {
+  // Use the same textData positions as the real 3D text would
+  textData.forEach(data => {
     const geometry = new THREE.BoxGeometry(30, 10, 30);
     const material = new THREE.MeshPhongMaterial({
       color: data.color,
@@ -135,23 +128,23 @@ function createFallbackTextSections() {
       transparent: true,
       opacity: 0.7
     });
-    
+
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(data.position.x, data.position.y, data.position.z);
     mesh.userData = {
       isTextSection: true,
       title: data.text,
+      content: data.content,
+      color: data.color,
       originalY: data.position.y,
       floatOffset: Math.random() * Math.PI * 2,
       floatSpeed: 0.001 + Math.random() * 0.001,
-      hoverHeight: 3,
+      hoverHeight: 0.5,
       isHovered: false,
       isActive: false,
-      rotationSpeed: 0.001,
-      color: data.color,
-      content: ''
+      rotationSpeed: 0.001
     };
-    
+
     scene.add(mesh);
     textSections.push(mesh);
   });
@@ -185,13 +178,15 @@ export function animateTextSections(time, techshamanPosition) {
       textSection.rotation.y += textSection.userData.rotationSpeed * 5;
 
       if (textSection.children[0] && textSection.children[0].material) {
-        textSection.children[0].material.emissiveIntensity = 0.8;
+        textSection.children[0].material.emissive.set(textSection.userData.color);
+        textSection.children[0].material.emissiveIntensity = 0.5;
       }
     } else {
       textSection.rotation.y += textSection.userData.rotationSpeed;
 
       if (textSection.children[0] && textSection.children[0].material) {
-        textSection.children[0].material.emissiveIntensity = 0.5;
+        textSection.children[0].material.emissive.set(textSection.userData.color);
+        textSection.children[0].material.emissiveIntensity = 0.3;
       }
     }
   });
