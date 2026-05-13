@@ -10,9 +10,9 @@ let gridSystem = {
 };
 
 const config = {
-  gridSize: 300,
-  gridDivisions: 150,
-  boundary: 120,
+  gridSize: 140,
+  gridDivisions: 70,
+  boundary: 70,
   wallHeight: 50,
   lightCycleCount: 5,
   colors: {

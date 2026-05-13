@@ -4,7 +4,7 @@ import { initScene, onWindowResize, getScene, getCamera, getRenderer, getClock }
 import { initAssets, loadAllAssets, getAssets } from './systems/assets.js';
 import { initGrid, animateGrid, getGridSystem } from './entities/grid.js';
 import { initDecks, animateDecks, getDeckAreas, checkDeckProximity } from './entities/decks.js';
-import { initCamera, getCameraController, getTargetPosition, updateCameraPosition } from './systems/camera.js';
+import { initCamera, getCameraController, getTargetPosition, updateCameraPosition, setTechshamanFacing } from './systems/camera.js';
 import { initParticles, animateParticles, animateDeckParticles, createBurst, getLights } from './systems/particles.js';
 import { initText, animateTextSections, getTextSections } from './entities/text.js';
 import { initUI, debugLog, updateStats, incrementClickCount, showDeckInfo } from './systems/ui.js';
@@ -148,15 +148,26 @@ async function initializeEntities() {
 function handleCameraUpdate(action, data) {
   switch (action) {
     case 'space':
-      playSound('toggle');
-      createBurst(getTargetPosition());
+      // Particle burst handled by keydown
       break;
     case 'reset':
-      playSound('reset');
-      // Clear focus memory so new focus captures fresh state
-      if (cameraController) {
-        cameraController.originalTarget = null;
+      cameraController.isFocusActive = false;
+      resetCamera();
+      break;
+    case 'toggle-ui':
+      toggleUI();
+      break;
+    case 'move':
+      cameraController.isFocusActive = false;
+      if (assets.meshes.techshaman) {
+        assets.meshes.techshaman.position.copy(data);
+        assets.meshes.techshaman.position.y = -5;
+        // Rotate TechShaman to face movement direction (forward)
+        assets.meshes.techshaman.rotation.y = cameraController.techshamanAzimuth;
       }
+      break;
+  }
+}
       break;
     case 'toggle-ui':
       toggleUI();
@@ -415,6 +426,8 @@ function onClick(event) {
 }
 
 function focusCameraOnDeck(deck) {
+  cameraController.isFocusActive = true;
+
   const deckPos = deck.position;
   const focusDistance = config.deckFocusDistance;
 
@@ -429,7 +442,6 @@ function focusCameraOnDeck(deck) {
     TWEEN.removeAll();
   }
 
-  // Compute azimuth from deck position for consistent framing
   const azimuth = Math.atan2(deckPos.z, deckPos.x) + Math.PI;
   const elevation = Math.PI / 6;
 
@@ -446,6 +458,7 @@ function focusCameraOnDeck(deck) {
       .onUpdate(updateCameraPosition)
       .onComplete(() => {
         camera.lookAt(targetPos);
+        // Keep focus active until user moves or clicks elsewhere
       })
       .start();
 
@@ -454,6 +467,8 @@ function focusCameraOnDeck(deck) {
 }
 
 function focusCameraOnText(textSection) {
+  cameraController.isFocusActive = true;
+
   const textPos = textSection.position;
   const focusDistance = config.deckFocusDistance * 0.75;
 
@@ -468,8 +483,6 @@ function focusCameraOnText(textSection) {
     TWEEN.removeAll();
   }
 
-  // Compute azimuth so camera faces the text from outside (away from origin)
-  // Direction from origin to text → camera approaches from that direction
   const dx = textPos.x;
   const dz = textPos.z;
   const azimuth = Math.atan2(dz, dx) + Math.PI;

@@ -1,19 +1,33 @@
 import * as THREE from 'three';
 
-let camera, renderer;
+let scene, camera, renderer;
 let cameraController = {
-  target: new THREE.Vector3(0, 8, 0), // Look up at TECHSHAMAN text above
+  target: new THREE.Vector3(0, 8, 0),
   distance: 45,
   azimuth: Math.PI / 3,
   elevation: Math.PI / 6,
   minDistance: 15,
   maxDistance: 60,
   isPanning: false,
+  isOrbiting: false,
   lastMousePos: { x: 0, y: 0 },
   movementSpeed: 0.7,
   keys: {},
-  boundary: 280
+  boundary: 120, // Reduced from 280 to match grid size
+  orbitSensitivity: 0.005,
+  minElevation: 0.1,
+  maxElevation: Math.PI / 2 - 0.1,
+  followSpeed: 0.08,
+  isFocusActive: false,
+  techshamanAzimuth: Math.PI / 3
 };
+
+function updateFollowAzimuth() {
+  if (cameraController.isFocusActive || cameraController.isOrbiting) return;
+  const targetAzimuth = cameraController.techshamanAzimuth + Math.PI;
+  const diff = Math.atan2(Math.sin(targetAzimuth - cameraController.azimuth), Math.cos(targetAzimuth - cameraController.azimuth));
+  cameraController.azimuth += diff * cameraController.followSpeed;
+}
 
 let onUpdateCallback = null;
 
@@ -59,6 +73,22 @@ function onWheel(event) {
 }
 
 function onMouseDown(event) {
+  // Any manual camera control cancels focus mode
+  cameraController.isFocusActive = false;
+
+  // Left-click (button 0) without shift = orbit
+  if (event.button === 0 && !event.shiftKey) {
+    event.preventDefault();
+    event.stopPropagation();
+    cameraController.isOrbiting = true;
+    cameraController.lastMousePos = { x: event.clientX, y: event.clientY };
+    if (renderer && renderer.domElement) {
+      renderer.domElement.style.cursor = 'move';
+    }
+    return;
+  }
+  
+  // Right-click or shift+left-click = pan (existing behavior)
   if (event.button === 2 || (event.button === 0 && event.shiftKey)) {
     event.preventDefault();
     event.stopPropagation();
@@ -72,28 +102,50 @@ function onMouseDown(event) {
 
 function onMouseUp() {
   cameraController.isPanning = false;
+  cameraController.isOrbiting = false;
   if (renderer && renderer.domElement) {
     renderer.domElement.style.cursor = 'default';
   }
 }
 
 function onMouseMove(event) {
-  if (!cameraController.isPanning) return;
+  if (cameraController.isOrbiting) {
+    event.preventDefault();
+    const deltaX = event.clientX - cameraController.lastMousePos.x;
+    const deltaY = event.clientY - cameraController.lastMousePos.y;
+    
+    // Horizontal drag rotates azimuth (around Y axis)
+    cameraController.azimuth -= deltaX * cameraController.orbitSensitivity;
+    
+    // Vertical drag rotates elevation (up/down)
+    cameraController.elevation += deltaY * cameraController.orbitSensitivity;
+    cameraController.elevation = Math.max(
+      cameraController.minElevation,
+      Math.min(cameraController.maxElevation, cameraController.elevation)
+    );
+    
+    cameraController.lastMousePos = { x: event.clientX, y: event.clientY };
+    updateCameraPosition();
+    return;
+  }
   
-  const deltaX = event.clientX - cameraController.lastMousePos.x;
-  const deltaY = event.clientY - cameraController.lastMousePos.y;
-  
-  const panSpeed = cameraController.distance * 0.001;
-  const newTarget = new THREE.Vector3(
-    cameraController.target.x - deltaX * panSpeed * Math.cos(cameraController.azimuth),
-    cameraController.target.y + deltaY * panSpeed,
-    cameraController.target.z - deltaX * panSpeed * Math.sin(cameraController.azimuth)
-  );
-  
-  applyBoundaryConstraints(newTarget);
-  cameraController.target.copy(newTarget);
-  cameraController.lastMousePos = { x: event.clientX, y: event.clientY };
-  updateCameraPosition();
+  if (cameraController.isPanning) {
+    event.preventDefault();
+    const deltaX = event.clientX - cameraController.lastMousePos.x;
+    const deltaY = event.clientY - cameraController.lastMousePos.y;
+    
+    const panSpeed = cameraController.distance * 0.001;
+    const newTarget = new THREE.Vector3(
+      cameraController.target.x - deltaX * panSpeed * Math.cos(cameraController.azimuth),
+      cameraController.target.y + deltaY * panSpeed,
+      cameraController.target.z - deltaX * panSpeed * Math.sin(cameraController.azimuth)
+    );
+    
+    applyBoundaryConstraints(newTarget);
+    cameraController.target.copy(newTarget);
+    cameraController.lastMousePos = { x: event.clientX, y: event.clientY };
+    updateCameraPosition();
+  }
 }
 
 function onKeyDown(event) {
@@ -145,6 +197,20 @@ function updateMovement() {
     movement.addScaledVector(right, moveVector.x);
     movement.y = moveVector.y;
     
+    // Update TechShaman facing: forward = camera look direction, so character faces that way.
+    // camera azimuth ψ gives camera position = ψ; look direction ψ+π
+    // So character facing φ should = ψ+π to move forward into camera view.
+    if (Math.abs(moveVector.z) > 0.01) {
+      if (moveVector.z < 0) {
+        // Forward (W): face camera look direction (azimuth + Math.PI)
+        cameraController.techshamanAzimuth = cameraController.azimuth + Math.PI;
+      } else {
+        // Backward (S): face opposite (toward camera)
+        cameraController.techshamanAzimuth = cameraController.azimuth;
+      }
+    }
+    // A/D strafing does not change facing
+    
     const newTarget = cameraController.target.clone().add(movement);
     applyBoundaryConstraints(newTarget);
     cameraController.target.copy(newTarget);
@@ -162,11 +228,13 @@ function applyBoundaryConstraints(target) {
 
 export function updateCameraPosition() {
   if (!camera) return;
-  
+
+  updateFollowAzimuth();
+
   const x = cameraController.target.x + cameraController.distance * Math.cos(cameraController.elevation) * Math.cos(cameraController.azimuth);
   const y = cameraController.target.y + cameraController.distance * Math.sin(cameraController.elevation);
   const z = cameraController.target.z + cameraController.distance * Math.cos(cameraController.elevation) * Math.sin(cameraController.azimuth);
-  
+
   camera.position.set(x, y, z);
   camera.lookAt(cameraController.target);
 }
@@ -175,6 +243,7 @@ function resetCamera() {
   cameraController.target.set(0, 8, 0); // Look at TECHSHAMAN text above
   cameraController.distance = 45;
   cameraController.azimuth = Math.PI / 3;
+  cameraController.isFocusActive = false;
   updateCameraPosition();
   if (onUpdateCallback) onUpdateCallback('reset');
 }
@@ -193,4 +262,9 @@ export function getCameraController() {
 
 export function getTargetPosition() {
   return cameraController.target.clone();
+}
+
+// Called by main.js to update TechShaman's facing direction
+export function setTechshamanFacing(angle) {
+  cameraController.techshamanAzimuth = angle;
 }

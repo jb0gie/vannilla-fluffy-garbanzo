@@ -245,7 +245,7 @@ export function animateDeckParticles(time) {
         for (let i = 0; i < positions.length; i += 3) {
           const particleIndex = Math.floor(i / 3);
           const angle = time * 0.001 + particleIndex * 0.1;
-          const radius = 5 + Math.sin(time * 0.002 + particleIndex) * 0.3;
+          const radius = 3 + Math.sin(time * 0.002 + particleIndex) * 0.3; // Reduced from 5
 
           const centerX = child.userData.originPosition.x;
           const centerZ = child.userData.originPosition.z;

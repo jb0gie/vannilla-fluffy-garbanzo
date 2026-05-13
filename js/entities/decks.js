@@ -12,47 +12,47 @@ const deckData = [
     description: 'A pioneer of a new era of human evolution. Believes that the current state of humanity is unsustainable, fragmented, and disconnected.',
     position: { x: 0, y: 0, z: 0 }, // CENTER — your home base
     color: 0x00ffff,
-    size: { width: 20, height: 14 }
+    size: { width: 12, height: 8 } // Reduced from 20x14
   },
   {
     id: 'yexzu',
     title: 'YE X ZU',
     description: 'A vision of a different world, a world of abundance, harmony, and connection. A world where every human being is free, empowered, and valued.',
-    position: { x: 50, y: 0, z: 50 }, // NE — first outward step
+    position: { x: 30, y: 0, z: 30 }, // NE — first outward step
     color: 0xff0080,
-    size: { width: 15, height: 10 }
+    size: { width: 10, height: 7 } // Reduced from 15x10
   },
   {
     id: '247420',
     title: '247420',
     description: 'A decentralized platform that allows anyone to create, share, and watch content of any kind, without censorship, surveillance, or interference.',
-    position: { x: -60, y: 0, z: 40 }, // NW — second step
+    position: { x: -35, y: 0, z: 25 }, // NW — second step
     color: 0x00ff9d,
-    size: { width: 15, height: 10 }
+    size: { width: 10, height: 7 } // Reduced from 15x10
   },
   {
     id: 'schwepe',
     title: 'SCHWEPE',
     description: 'A skinless frog. The essence of schwepe speaks to the mind that drives ultimate realisation that jokes are funny.',
-    position: { x: -50, y: 0, z: -60 }, // SW — third step
+    position: { x: -30, y: 0, z: -35 }, // SW — third step
     color: 0xffd700,
-    size: { width: 14, height: 9 }
+    size: { width: 9, height: 6 } // Reduced from 14x9
   },
   {
     id: 'blades',
     title: 'BLADES OF GRASS',
     description: 'An innovative project that aims to reconnect humanity with nature through technology.',
-    position: { x: 55, y: 0, z: -50 }, // SE — fourth step
+    position: { x: 30, y: 0, z: -30 }, // SE — fourth step
     color: 0x4d00ff,
-    size: { width: 14, height: 9 }
+    size: { width: 9, height: 6 } // Reduced from 14x9
   },
   {
     id: 'accolades',
     title: 'ACCOLADES',
     description: 'The McAfee Job, MonaJob, MoralisJob, MetaGame - groundbreaking cybersecurity and blockchain initiatives',
-    position: { x: 0, y: 0, z: -100 }, // FAR SOUTH — final destination of the spiral
+    position: { x: 0, y: 0, z: -60 }, // FAR SOUTH — final destination of the spiral
     color: 0xff6b6b,
-    size: { width: 18, height: 11 }
+    size: { width: 12, height: 8 } // Reduced from 18x11
   }
 ];
 
@@ -164,13 +164,13 @@ function createDeckTitle(group, deck) {
 }
 
 function createDeckParticles(position, color, size) {
-  const particleCount = 4; // Reduced from 8 for less busy
+  const particleCount = 4;
   const particleGeometry = new THREE.BufferGeometry();
   const positions = new Float32Array(particleCount * 3);
   const colors = new Float32Array(particleCount * 3);
   const sizes = new Float32Array(particleCount);
 
-  const radius = (size.width / 2) + 1.5;
+  const radius = (size.width / 2) + 1.0; // Reduced from 1.5
 
   for (let i = 0; i < particleCount; i++) {
     const angle = (i / particleCount) * Math.PI * 2;
@@ -182,7 +182,7 @@ function createDeckParticles(position, color, size) {
     colors[i * 3 + 1] = color.g / 255;
     colors[i * 3 + 2] = color.b / 255;
 
-    sizes[i] = 0.1; // Reduced from 0.15
+    sizes[i] = 0.1;
   }
 
   particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
@@ -236,7 +236,7 @@ export function checkDeckProximity(cameraPosition) {
   deckAreas.forEach(deck => {
     const distance = cameraPosition.distanceTo(deck.position);
     const wasNear = deck.userData.isNear;
-    deck.userData.isNear = distance < 40;
+    deck.userData.isNear = distance < 25; // Reduced from 40
     
     // Play ambient sound when first getting near
     if (deck.userData.isNear && !wasNear) {

@@ -16,28 +16,28 @@ const textData = [
   },
   {
     text: 'NEURAL MATRIX',
-    position: { x: -35, y: 6, z: -35 }, // NE middle ring
+    position: { x: -20, y: 6, z: -20 }, // NE middle ring
     color: 0xff00ff,
     size: 1.0,
     content: 'The network is alive.\nSYSTEM: ONLINE\nPROTOCOL: ACTIVE\nCONNECTION: ESTABLISHED'
   },
   {
     text: 'DATA STREAMS',
-    position: { x: 35, y: 6, z: -35 }, // SE middle ring
+    position: { x: 20, y: 6, z: -20 }, // SE middle ring
     color: 0xff8800,
     size: 0.95,
     content: 'Project data streams:\nYE X ZU — Synchronized\n247420 — Decentralized\nSCHWEPE — Consciousness\nBLADES — Nature Tech\nACCOLADES — Blockchain'
   },
   {
     text: 'CONTROLS',
-    position: { x: -55, y: 5, z: 20 }, // Far SW — only after exploring
+    position: { x: -25, y: 5, z: 15 }, // Far SW — only after exploring
     color: 0x00ff00,
     size: 0.75,
     content: 'WASD — Move\nQ/E — Up/Down\nMouse — Look\nScroll — Zoom\nR-Click — Pan\nCLICK — Focus\nDBL-CLICK — Teleport'
   },
   {
     text: 'DECKS',
-    position: { x: 55, y: 5, z: 20 }, // Far SE
+    position: { x: 25, y: 5, z: 15 }, // Far SE
     color: 0xffff00,
     size: 0.7,
     content: '6 decks orbit the grid.\nVisit each to learn more.\nCollect 15 DATA CRYSTALS along the way.'
@@ -120,7 +120,7 @@ function createInteractiveText(textData, index) {
 function createFallbackTextSections() {
   // Use the same textData positions as the real 3D text would
   textData.forEach(data => {
-    const geometry = new THREE.BoxGeometry(30, 10, 30);
+    const geometry = new THREE.BoxGeometry(15, 6, 15); // Smaller fallback box
     const material = new THREE.MeshPhongMaterial({
       color: data.color,
       emissive: data.color,
@@ -153,7 +153,7 @@ function createFallbackTextSections() {
 export function animateTextSections(time, techshamanPosition) {
   if (!techshamanPosition) return;
 
-  const interactionDistance = 25;
+  const interactionDistance = 15; // Reduced from 25
 
   textSections.forEach((textSection) => {
     if (!textSection.userData.isTextSection) return;
