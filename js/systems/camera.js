@@ -123,10 +123,10 @@ function onMouseMove(event) {
     const deltaY = event.clientY - cameraController.lastMousePos.y;
     
     // Horizontal drag rotates azimuth (around Y axis)
-    cameraController.azimuth -= deltaX * cameraController.orbitSensitivity;
+    cameraController.azimuth += deltaX * cameraController.orbitSensitivity;
     
     // Vertical drag rotates elevation (up/down)
-    cameraController.elevation += deltaY * cameraController.orbitSensitivity;
+    cameraController.elevation -= deltaY * cameraController.orbitSensitivity;
     cameraController.elevation = Math.max(
       cameraController.minElevation,
       Math.min(cameraController.maxElevation, cameraController.elevation)
@@ -143,11 +143,18 @@ function onMouseMove(event) {
     const deltaY = event.clientY - cameraController.lastMousePos.y;
     
     const panSpeed = cameraController.distance * 0.001;
-    const newTarget = new THREE.Vector3(
-      cameraController.target.x - deltaX * panSpeed * Math.cos(cameraController.azimuth),
-      cameraController.target.y + deltaY * panSpeed,
-      cameraController.target.z - deltaX * panSpeed * Math.sin(cameraController.azimuth)
-    );
+
+    // Calculate camera right and up vectors for panning
+    const right = new THREE.Vector3();
+    const up = new THREE.Vector3();
+
+    camera.matrixWorld.extractBasis(right, up, new THREE.Vector3());
+
+    const movement = new THREE.Vector3();
+    movement.addScaledVector(right, -deltaX * panSpeed);
+    movement.addScaledVector(up, deltaY * panSpeed);
+
+    const newTarget = cameraController.target.clone().add(movement);
     
     applyBoundaryConstraints(newTarget);
     cameraController.target.copy(newTarget);
@@ -192,7 +199,7 @@ function updateMovement() {
   if (cameraController.keys['KeyS']) moveVector.z += 1;
   if (cameraController.keys['KeyA']) moveVector.x -= 1;
   if (cameraController.keys['KeyD']) moveVector.x += 1;
-  
+
   const verticalMove = (cameraController.keys['KeyQ'] ? 1 : 0) + (cameraController.keys['KeyE'] ? -1 : 0);
 
   if (moveVector.lengthSq() > 0 || verticalMove !== 0) {
@@ -216,9 +223,10 @@ function updateMovement() {
     // Calculate facing direction based on movement vector relative to camera
     if (moveVector.lengthSq() > 0) {
       const moveAngle = Math.atan2(moveVector.x, moveVector.z);
-      // Azimuth is camera position, camera look is Azimuth + PI
-      // We want to face in the direction of movement relative to camera look
-      cameraController.techshamanAzimuth = cameraController.azimuth + Math.PI - moveAngle;
+      // Azimuth is the angle of the camera position.
+      // The direction the camera is looking is Azimuth + PI.
+      // The moveAngle is relative to the camera's forward.
+      cameraController.techshamanAzimuth = cameraController.azimuth + Math.PI + moveAngle;
     }
     
     const newTarget = cameraController.target.clone().add(movement);

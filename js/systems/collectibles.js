@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import { playSound } from '../audio.js';
+import { getCameraController } from './camera.js';
+import { getGameState } from './gameState.js';
 
 let scene;
 let collectibles = [];
@@ -214,10 +216,8 @@ export function collectCrystal(crystal) {
   showCollectionToast(crystal.userData.id);
 
   // Update game state
-  import('./gameState.js').then(m => {
-    const gs = m.getGameState();
-    if (gs) gs.collectItem(crystal.userData.id, 100);
-  });
+  const gs = getGameState();
+  if (gs) gs.collectItem(crystal.userData.id, 100);
 
   console.log(`💎 Crystal collected! Total: ${collectedCount}`);
   
@@ -310,10 +310,8 @@ function createCollectionExplosion(position, color) {
   scene.add(particles);
   
   // Camera shake on collection
-  import('./camera.js').then(m => {
-    const cc = m.getCameraController();
-    if (cc) cc.shakeIntensity = 0.4;
-  });
+  const cc = getCameraController();
+  if (cc) cc.shakeIntensity = 0.4;
 
   // Flash light
   const flash = new THREE.PointLight(color, 2, 20);
