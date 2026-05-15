@@ -161,21 +161,10 @@ function handleCameraUpdate(action, data) {
       cameraController.isFocusActive = false;
       if (assets.meshes.techshaman) {
         assets.meshes.techshaman.position.copy(data);
+        // Ensure character stays at ground level or adjusted offset
         assets.meshes.techshaman.position.y = -5;
-        // Rotate TechShaman to face movement direction (forward)
+        // Rotate TechShaman to face movement direction
         assets.meshes.techshaman.rotation.y = cameraController.techshamanAzimuth;
-      }
-      break;
-  }
-}
-      break;
-    case 'toggle-ui':
-      toggleUI();
-      break;
-    case 'move':
-      if (assets.meshes.techshaman) {
-        assets.meshes.techshaman.position.copy(data);
-        assets.meshes.techshaman.position.y = -5;
       }
       break;
   }
