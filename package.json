@@ -2,9 +2,7 @@
   "name": "vannilla-fluffy-garbanzo",
   "version": "0.0.0",
   "description": "practicing threeJS strats",
-  "scripts": {
-    "start": "npx http-server ./ --port $PORT --no-dotfiles --no-cors --no-cache --no-logs --no-robots"
-  },
+  "scripts": {},
   "author": "irb0gie",
   "license": "UNLICENSED"
 }
